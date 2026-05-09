@@ -1,0 +1,2971 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Espacio Weed | Prepara el viaje a otro mundo</title>
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="preconnect" href="https://script.googleusercontent.com">
+    
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@300;400;600;700&display=swap');
+
+:root {
+  --neon-green: #2ecc71;
+  --amber: #f1c40f;
+  --cian: #00ffff;
+  --bg-space: #020204;
+  --glass: rgba(255, 255, 255, 0.05);
+  --font-main: 'Montserrat', sans-serif;
+  --font-brand: 'Orbitron', sans-serif;
+  --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* 1. RESET Y BASE */
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg-space);
+  color: white;
+  font-family: var(--font-main);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* 2. FONDO GALÁCTICO DEFINITIVO (GPU ACCELERATED) */
+#star-canvas {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at center, #1B2735 0%, #020204 100%);
+  overflow: hidden;
+}
+
+/* Capa de estrellas acelerada por hardware */
+#star-canvas::before {
+  content: "";
+  position: absolute;
+  top: -100%; left: 0; width: 100%; height: 200%; /* El lienzo es el doble de alto */
+  
+  /* Patrón infinito SVG en código (Cero tiempo de carga, peso imperceptible) */
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1' fill='white' opacity='0.8'/%3E%3Ccircle cx='150' cy='80' r='1.5' fill='white' opacity='0.6'/%3E%3Ccircle cx='90' cy='160' r='1' fill='white' opacity='0.9'/%3E%3Ccircle cx='180' cy='180' r='0.5' fill='white' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.6;
+  
+  /* Animación súper fluida usando tarjeta gráfica */
+  animation: moveStarsGPU 60s linear infinite;
+}
+
+@keyframes moveStarsGPU {
+  from { transform: translateY(0); }
+  to { transform: translateY(50%); } /* Bucle perfecto, cero estrés para el celular */
+}
+/* 6. CORRECCIÓN DEL MENÚ DESPLEGABLE (DROPDOWN) */
+.dropdown { position: relative; display: inline-block; }
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #0a0a0c;
+  min-width: 220px;
+  box-shadow: 0px 8px 16px rgba(0,255,255,0.4); /* Sombra más fuerte para resaltar sobre el slider */
+  z-index: 20000; /* Nivel máximo de órbita */
+  border: 1px solid var(--cian);
+  border-radius: 8px;
+  margin-top: 0;
+  padding: 10px 0;
+}
+
+.dropdown-content a {
+  color: white !important;
+  padding: 12px 20px !important;
+  text-decoration: none;
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: rgba(0, 255, 255, 0.1);
+  color: var(--amber) !important;
+}
+
+/* Mostrar al pasar el mouse */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Eliminar el cuadro gris feo si se queda pegado */
+.skeleton-loader {
+  background: rgba(255,255,255,0.05);
+  width: 100%; height: 100%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.1; }
+  100% { opacity: 0.3; }
+}
+
+/* 3. BARRA SUPERIOR (TOP BAR) - CÁPSULAS ESTÁTICAS */
+.top-bar {
+  position: fixed;
+  top: 0; width: 100%;
+  background: #000;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+  z-index: 5000;
+  padding: 6px 0;
+}
+
+.top-bar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.trust-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 4px 14px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.5px;
+  /* Estático según auditoría */
+}
+
+.wa-link { 
+  color: var(--cian) !important; 
+  cursor: pointer; 
+}
+
+/* 4. HEADER Y NAVEGACIÓN */
+.header-wrap {
+  margin-top: 45px;
+  padding: 30px 0;
+  background: #000;
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+  position: relative; /* Vital para que el z-index funcione */
+  z-index: 9000;      /* Nivel superior al slider */
+}
+
+.logo-area { text-align: center; margin-bottom: 25px; }
+.main-logo { 
+  width: 170px;  
+  transition: var(--transition);
+}
+
+.main-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-brand);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+  opacity: 0.75;
+}
+
+.nav-links a:hover {
+  color: var(--cian);
+  opacity: 1;
+  text-shadow: 0 0 10px var(--cian);
+}
+
+.search-container {
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+}
+
+#main-search {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  color: white;
+  outline: none;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+#main-search:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+}
+
+.search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.3);
+}
+
+/* 5. SLIDER DESTACADOS - CÁPSULA DE ACCESO DIRECTO */
+.slider-container {
+  width: 100%;
+  height: 400px; /* Altura fija para la cápsula */
+  position: relative;
+  overflow: hidden;
+  background: transparent; /* El fondo lo da la cápsula */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.slide {
+  position: absolute;
+  width: 90%; /* Caja más pequeña que el contenedor */
+  max-width: 800px;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Imagen izquierda, texto derecha */
+  opacity: 0;
+  transition: opacity 1s ease-in-out, transform 0.5s ease-out;
+  background: var(--glass);
+  border: 2px solid var(--neon-green);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+  transform: translateX(50px); /* Efecto de entrada */
+  pointer-events: none;
+}
+
+.slide.active { 
+  opacity: 1; 
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* Imagen a la izquierda (Neuro-Marketing) */
+.img-slide {
+  width: 40%;
+  height: 100%;
+  object-fit: contain; /* No recorta la imagen, la ajusta */
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+
+/* Texto y Acciones a la derecha */
+.slide-content {
+  width: 55%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.slide-content h2 { 
+  font-family: var(--font-brand); 
+  color: var(--amber); 
+  margin: 0; 
+  font-size: 0.9rem; 
+  letter-spacing: 2px;
+}
+
+.slide-content h1 { 
+  font-family: var(--font-brand); 
+  font-size: 1.8rem; 
+  color: white; 
+  margin: 5px 0 15px 0; 
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.slide-content p {
+  color: #ccc;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+/* Botón de compra rápido en el Banner */
+.btn-banner-buy {
+  background: var(--neon-green);
+  color: black;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-family: var(--font-brand);
+  font-weight: bold;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-banner-buy:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+/* CONTROLES DE NAVEGACIÓN (FLECHAS) */
+.slider-prev, .slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: var(--cian);
+  border: 1px solid var(--cian);
+  font-size: 1.5rem;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 100;
+  transition: 0.3s;
+}
+
+.slider-prev:hover, .slider-next:hover {
+  background: var(--cian);
+  color: black;
+}
+
+.slider-prev { left: 10px; }
+.slider-next { right: 10px; }
+
+/* MOBILE FIX */
+@media (max-width: 768px) {
+  .slider-container { height: 520px; padding: 10px; }
+  .slide { flex-direction: column; height: 96%; padding: 15px; justify-content: flex-start; gap: 5px; left: 5%; pointer-events: none;}
+  .img-slide { width: auto; max-height: 180px; object-fit: contain; margin-bottom: 5px; flex-shrink: 0; }
+  .slide-content { width: 100%; text-align: center; }
+  .slide-content h1 { font-size: 1.2rem; margin: 5px 0; }
+  .slide-content p { font-size: 0.75rem; line-height: 1.2; margin-bottom: 10px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+  .slide-content h1 { font-size: 1.4rem; }
+  .slider-prev, .slider-next { font-size: 1rem; padding: 8px 12px; }
+}
+
+/* 6. CATEGORÍAS DINÁMICAS */
+.category-filter-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 25px;
+  background: rgba(0,0,0,0.4);
+}
+
+.cat-btn {
+  background: transparent;
+  border: 1px solid var(--cian);
+  color: var(--cian);
+  padding: 7px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font-brand);
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+
+.cat-btn:hover {
+  background: var(--cian);
+  color: black;
+  box-shadow: 0 0 15px var(--cian);
+}
+
+/* 7. VITRINA DE PRODUCTOS (GRID) */
+.content-wrapper { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 30px;
+}
+
+.product-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: var(--transition);
+}
+
+.product-card:hover {
+  border-color: var(--neon-green);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+.product-card img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.product-card:hover img { transform: scale(1.1); }
+
+.more-info-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--amber);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: var(--font-brand);
+  font-size: 0.65rem;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.product-card:hover .more-info-btn { opacity: 1; }
+
+.scarcity-label {
+  position: absolute;
+  top: 15px; left: 15px;
+  background: #e74c3c;
+  color: white;
+  padding: 3px 10px;
+  font-size: 0.6rem;
+  font-weight: bold;
+  border-radius: 3px;
+  z-index: 5;
+}
+
+/* 8. CARRITO SIDEBAR */
+.cart-sidebar {
+  position: fixed;
+  top: 0; right: -400px;
+  width: 380px; height: 100%;
+  background: #08080a;
+  border-left: 1px solid var(--cian);
+  z-index: 100000;
+  transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-sidebar.active { right: 0; }
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--glass);
+  padding-bottom: 20px;
+}
+
+.cart-header h3 { font-family: var(--font-brand); margin: 0; letter-spacing: 2px; }
+
+.cart-items-container {
+  flex: 1;
+  overflow-y: auto;
+  margin: 25px 0;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dotted rgba(255,255,255,0.1);
+}
+
+.btn-qty {
+  background: #222; border: 1px solid #444; color: white;
+  width: 25px; height: 25px; cursor: pointer; border-radius: 3px;
+}
+
+.btn-del {
+  background: none; border: none; color: #e74c3c; cursor: pointer; margin-left: 10px;
+}
+
+.cart-footer {
+  border-top: 1px solid var(--cian);
+  padding-top: 20px;
+}
+
+.cart-total-box {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-brand);
+  font-size: 1.3rem;
+  color: var(--amber);
+  margin-bottom: 20px;
+}
+
+.btn-checkout {
+  width: 100%;
+  padding: 18px;
+  background: var(--neon-green);
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-brand);
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-checkout:hover { background: white; transform: scale(1.02); }
+
+/* 9. MODAL DETALLE */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 99999 !important; /* Por encima de todo, incluso del carrito */
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0,0,0,0.8); /* Fondo oscuro para enfocar la mente */
+  backdrop-filter: blur(8px); /* Efecto neuro-relajante */
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--glass);
+  border: 1px solid var(--neon-green);
+  margin: auto;
+  padding: 25px;
+  width: 90%; /* Ocupa el 90% en móviles */
+  max-width: 500px; /* Pero nunca más de 500px en PC */
+  border-radius: 15px;
+  position: relative;
+  box-sizing: border-box; /* CRÍTICO: Evita que el padding empuje los bordes hacia afuera */
+}
+
+.modal-flex { display: flex; gap: 40px; flex-wrap: wrap; }
+.modal-img { width: 350px; border-radius: 15px; }
+
+.price-box {
+  background: rgba(255,255,255,0.03);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.precio-old { text-decoration: line-through; opacity: 0.5; font-size: 1rem; margin-right: 15px; }
+.precio-promo { color: var(--amber); font-weight: bold; font-size: 1.8rem; font-family: var(--font-brand); }
+
+/* 10. WHATSAPP BUBBLE */
+.wa-bubble {
+  position: fixed;
+  bottom: 30px; right: 30px;
+  width: 65px; height: 65px;
+  z-index: 5500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.wa-bubble:hover { transform: scale(1.15) rotate(10deg); }
+.wa-bubble img { width: 100%; filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.4)); }
+
+/* 11. TOAST NOTIFICATION */
+.toast-notification {
+  position: fixed;
+  bottom: -60px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--neon-green);
+  color: black;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-family: var(--font-brand);
+  font-size: 0.8rem;
+  z-index: 200000 !important;
+  transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-notification.show { bottom: 110px; }
+
+/* 12. RESPONSIVE DESIGN (MOBILE) */
+@media (max-width: 768px) {
+  .top-bar-container { gap: 6px; }
+  .trust-card { font-size: 0.55rem; padding: 4px 8px; }
+  
+  .main-logo { width: 130px; }
+  .nav-links { gap: 15px; font-size: 0.65rem; flex-wrap: wrap; justify-content: center; }
+  
+  .product-grid { grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+  
+  .cart-sidebar { width: 100%; right: -100%; }
+  
+  .modal-img { width: 100%; }
+  .modal-content { margin: 10px; padding: 20px; }
+}
+.section-title {
+  text-align: center;
+  font-family: var(--font-brand);
+  color: var(--cian);
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  border-bottom: 2px solid var(--neon-green);
+  display: inline-block;
+  padding-bottom: 10px;
+  width: 100%;
+}
+/* DISEÑO QUIRÚRGICO DE LA NAVE */
+.nave-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(2, 2, 4, 0.9) !important;
+    backdrop-filter: blur(15px) !important;
+    z-index: 99999 !important;
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto; /* PERMITE SCROLL SI ALGO QUEDA ABAJO */
+    padding: 20px 0;
+}
+
+.login-card {
+    background: var(--glass);
+    border: 2px solid var(--cian);
+    padding: 30px;
+    border-radius: 20px;
+    width: 95%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+    position: relative;
+    margin: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    /* LÍNEAS DE CORRECCIÓN QUIRÚRGICA: */
+    display: flex;
+    flex-direction: column; /* Apila todo verticalmente */
+    align-items: center;    /* Centra inputs y botones */
+}
+
+.nave-logo { width: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--neon-green)); }
+.nave-title { font-family: var(--font-brand); font-size: 1.2rem; color: var(--amber); margin-bottom: 30px; letter-spacing: 2px; }
+
+.input-group {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+}
+
+.btn-nave-main {
+    width: 100%;
+    padding: 14px;
+    background: var(--neon-green);
+    color: black;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font-brand);
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-nave-main:hover { transform: scale(1.02); background: white; }
+
+/* 1. Enlaces del Login/Registro (Se mantienen compactos) */
+.nave-links { 
+    margin-top: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+.nave-links a { 
+    color: var(--cian); 
+    font-size: 0.75rem; 
+    text-decoration: none; 
+    opacity: 0.7; 
+    transition: 0.3s;
+}
+.nave-links a:hover { opacity: 1; text-decoration: underline; }
+
+/* 2. Botón VOLVER (Independiente y Ergonómico para el dedo) */
+.back-link { 
+    display: block;
+    margin-top: 35px;       /* Distancia generosa del botón de arriba */
+    padding: 12px;          /* Zona de toque ampliada para el celular */
+    color: var(--cian); 
+    font-size: 0.8rem; 
+    text-decoration: none; 
+    opacity: 0.7; 
+    font-family: var(--font-brand);
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.back-link:hover { 
+    opacity: 1; 
+    text-shadow: 0 0 8px var(--cian); 
+}
+
+/* 3. Textos informativos */
+.nave-text { font-size: 0.8rem; color: #ccc; margin-bottom: 20px; }
+
+
+.nave-input {
+    width: 100%;
+    align-self: stretch;
+    box-sizing: border-box; /* Evita que el padding "estire" el input hacia afuera */
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;        /* Evita el zoom automático en iPhones al clickear */
+    outline: none;
+}
+
+.dash-avatar {
+    width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--neon-green);
+    cursor: pointer; box-shadow: 0 0 15px var(--neon-green); transition: 0.3s;
+}
+
+.dash-avatar:hover { transform: scale(1.1); }
+
+.compras-grid {
+    display: flex; gap: 10px; overflow-x: auto; padding: 10px 0;
+}
+
+.compra-card {
+    min-width: 100px; background: rgba(255,255,255,0.05);
+    padding: 10px; border-radius: 10px; border: 1px solid var(--glass);
+    text-align: center; font-size: 0.6rem;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Se adapta solo */
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tool-btn {
+    background: var(--glass); border: 1px solid var(--cian); color: white;
+    padding: 15px 5px; border-radius: 8px; font-size: 0.6rem; cursor: pointer;
+}
+
+.avatar-opt { width: 100%; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.avatar-opt:hover { border-color: var(--amber); }
+
+.btn-logout { background: none; border: none; color: #ff4444; font-size: 0.7rem; cursor: pointer; }
+/* AJUSTES ESPECÍFICOS PARA MÓVILES (Pantallas menores a 600px) */
+@media (max-width: 600px) {
+    /* Ajustes de tarjetas y comunidad (Tu código original) */
+    .login-card {
+        padding: 20px 15px; /* Menos espacio interno para ganar pantalla */
+        border-radius: 15px;
+    }
+
+    .nave-title {
+        font-size: 1rem; /* Título un poco más pequeño */
+        margin-bottom: 20px;
+    }
+
+    .compra-card {
+        min-width: 120px; /* Tarjetas de compras un poco más cómodas para scroll */
+    }
+    
+    .tools-grid {
+        grid-template-columns: 1fr 1fr; /* 2 botones por fila en lugar de 3 si es muy angosto */
+    }
+
+    /* Ajuste táctil unificado para los botones de cierre en móviles */
+    .close, .close-nave, .close-cart, .modal-close {
+        top: 10px;
+        right: 10px;
+        width: 50px;
+        height: 50px;
+        font-size: 35px; /* X más grande para el pulgar */
+        background: rgba(0, 0, 0, 0.9);
+        border: 2px solid var(--neon-green);
+    }
+}
+.suggestions-box {
+    background: rgba(46, 204, 113, 0.05);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.sugerencia-item {
+    display: none; /* Se controlan por JS */
+    animation: fadeIn 0.5s ease;
+}
+
+.sugerencia-item.active { display: flex; gap: 15px; align-items: center; }
+
+.img-sug { width: 80px; height: 80px; object-fit: contain; background: white; border-radius: 10px; }
+
+.info-sug { text-align: left; flex: 1; }
+
+.badge-desc {
+    background: var(--amber); color: black; font-weight: bold;
+    font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+}
+
+.dots-container { display: flex; justify-content: center; gap: 5px; margin-top: 10px; }
+.dot { width: 8px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; }
+.dot.active { background: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+
+/* CONTROL DE AVATARES EN PERFIL */
+.avatar-grid {
+    display: grid;
+    /* Esto asegura que quepan varios avatares por línea según el ancho */
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); 
+    gap: 12px;
+    min-height: 90px;   /* ¡NUEVO! Espacio garantizado para una fila */
+    max-height: 180px;  /* Altura máxima para ver dos filas antes de hacer scroll */
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 12px;
+    width: 100%;
+    border: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.avatar-opt {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.avatar-opt:hover {
+    transform: scale(1.1);
+    border-color: var(--cian);
+}
+
+.avatar-opt.seleccionado {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+/* AJUSTE PARA EL SELECT (PREGUNTA) */
+select.nave-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+}
+
+.auspiciadores-container {
+  background: var(--glass);
+  border-top: 1px solid rgba(46, 204, 113, 0.2);
+  border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 8000;
+}
+
+.marquee-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.marquee-content {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  padding: 0 25px;
+}
+
+.marquee-content img {
+  height: 40px; /* Tamaño discreto */
+  width: auto;
+  filter: grayscale(100%) opacity(0.7);
+  transition: var(--transition);
+}
+
+.marquee-content img:hover {
+  filter: grayscale(0%) opacity(1);
+}
+
+/* Animación de giro infinito */
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.scrolling {
+  animation: scroll-marquee 25s linear infinite;
+}
+
+/* BURBUJA CARRITO FLOTANTE - INTEGRACIÓN ESPACIO WEED */
+.cart-float-bubble {
+  position: fixed;
+  bottom: 105px; /* Situada sobre la de WhatsApp (30px + 65px + 10px gap) */
+  right: 30px;
+  width: 65px;
+  height: 65px;
+  background: var(--cian); /* Color de acción de tu Nave */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+  z-index: 5400; /* Justo debajo de la de WhatsApp para jerarquía visual */
+  cursor: pointer;
+  transition: var(--transition);
+  color: black;
+  font-size: 1.6rem;
+}
+
+.cart-float-bubble:hover {
+  transform: scale(1.1);
+  background: white;
+}
+
+.cart-badge-float {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #e74c3c; /* Rojo alerta para el contador */
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--bg-space);
+}
+
+/* Ajuste para que en móviles no tapen demasiado */
+@media (max-width: 768px) {
+  .wa-bubble, .cart-float-bubble {
+    right: 20px;
+    width: 55px;
+    height: 55px;
+  }
+  .wa-bubble { bottom: 20px; }
+  .cart-float-bubble { bottom: 85px; font-size: 1.3rem; }
+}
+
+/* ESTRUCTURA MODAL DETALLES BLINDADO */
+.modal-detalles-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* Altura máxima de la ventana */
+  overflow: hidden; /* Evita que el contenedor padre crezca */
+  background: var(--bg-space);
+  border: 1px solid var(--cian);
+  border-radius: 15px;
+}
+
+.modal-detalles-body {
+  flex: 1; /* Toma todo el espacio disponible */
+  overflow-y: auto; /* Solo esta parte tiene scroll */
+  padding: 20px;
+}
+
+.modal-detalles-footer {
+  padding: 15px 20px;
+  background: rgba(0,0,0,0.9);
+  border-top: 1px solid rgba(0,255,255,0.2);
+  text-align: center;
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,255,255,0.5);
+  border: none;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* VARIANTES */
+.variant-select {
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  border: 1px solid #333;
+  color: white;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+/* DISEÑO DE MODAL PROFESIONAL "BLINDADO" */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh; /* Evita que se salga de la pantalla */
+    padding: 0 !important; /* Quitamos padding para que el footer pegue abajo */
+    overflow: hidden;
+    background: #0b0f1a;
+    border: 1px solid var(--cian);
+}
+
+#detalle-body {
+    flex: 1; /* Esto permite que el cuerpo crezca y el footer se quede abajo */
+    overflow-y: auto; /* Solo el contenido tiene scroll */
+    padding: 20px;
+}
+
+.modal-footer-fixed {
+    padding: 15px;
+    background: rgba(0,0,0,0.9);
+    border-top: 1px solid rgba(0,255,255,0.2);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ESTILO CARRUSEL */
+.carousel-container {
+    position: relative;
+    width: 60%; /* Reducido del 100% al 60% para que no ocupe toda la pantalla */
+    margin: 0 auto 15px; /* Centra la imagen horizontalmente y da aire abajo */
+    aspect-ratio: 1/1; /* Mantiene el cuadrado perfecto */
+    background: rgba(0,0,0,0.3); /* Fondo sutil para que la imagen destaque */
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,255,255,0.1); /* Borde cian muy fino */
+}
+
+.carousel-img {
+    max-width: 95%; /* Pequeño margen interno para que no pegue al borde del cuadro */
+    max-height: 95%;
+    object-fit: contain; /* Evita que la imagen se estire feo */
+    border-radius: 8px;
+}
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,255,255,0.3);
+    border: none;
+    color: white;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.nav-btn:hover { background: var(--cian); color: black; }
+.prev { left: 10px; }
+.next { right: 10px; }
+/* ==========================================
+   ESTÉTICA UNIVERSAL: BOTONES DE CIERRE (X) 
+   ========================================== */
+.close, .close-nave, .close-cart, .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-family: var(--font-brand);
+    color: var(--neon-green);
+    background: rgba(2, 2, 4, 0.95); /* Fondo espacial oscuro */
+    border: 1px solid rgba(46, 204, 113, 0.4);
+    border-radius: 8px; /* Look tecnológico (cuadrado con bordes suaves) */
+    cursor: pointer;
+    transition: 0.3s all cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 100000;
+    line-height: 1;
+    user-select: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.close:hover, .close-nave:hover, .close-cart:hover, .modal-close:hover {
+    background: var(--neon-green);
+    color: black !important;
+    box-shadow: 0 0 15px var(--neon-green);
+    transform: rotate(90deg) scale(1.1); /* Giro mecánico al pasar el dedo/mouse */
+    border-color: var(--neon-green);
+}
+
+.close:active, .close-nave:active, .close-cart:active, .modal-close:active {
+    transform: scale(0.95); /* Hundimiento al hacer clic */
+    box-shadow: none;
+}
+</style>    
+</head>
+<body>
+
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+
+    <div id="star-canvas"></div>
+    <div id="toast" class="toast-notification"></div>
+
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <div class="trust-card"><i class="fas fa-shield-alt"></i> <span>PAGOS SEGUROS</span></div>
+            <div class="trust-card"><i class="fas fa-truck"></i> <span>ENVÍOS A TODO CHILE</span></div>
+            <div class="trust-card"><i class="fas fa-certificate"></i> <span>GARANTÍA OFICIAL</span></div>
+            <div class="trust-card wa-link" onclick="abrirSoporte()">
+              <i class="fas fa-headset"></i> <span>SOPORTE TÉCNICO</span>
+            </div>
+            <div id="social-icons-container" class="top-bar-socials">
+            </div>
+        </div>
+    </div>
+
+    <header class="header-wrap">
+        <div class="logo-area">
+            <img src="https://i.postimg.cc/9FL0gGth/Espacio-Weed.gif" class="main-logo" alt="Espacio Weed Logo">
+        </div>
+        
+        <nav class="main-nav">
+    <ul class="nav-links">
+        <li><a href="#" onclick="volverInicio(event)">INICIO</a></li>
+        
+        <li class="dropdown">
+            <a href="#" class="dropbtn" onclick="event.preventDefault()">CATEGORÍA<i class="fas fa-chevron-down"></i></a>
+            <div id="category-list" class="dropdown-content"></div>
+        </li>
+        
+        <li><a href="#" onclick="mostrarAcceso(event)">ACCESO</a></li>
+        
+        <li><a href="#" onclick="mostrarPagos(event)">PAGOS</a></li>
+        
+        <li><a href="#" onclick="toggleCart(event)">CARRO (<span id="cart-count">0</span>)</a></li>
+    </ul>
+
+    <div class="search-container">
+        <input type="text" id="main-search" placeholder="Busca tu producto o marca..." onkeyup="filtrar()">
+        <i class="fas fa-search search-icon"></i>
+    </div>
+</nav>
+    </header>
+
+    <section id="auspiciadores-section" class="auspiciadores-container" style="display:none;">
+      <div class="marquee-wrapper">
+        <div id="marquee-content" class="marquee-content"></div>
+      </div>
+    </section>
+
+    <div id="modal-anuncio" class="modal" style="display:none; z-index: 150000; align-items:center; justify-content:center;">
+      <div class="modal-content login-card" style="max-width: 450px; position: relative; border-color: var(--amber); box-shadow: 0 0 30px rgba(241, 196, 15, 0.2);">
+        <span class="close-nave" onclick="document.getElementById('modal-anuncio').style.display='none'"><i class="fas fa-times"></i></span>
+        <h2 class="nave-title" style="color: var(--amber); margin-bottom: 15px; font-size:1.2rem;"><i class="fas fa-bullhorn"></i> ATENCIÓN</h2>
+        
+        <img id="anuncio-img" src="" style="width: 100%; border-radius: 10px; margin-bottom: 15px; display: none; object-fit: contain; max-height: 300px;">
+        <p id="anuncio-texto" class="nave-text" style="color: white; line-height: 1.5; margin-bottom: 20px; display: none; font-weight: bold; font-size: 1rem;"></p>
+        
+        <button class="btn-nave-main" style="background: var(--amber); color: black;" onclick="document.getElementById('modal-anuncio').style.display='none'">ENTENDIDO</button>
+      </div>
+    </div>
+
+    <section id="hero-slider" class="slider-container">
+    <div class="skeleton-loader"></div>
+    <button class="slider-prev" onclick="cambiarSlide(-1)">&#10094;</button>
+    <button class="slider-next" onclick="cambiarSlide(1)">&#10095;</button>
+</section>
+
+    <div id="category-bar" class="category-filter-bar" style="display:none;"></div>
+
+    <main class="content-wrapper" id="catalogo">
+    <h2 class="section-title">EXPEDICIÓN ESPACIO WEED</h2>
+    <div id="grid-productos" class="product-grid">
+        <p id="loading-msg" style="grid-column: 1/-1; text-align:center; padding:50px; font-family:var(--font-brand); color:var(--amber); letter-spacing:2px;">
+            PREPARANDO IMPLEMENTOS DE DESPEGUE...
+        </p>
+    </div>
+</main>
+
+    <div class="cart-float-bubble" onclick="toggleCart(event)" title="Ver mi pedido">
+      <i class="fas fa-shopping-basket"></i>
+      <span id="cart-count-bubble" class="cart-badge-float">0</span>
+    </div>
+
+    <div class="wa-bubble" onclick="irWhatsApp()" title="Soporte Técnico">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Support">
+    </div>
+
+    <div id="cart-drawer" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>TU CARRITO</h3>
+            <span class="close-cart" onclick="toggleCart()">&times;</span>
+        </div>
+        
+        <div id="cart-items" class="cart-items-container"></div>
+
+        <div class="cart-footer">
+            <div class="shipping-option">
+                <label class="custom-checkbox">
+                    <input type="checkbox" id="chk-envio" onchange="actualizarTotalCarrito()"> 
+                    <span class="checkmark"></span>
+                    ¿Deseas envío a domicilio? (+$3.500)
+                </label>
+                <input type="text" id="direccion-envio" placeholder="Calle, Número, Ciudad..." style="display:none;">
+            </div>
+
+            <div class="cart-total-box">
+                <span class="total-label">TOTAL FINAL:</span>
+                <span id="cart-total-value" class="total-amount">$0</span>
+            </div>
+            <div style="margin-bottom: 20px; border-bottom: 1px solid var(--glass); padding-bottom: 15px;">
+              <p style="font-size: 0.7rem; color: var(--cian); margin-bottom: 10px; font-family: var(--font-brand);">MÉTODO DE PAGO:</p>
+    
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; margin-bottom: 10px; cursor: pointer;">
+              <input type="radio" name="metodo-pago" value="efectivo" checked style="accent-color: var(--neon-green);">
+              <span>Transferencia / Efectivo</span>
+              </label>
+
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; cursor: pointer;">
+                <input type="radio" name="metodo-pago" value="mercadopago" style="accent-color: var(--neon-green);">
+                <span>Mercado Pago (Tarjetas)</span>
+              </label>
+            </div>
+
+            <button class="btn-checkout" onclick="procesarCompra()">
+                FINALIZAR PEDIDO <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-detalle" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarModal()">&times;</span>
+            <div id="detalle-body"></div>
+        </div>
+    </div>
+
+<div id="modal-pagos-unique" class="modal" style="display:none; z-index: 10000;">
+<div class="modal-content login-card" style="max-width: 400px; position: relative; max-height: 85vh; overflow-y: auto; padding: 20px;">
+<span class="close-nave" onclick="cerrarModalPagos()">&times;</span>
+<h2 class="nave-title" style="margin-bottom: 15px;">INFORMACIÓN DE PAGO</h2>
+
+<div style="background: white; padding: 10px 15px; border-radius: 12px; margin-bottom: 15px;">
+<img src="https://i.postimg.cc/vHJFW0MT/mediosde-pago.png" style="width: 100%; max-width: 140px; display: block; margin: 0 auto 5px;" alt="Mercado Pago">
+<p style="color: #333; font-size: 0.65rem; font-weight: bold; text-align:center; margin: 0;">PAGO SEGURO Y COORDINACIÓN</p>
+</div>
+
+<div style="text-align: left; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); padding: 15px; border-radius: 10px;">
+<h4 class="cian" style="margin-top: 0; font-size: 0.7rem; border-bottom: 1px solid var(--cian); padding-bottom: 5px;">TRANSFERENCIA</h4>
+<div style="font-size: 0.75rem; line-height: 1.5; color: #ccc; margin-top: 10px;">
+<p style="margin: 5px 0;"><strong>BANCO:</strong> <span id="ind-pago-banco"></span></p>
+<p style="margin: 5px 0;"><strong>RUT:</strong> <span id="ind-pago-rut"></span></p>
+<p style="margin: 5px 0;"><strong>NÚMERO:</strong> <span id="ind-pago-numero"></span></p>
+<p style="margin: 5px 0;"><strong>CORREO:</strong> <span id="ind-pago-email"></span></p>
+</div>
+</div>
+<button class="btn-nave-main" style="margin-top:15px; padding: 12px;" onclick="cerrarModalPagos()">ENTENDIDO</button>
+</div>
+</div>
+<div id="modal-soporte" class="modal">
+  <div class="modal-content" style="max-width: 500px;">
+    <span class="close-modal" onclick="cerrarSoporte()">&times;</span>
+    <h2 style="font-family:var(--font-brand); color:var(--cian); margin-bottom:20px; font-size:1.2rem;">SOPORTE TÉCNICO</h2>
+    <p style="font-size:0.75rem; color:#888; margin-bottom:15px;">Describe tu solicitud o problema (máx. 300 caracteres)</p>
+
+    <textarea id="soporte-mensaje" class="nave-input" maxlength="300" placeholder="Escribe aquí..." style="height:120px; resize:none;"></textarea>
+
+    <div style="margin-top:20px; margin-bottom:20px; text-align:left;">
+      <label style="display:block; font-size:0.7rem; color:var(--amber); margin-bottom:8px; font-weight:bold;">ADJUNTAR IMAGEN DE REFERENCIA (MÁX. 4MB):</label>
+      <input type="file" id="soporte-adjunto" accept="image/*" class="nave-input" style="font-size:0.7rem;">
+    </div>
+
+    <button class="btn-checkout" onclick="enviarSolicitudSoporte()" id="btn-envio-soporte">
+      ENVIAR SOLICITUD
+    </button>
+  </div>
+</div>
+
+</body>
+</html>
+    
+<div id="comunidad-portal" class="nave-container">
+
+    <div id="login-section" style="width: 100%;">
+        <div class="login-card">
+            <span class="close-nave" onclick="cerrarComunidad()">&times;</span>
+            <img src="https://i.postimg.cc/1RF0H6Ff/Logoew.png" class="nave-logo">
+            <h2 class="nave-title">CENTRO DE MANDO</h2>
+            
+            <input type="email" id="login-email" class="nave-input" placeholder="EMAIL">
+            <input type="password" id="login-pass" class="nave-input" placeholder="CONTRASEÑA">
+            
+            <button class="btn-nave-main" onclick="ejecutarLogin()">INGRESAR</button>
+            
+            <div class="nave-links">
+                <a href="#" onclick="cambiarVistaComunidad('registro', event)">CREAR CUENTA</a>
+                <a href="#" onclick="cambiarVistaComunidad('recuperar', event)">OLVIDÉ MI CLAVE</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="registro-section" style="display: none; width: 100%;">
+        <div class="login-card">
+            <h2 class="nave-title">NUEVO EXPLORADOR</h2>
+            <input type="text" id="reg-nombre" class="nave-input" placeholder="NOMBRE COMPLETO">
+            <input type="email" id="reg-email" class="nave-input" placeholder="EMAIL">
+            <input type="password" id="reg-pass" class="nave-input" placeholder="CONTRASEÑA">
+            <input type="password" id="reg-pass-conf" class="nave-input" placeholder="CONFIRMAR">
+            
+            <select id="reg-pregunta" class="nave-input">
+                <option value="" disabled selected>Pregunta de Seguridad</option>
+                <option>¿Nombre de tu mascota?</option>
+                <option>¿Ciudad de nacimiento?</option>
+                <option>¿Tu primer vaporizador?</option>
+            </select>
+            <input type="text" id="reg-respuesta" class="nave-input" placeholder="TU RESPUESTA">
+            
+            <button class="btn-nave-main" onclick="ejecutarRegistro()">UNIRSE</button>
+            <a href="#" class="back-link" onclick="cambiarVistaComunidad('login', event)">VOLVER AL LOGIN</a>
+        </div>
+    </div>
+
+    <div id="recuperar-section" style="display: none; width: 100%;">
+        <div class="login-card">
+            <h2 class="nave-title">RECUPERAR ACCESO</h2>
+            <div id="recover-step-1">
+                <p class="nave-text">Ingresa tu email para rastrear tu cuenta.</p>
+                <input type="email" id="recover-email" class="nave-input" placeholder="TU@EMAIL.COM">
+                <button class="btn-nave-main" onclick="buscarPregunta()">BUSCAR PREGUNTA</button>
+            </div>
+            <div id="recover-step-2" style="display: none;">
+                <p id="display-pregunta" class="cian" style="margin-bottom:15px; font-weight:bold;"></p>
+                <input type="text" id="recover-respuesta" class="nave-input" placeholder="TU RESPUESTA">
+                <button class="btn-nave-main" onclick="validarRespuesta()">RESTABLECER</button>
+            </div>
+            <a href="#" class="back-link" onclick="cambiarVistaComunidad('login', event)">VOLVER AL LOGIN</a>
+        </div>
+    </div>
+
+    <div id="dashboard-section" style="display: none; width: 100%;">
+        <div class="login-card" style="max-width: 500px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:20px;">
+                <img id="user-avatar" class="dash-avatar" onclick="abrirPerfil()" title="Editar Perfil">
+                <h3 id="user-name-display" class="cian" style="margin:0; font-size:0.9rem;"></h3>
+                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+
+            <div class="suggestions-box">
+                <h4 id="titulo-sugerencias" class="amber" style="font-size:0.6rem; letter-spacing:2px; margin-bottom:10px;">SUGERENCIAS PARA TI</h4>
+                <div id="wrapper-sugerencias" class="sugerencias-slider"></div>
+                <div id="dots-sugerencias" class="dots-container"></div>
+            </div>
+
+            <div class="tools-grid">
+                <button class="tool-btn" onclick="mostrarHistorial()"><i class="fas fa-history"></i> HISTORIAL</button>
+                <button class="tool-btn" onclick="mostrarBuzon()"><i class="fas fa-envelope"></i> BUZÓN</button>
+            </div>
+            
+            <a href="#" class="back-link" onclick="volverInicioDesdeDashboard(event)" style="color:var(--cian); font-weight: bold;">VOLVER AL INICIO</a>
+        </div>
+    </div>
+
+    <div id="perfil-section" style="display: none; width: 100%;">
+        <div class="login-card">
+            <h2 class="nave-title">PERFIL</h2>
+            <div id="avatar-list" class="avatar-grid"></div>
+            
+            <div style="width: 100%; margin-top: 20px;">
+                <input type="text" id="edit-nombre" class="nave-input" placeholder="NOMBRE">
+                <input type="email" id="edit-email" class="nave-input" disabled style="opacity:0.5;">
+                
+                <select id="edit-pregunta" class="nave-input">
+                    <option>¿Nombre de tu mascota?</option>
+                    <option>¿Ciudad de nacimiento?</option>
+                    <option>¿Tu primer vaporizador?</option>
+                </select>
+                <input type="text" id="edit-respuesta" class="nave-input" placeholder="RESPUESTA">
+            </div>
+            
+            <button class="btn-nave-main" onclick="guardarCambiosPerfil()">GUARDAR</button>
+            <a href="#" class="back-link" onclick="cambiarVistaComunidad('dashboard', event)">VOLVER AL DASHBOARD</a>
+        </div>
+    </div>
+
+    <div id="historial-section" style="display: none; width: 100%;">
+        <div class="login-card" style="max-width: 550px;">
+            <h2 class="nave-title">MIS EXPEDICIONES</h2>
+            <p class="nave-text" style="font-size: 0.7rem;">Últimos 10 carritos registrados</p>
+            
+            <div id="lista-historial" style="display: flex; flex-direction: column; gap: 15px; max-height: 400px; overflow-y: auto; padding: 10px 5px;">
+            </div>
+
+            <a href="#" class="back-link" onclick="cambiarVistaComunidad('dashboard', event)">VOLVER AL PANEL</a>
+        </div>
+    </div>
+
+    <div id="buzon-section" style="display: none; width: 100%;">
+  <div class="login-card" style="max-width: 500px; padding: 20px;">
+    <span class="close-nave" onclick="cambiarVistaComunidad('dashboard')">&times;</span>
+    <h2 class="nave-title" style="margin-bottom: 15px;"><i class="fas fa-comments"></i> COMUNICACIÓN ADMIN</h2>
+
+    <div id="chat-box" style="height: 350px; overflow-y: auto; background: #05070a; border-radius: 10px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; border: 1px solid rgba(46, 204, 113, 0.2);">
+      <p style="opacity:0.5; font-size:0.7rem; text-align:center; margin-top:50px;">Sincronizando con el satélite...</p>
+    </div>
+
+    <div style="display: flex; gap: 10px; align-items: flex-end;">
+      <div style="position: relative; flex: 1;">
+        <textarea id="msg-input" class="nave-input" maxlength="250" placeholder="Escribe tu mensaje..." style="height: 50px; resize: none; margin-bottom: 0; font-family: 'Rajdhani'; padding-right: 45px;"></textarea>
+        <div id="char-count" style="position: absolute; bottom: 10px; right: 10px; font-size: 0.55rem; color: var(--neon-green); opacity: 0.6;">0/250</div>
+      </div>
+      <button class="btn-nave-main" onclick="ejecutarEnvioMensaje()" style="width: auto; height: 50px; padding: 0 20px; margin-top: 0;">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+    
+    <a href="#" class="back-link" onclick="cambiarVistaComunidad('dashboard', event)" style="margin-top: 15px;">VOLVER AL PANEL</a>
+  </div>
+</div>
+
+
+
+    <div id="pagos-section" style="display: none; width: 100%;">
+        <div class="login-card">
+            <span class="close-nave" onclick="cerrarComunidad()">&times;</span>
+            <h2 class="nave-title">MEDIOS DE PAGO</h2>
+            
+            <div style="background: white; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Mercado_Pago_logo.svg/512px-Mercado_Pago_logo.svg.png" 
+                 style="width: 100%; max-width: 160px; display: block; margin: 0 auto 10px;" alt="Mercado Pago">
+            
+            <p style="color: #333; font-size: 0.65rem; margin-top: 8px; font-weight: bold; font-family: sans-serif; letter-spacing: 0.5px;">
+                PAGO SEGURO CON TARJETAS Y REDCOMPRA
+            </p>
+        </div>
+
+            <div style="text-align: left; background: rgba(0,255,255,0.05); border: 1px solid var(--cian); padding: 15px; border-radius: 10px; border: 1px solid rgba(0,255,255,0.2);">
+                <h4 class="cian" style="margin-top: 0; font-size: 0.7rem; letter-spacing: 1px; border-bottom: 1px solid var(--cian); padding-bottom: 5px;">TRANSFERENCIA</h4>
+                <div style="font-size: 0.75rem; line-height: 1.8; color: #ccc; margin-top: 10px;">
+                    <p><strong>BANCO:</strong> <span id="pago-banco"></span></p>
+                    <p><strong>RUT:</strong> <span id="pago-rut"></span></p>
+                    <p><strong>NÚMERO:</strong> <span id="pago-numero"></span></p>
+                    <p><strong>CORREO:</strong> <span id="pago-email"></span></p>
+                </div>
+            </div>
+
+            <button class="btn-nave-main" style="margin-top: 25px;" onclick="cerrarComunidad()">ENTENDIDO</button>
+        </div>
+    </div>
+
+</div>
+<script>
+// Variables Globales de Estado
+var configGlobal = {};
+var productosGlobal = [];
+var carrito = [];
+var slideIndex = 0;
+var sessionUser = null;
+let scriptUrl = ""; // <--- PIEZA CLAVE: Se llenará automáticamente
+
+const API_URL = "https://script.google.com/macros/s/AKfycbwpzm-n0UUwvEgYOCtPDE6Z5OJkq4jBracHGXE7i3XHmn9xaolZchSNt8Sy95mGONActA/exec";
+
+async function ejecutarEnServidor(action, data = null) {
+    const url = `${API_URL}?action=${action}`;
+    const options = {
+        method: data ? "POST" : "GET",
+        mode: "cors"
+    };
+    if (data) {
+        options.body = JSON.stringify(data);
+        // Usamos text/plain para evitar problemas de CORS en navegadores
+        options.headers = { "Content-Type": "text/plain;charset=utf-8" };
+    }
+    try {
+        const response = await fetch(url, options);
+        return await response.json();
+    } catch (error) {
+        console.error("Error en conexión con el servidor:", error);
+        throw error;
+    }
+}
+/**
+ * INICIALIZACIÓN DEL SISTEMA
+ */
+document.addEventListener('DOMContentLoaded', async function() {
+  console.log("Iniciando Secuencia de Despegue Escalonado...");
+
+  try {
+    // 1. CARGA MASIVA AL SERVIDOR
+    const data = await ejecutarEnServidor("getInitialData");
+
+    // 2. PRIORIDAD 1 (0 ms): Configuración, Anuncio y Redes
+    configGlobal = data.config;
+    renderSocialIcons(); // FOCUS: Conectamos la función evolucionada correcta
+    if (typeof verificarAnuncio === "function") verificarAnuncio();
+
+    // 3. PRIORIDAD 2 (400 ms): Slider y Auspiciadores (Estética)
+    setTimeout(() => {
+      const sectionAuspi = document.getElementById('auspiciadores-section');
+      const contentAuspi = document.getElementById('marquee-content');
+      if (data.auspiciadores && data.auspiciadores.length > 0 && sectionAuspi && contentAuspi) {
+        sectionAuspi.style.display = 'block';
+        let logosHtml = data.auspiciadores.map(a => `<img src="${a.logo}" alt="${a.nombre}" title="${a.nombre}" onerror="this.style.display='none'">`).join('');
+        contentAuspi.innerHTML = (data.auspiciadores.length > 5) ? logosHtml + logosHtml : logosHtml;
+        if (data.auspiciadores.length > 5) contentAuspi.classList.add('scrolling');
+      }
+
+      const containerSlider = document.getElementById('hero-slider');
+      if (data.destacados && data.destacados.length > 0 && containerSlider) {
+        containerSlider.innerHTML = data.destacados.map((s, i) => `
+          <div class="slide ${i === 0 ? 'active' : ''}">
+            <img src="${s.img}" class="img-slide" alt="${s.nombre}" onerror="this.src='https://i.postimg.cc/1RF0H6Ff/Logoew.png'">
+            <div class="slide-content">
+              <h2 class="amber">${s.titulo}</h2>
+              <h1>${s.nombre}</h1>
+              <p>${s.desc}</p>
+              <div class="price-display" style="color:var(--cian); font-weight:bold; font-size:1.3rem; margin-bottom:15px;">
+                $${Number(s.precio).toLocaleString('es-CL')}
+              </div>
+              <button class="btn-banner-buy" onclick="abrirDetalle('${s.sku}')">
+                VER DETALLES <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+        `).join('') + '<button class="slider-prev" onclick="cambiarSlide(-1)">&#10094;</button><button class="slider-next" onclick="cambiarSlide(1)">&#10095;</button>';
+        if (typeof iniciarAnimacionSlider === "function") iniciarAnimacionSlider();
+      }
+    }, 400);
+
+    // 4. PRIORIDAD 3 (800 ms): Catálogo Completo y Filtros
+    setTimeout(() => {
+      productosGlobal = data.productos;
+      const loadingMsg = document.getElementById('loading-msg');
+      if(loadingMsg) loadingMsg.remove();
+      if (typeof renderProductos === "function") renderProductos(productosGlobal);
+      if (typeof generarMenuCategorias === "function") generarMenuCategorias(productosGlobal);
+      
+      console.log("Nave 100% Desplegada y Operativa.");
+    }, 800);
+
+  } catch (error) {
+    console.error("Falla en la carga inicial:", error);
+  }
+});
+
+/**
+ * MOTOR DE BÚSQUEDA Y FILTRADO DINÁMICO
+ */
+function filtrar() {
+  const term = document.getElementById('main-search').value.toLowerCase();
+  const slider = document.getElementById('hero-slider');
+
+  // Si el usuario empieza a buscar, el slider se va
+  if (slider && term.length > 0) {
+    slider.style.display = 'none';
+  }
+
+  const filtrados = productosGlobal.filter(function(p) {
+    return (
+      p.NOMBRE.toString().toLowerCase().includes(term) || 
+      p.MARCA.toString().toLowerCase().includes(term) || 
+      p.CATEGORIA.toString().toLowerCase().includes(term)
+    );
+  });
+  renderProductos(filtrados);
+}
+
+/**
+ * EVOLUCIÓN: Generación de Menú Desplegable (Dropdown)
+ */
+function generarMenuCategorias(productos) {
+  // Extraemos categorías únicas del listado de productos
+  const categorias = [...new Set(productos.map(function(p) { return p.CATEGORIA; }))];
+  const dropdown = document.getElementById('category-list'); // Elemento dentro del li.dropdown
+  
+  if (!dropdown) return;
+
+  // Link "VER TODO" para resetear filtros
+  let html = '<a href="#" onclick="filtrarPorCat(\'TODOS\', event)">VER TODO</a>';
+  
+  // Generación dinámica de los links del dropdown
+  html += categorias.map(function(cat) {
+    return '<a href="#" onclick="filtrarPorCat(\'' + cat + '\', event)">' + cat.toUpperCase() + '</a>';
+  }).join('');
+  
+  dropdown.innerHTML = html;
+}
+
+/**
+ * EVOLUCIÓN: Lógica de Filtrado con ocultación de Slider
+ */
+function filtrarPorCat(cat, e) {
+  if (e) e.preventDefault();
+  const slider = document.getElementById('hero-slider');
+  
+  // Regla FOCUS: Cualquier filtro (incluyendo TODOS) oculta el slider
+  if (slider) {
+    slider.style.display = 'none'; 
+  }
+
+  if (cat === 'TODOS') {
+    renderProductos(productosGlobal);
+  } else {
+    const filtrados = productosGlobal.filter(function(p) { return p.CATEGORIA === cat; });
+    renderProductos(filtrados);
+  }
+  
+  document.getElementById('grid-productos').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Función auxiliar para móviles (clic en la palabra Categorías)
+function abrirCategorias() {
+  const dropdown = document.querySelector('.dropdown-content');
+  if (dropdown) {
+    dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+  }
+}
+
+/**
+ * MOTOR DE VITRINA Y MODAL DE DETALLES
+ */
+function renderProductos(lista) {
+  const grid = document.getElementById('grid-productos');
+  if (!grid) return;
+
+  if (lista.length === 0) {
+    grid.innerHTML = '<p class="no-results" style="grid-column: 1/-1; text-align:center; padding:50px; opacity:0.5;">No hay productos en esta órbita...</p>';
+    return;
+  }
+
+  grid.innerHTML = lista.map(function(p) {
+    const stockBajo = (Number(p.STOCK) < 5);
+    const imgUrl = p.IMAGEN_URL || 'https://i.postimg.cc/1RF0H6Ff/Logoew.png';
+    // FOCUS: Lógica de etiquetas de promoción
+    let promoLabel = '';
+    if (p.TIPO_PROMO === 'Descuento') {
+        promoLabel = `<div class="scarcity-label" style="background:var(--amber); color:black; top:45px;">OFERTA</div>`;
+    } else if (p.TIPO_PROMO === 'Regalo') {
+        promoLabel = `<div class="scarcity-label" style="background:var(--cian); color:black; top:45px;">+ REGALO</div>`;
+    }
+    return `
+      <div class="product-card" onclick="abrirDetalle('${p.SKU}')">
+        ${stockBajo ? '<div class="scarcity-label">STOCK CRÍTICO</div>' : ''}
+        ${promoLabel}
+        <img src="${imgUrl}" loading="lazy" alt="${p.NOMBRE}" onerror="this.src='https://i.postimg.cc/1RF0H6Ff/Logoew.png'">
+        <div class="more-info-btn">MÁS INFO</div>
+        <div style="padding:15px; text-align:center;">
+          <small style="color:var(--amber); font-weight:bold;">${p.MARCA}</small>
+          <div style="font-size:0.85rem; margin-top:5px; font-weight:600; color:white;">${p.NOMBRE}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+let currentImgIndex = 0;
+let currentImages = [];
+
+function abrirDetalle(sku) {
+    const p = productosGlobal.find(item => String(item.SKU).trim() === String(sku).trim());
+    if (!p) return;
+
+    registrarInteresRadar(sku); // Activamos radar de favoritos
+    
+    // Preparar imágenes
+    currentImages = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL : [p.IMAGEN_URL];
+    currentImgIndex = 0;
+
+    const detalleBody = document.getElementById('detalle-body');
+    const modal = document.getElementById('modal-detalle');
+
+    // Construcción del cuerpo (Scrollable)
+    detalleBody.innerHTML = `
+        <div class="carousel-container">
+            <img src="${currentImages[0]}" id="img-main-detail" class="carousel-img">
+            ${currentImages.length > 1 ? `
+                <button class="nav-btn prev" onclick="changeImg(-1)">&#10094;</button>
+                <button class="nav-btn next" onclick="changeImg(1)">&#10095;</button>
+            ` : ''}
+        </div>
+
+        <h2 class="cian" style="margin-bottom:5px;">${p.NOMBRE}</h2>
+<p style="color:var(--amber); font-weight:bold; font-size:1.2rem; margin-bottom:15px;">
+${(p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ? 
+    `<span class="precio-old" style="text-decoration:line-through; color:#888; font-size:0.9rem; margin-right:10px;">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>
+     <span class="precio-promo">$${(Number(p.PRECIO) - Number(p.DETALLE_PROMO)).toLocaleString('es-CL')}</span>` : 
+    `<span class="precio-promo">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>`
+}
+</p>
+${p.TIPO_PROMO === 'Regalo' ? `<p style="color:var(--cian); font-size:0.8rem; margin-top:-10px; margin-bottom:15px;"><i class="fas fa-gift"></i> Incluye regalo por tu compra</p>` : ''}
+
+        <div class="variantes-container" style="margin-bottom:20px;">
+            ${crearSelectorVariante('SABOR', p.SABOR)}
+            ${crearSelectorVariante('COLOR', p.COLOR)}
+            ${crearSelectorVariante('TAMAÑO', p.TAMANO)}
+        </div>
+
+        <p class="nave-text" style="text-align:justify; line-height:1.5; font-size:0.85rem;">
+            ${p.DESCRIPCION}
+        </p>
+    `;
+
+    // Inyección del Footer Fijo (Donde está el botón)
+    // Borramos cualquier footer previo para no duplicar
+    const oldFooter = modal.querySelector('.modal-footer-fixed');
+    if (oldFooter) oldFooter.remove();
+
+    const footer = document.createElement('div');
+    footer.className = 'modal-footer-fixed';
+    footer.innerHTML = `
+        <button class="btn-checkout" onclick="agregarConVariantes('${p.SKU}')" style="width:100%; margin:0;">
+            AÑADIR A CARRO
+        </button>
+    `;
+    modal.querySelector('.modal-content').appendChild(footer);
+
+    modal.style.display = "flex";
+}
+
+// Función auxiliar para crear los Selects
+function crearSelectorVariante(label, datos) {
+    if (!datos || datos.trim() === "") return "";
+    const opciones = datos.split(',');
+    return `
+        <div style="margin-bottom:10px;">
+            <label style="font-size:0.6rem; color:#888; display:block; margin-bottom:4px;">${label}</label>
+            <select id="var-${label.toLowerCase()}" class="nave-input" style="margin-bottom:0; font-size:0.8rem; height:35px;">
+                ${opciones.map(opt => `<option value="${opt.trim()}">${opt.trim()}</option>`).join('')}
+            </select>
+        </div>
+    `;
+}
+
+// Navegación de imágenes
+function changeImg(dir) {
+    currentImgIndex += dir;
+    if (currentImgIndex < 0) currentImgIndex = currentImages.length - 1;
+    if (currentImgIndex >= currentImages.length) currentImgIndex = 0;
+    document.getElementById('img-main-detail').src = currentImages[currentImgIndex];
+}
+
+function generarHTMLVariante(data, id) {
+  if(!data || !data.includes(':')) return '';
+  const [titulo, opciones] = data.split(':');
+  const lista = opciones.split(',');
+  return `
+    <label style="font-size:0.7rem; color:#888;">${titulo.toUpperCase()}:</label>
+    <select class="variant-select" id="var-${id}">
+      ${lista.map(opt => `<option value="${opt.trim()}">${opt.trim()}</option>`).join('')}
+    </select>
+  `;
+}
+
+function registrarInteresRadar(sku) {
+  let radar = JSON.parse(localStorage.getItem('weed_radar') || '[]');
+  // Guardamos solo los últimos 5 SKUs vistos, sin repetir
+  radar = [sku, ...radar.filter(s => s !== sku)].slice(0, 5);
+  localStorage.setItem('weed_radar', JSON.stringify(radar));
+}
+
+/**
+ * MOTOR DE CARRITO DE COMPRAS
+ */
+function toggleCart(e) {
+  
+  // 1. EL FRENO: Detiene la navegación hacia la página blanca (#)
+  if (e && e.preventDefault) e.preventDefault();
+  
+  const drawer = document.getElementById('cart-drawer');
+  if (drawer) {
+    drawer.classList.toggle('active');
+    console.log("Carrito activado/desactivado");
+  } else {
+    console.error("Error: No se encontró el contenedor cart-drawer");
+  }
+}
+
+function agregarAlCarrito(sku, variantes = "") {
+  const p = productosGlobal.find(function(x) { return x.SKU == sku; });
+  
+  // Seguro FOCUS: si no encuentra el producto, aborta para no romper la web
+  if (!p) return;
+
+  // FOCUS: Buscamos si ya existe el mismo producto CON LA MISMA VARIANTE exacta
+  const itemExistente = carrito.find(function(item) { 
+      return item.sku === sku && item.variantes === variantes; 
+  });
+
+  if (itemExistente) {
+    itemExistente.cantidad++;
+  } else {
+    // Cálculo de precio real
+    let precioFinal = (p.PRECIO_PROMO && Number(p.PRECIO_PROMO) > 0) ? Number(p.PRECIO_PROMO) : Number(p.PRECIO);
+    if (p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) {
+        precioFinal = Number(p.PRECIO) - Number(p.DETALLE_PROMO);
+    }
+    
+    carrito.push({
+      sku: p.SKU,
+      nombre: p.NOMBRE + (variantes ? " [" + variantes + "]" : ""),
+      variantes: variantes, 
+      precio: precioFinal,
+      cantidad: 1
+    });
+
+    // LÓGICA DE REGALO (Faltaba en tu función)
+    // Busca el producto regalado y lo añade a precio $0
+    if (p.TIPO_PROMO === 'Regalo' && p.DETALLE_PROMO) {
+      const regalo = productosGlobal.find(function(it) { return it.SKU === p.DETALLE_PROMO; });
+      if (regalo) {
+        carrito.push({
+          sku: regalo.SKU + "-REGALO",
+          nombre: "REGALO: " + regalo.NOMBRE,
+          variantes: "",
+          precio: 0,
+          cantidad: 1
+        });
+      }
+    }
+  }
+
+  actualizarUI();
+  cerrarModal();
+  mostrarToast("+1 " + p.NOMBRE + " en el carro");
+}
+
+function actualizarUI() {
+  const totalItems = carrito.reduce(function(sum, item) { return sum + item.cantidad; }, 0);
+  
+  // 1. Actualiza contador del menú superior
+  document.getElementById('cart-count').innerText = totalItems;
+  
+  // 2. Sincroniza burbuja flotante (Novedad FOCUS)
+  const countBubble = document.getElementById('cart-count-bubble');
+  if(countBubble) {
+    countBubble.innerText = totalItems;
+    // Ocultar si está vacío para no generar "ruido visual" innecesario
+    countBubble.style.display = totalItems > 0 ? 'flex' : 'none';
+  }
+  
+  renderCarrito();
+  actualizarTotalCarrito();
+}
+
+function renderCarrito() {
+  const container = document.getElementById('cart-items');
+  if (carrito.length === 0) {
+    container.innerHTML = '<p style="text-align:center; padding:40px; opacity:0.4;">Tu carro está vacío...</p>';
+    return;
+  }
+
+  container.innerHTML = carrito.map(function(item, index) {
+    return `
+      <div class="cart-item">
+        <div style="flex:1;">
+          <div style="font-weight:600; font-size:0.85rem; color:white;">${item.nombre}</div>
+          <small style="color:var(--cian);">$${item.precio.toLocaleString('es-CL')}</small>
+        </div>
+        <div class="cart-item-actions" style="display:flex; align-items:center; gap:8px;">
+          <button class="btn-qty" onclick="cambiarCantidad(${index}, -1)">-</button>
+          <span style="font-size:0.8rem; font-weight:bold; min-width:15px; text-align:center; color:white;">${item.cantidad}</span>
+          <button class="btn-qty" onclick="cambiarCantidad(${index}, 1)">+</button>
+          <button class="btn-del" onclick="eliminarDelCarrito(${index})"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function cambiarCantidad(index, delta) {
+  carrito[index].cantidad += delta;
+  if (carrito[index].cantidad <= 0) {
+    eliminarDelCarrito(index);
+  } else {
+    actualizarUI();
+  }
+}
+
+function eliminarDelCarrito(index) {
+  carrito.splice(index, 1);
+  actualizarUI();
+}
+
+function actualizarTotalCarrito() {
+  const subtotal = carrito.reduce(function(sum, item) { return sum + (item.precio * item.cantidad); }, 0);
+  const necesitaEnvio = document.getElementById('chk-envio').checked;
+  const costoEnvio = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
+  
+  const direccionInput = document.getElementById('direccion-envio');
+  if(direccionInput) direccionInput.style.display = necesitaEnvio ? 'block' : 'none';
+  
+  document.getElementById('cart-total-value').innerText = '$' + (subtotal + costoEnvio).toLocaleString('es-CL');
+}
+
+function vaciarCarrito() {
+    carrito = [];
+    actualizarUI();
+    console.log("Órbita despejada: Carrito vaciado con éxito.");
+}
+
+/**
+ * CIERRE DE VENTA Y WHATSAPP
+ */
+async function procesarCompra() {
+  if (carrito.length === 0) return;
+
+  // 1. Identificar el método de pago seleccionado
+  const metodoInput = document.querySelector('input[name="metodo-pago"]:checked');
+  if (!metodoInput) {
+    mostrarToast("Por favor, selecciona un método de pago.");
+    return;
+  }
+  const metodo = metodoInput.value;
+
+  // 2. Bloqueo de seguridad para Mercado Pago
+  if (metodo === 'mercadopago' && !sessionUser) {
+    mostrarToast("Para pagar con tarjeta debes iniciar sesión.");
+    mostrarAcceso(); 
+    return;
+  }
+
+  const btn = document.querySelector('.btn-checkout');
+  const originalText = btn.innerHTML;
+  btn.innerText = "PROCESANDO...";
+  btn.disabled = true;
+
+  const necesitaEnvio = document.getElementById('chk-envio').checked;
+  const subtotal = calcularSubtotal(); 
+  const envioVal = necesitaEnvio ? 3500 : 0;
+  const direccion = document.getElementById('direccion-envio').value;
+
+  if (necesitaEnvio && !direccion) {
+    alert("Por favor, ingresa tu dirección para el envío.");
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+    return;
+  }
+
+  const pedido = {
+    nombreCliente: sessionUser ? sessionUser.nombre : "Cliente Web",
+    email: sessionUser ? sessionUser.email : "N/A",
+    resumenProductos: carrito.map(i => i.nombre + " (x" + i.cantidad + ")").join(', '),
+    items: carrito,
+    subtotal: subtotal,
+    necesitaEnvio: necesitaEnvio,
+    totalFinal: subtotal + envioVal,
+    direccion: necesitaEnvio ? direccion : "Retiro en Local",
+    metodoPago: metodo
+  };
+
+  // 3. RAMIFICACIÓN DE LÓGICA (EVOLUCIONADA PARA GITHUB)
+  if (metodo === 'mercadopago') {
+    try {
+      const res = await ejecutarEnServidor("pagar", pedido);
+      if(res.success) {
+        mostrarToast("Redirigiendo a pago seguro...");
+        window.location.href = res.init_point;
+      } else {
+        mostrarToast("Error: " + res.msg);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    } catch(err) {
+      mostrarToast("Falla de conexión.");
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  } else {
+    // FLUJO TRANSFERENCIA -> WhatsApp
+    try {
+      const res = await ejecutarEnServidor("registrarPedido", pedido);
+      if(res.success || res.id) {
+        const num = (configGlobal['WHATSAPP_ADMIN'] || '569').toString().replace(/\D/g, '');
+        const msg = `🚀 *NUEVO PEDIDO ESPACIO WEED*\n📌 *ID:* ${res.id}\n---\n🛒 *Productos:* ${pedido.resumenProductos}\n💰 *Total:* $${pedido.totalFinal.toLocaleString('es-CL')}\n🚚 *Envío:* ${pedido.direccion}\n💳 *Pago:* Transferencia/Efectivo\n\n*Por favor, confírmenme el stock.*`;
+        
+        window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(msg), '_blank');
+        
+        vaciarCarrito(); 
+        toggleCart();
+        mostrarToast("¡Pedido registrado! Enviando WhatsApp...");
+        setTimeout(() => { location.reload(); }, 2000); 
+      }
+    } catch(err) {
+      mostrarToast("Error de conexión al registrar.");
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  }
+}
+
+function irWhatsApp() {
+  const num = (configGlobal['WHATSAPP_ADMIN'] || '56984569569').toString().replace(/\D/g, '');
+  const url = 'https://wa.me/' + num + '?text=' + encodeURIComponent('Hola Espacio Weed, necesito información sobre un productos.');
+  window.open(url, '_blank');
+}
+
+// CONTROL DEL SLIDER (Navegación y Automático)
+var sliderInterval; // Variable para detener el auto-play al hacer clic
+
+function iniciarAnimacionSlider() {
+  const slides = document.querySelectorAll('.slide');
+  if (slides.length <= 1) return;
+  
+  // Reiniciamos el auto-play
+  if(sliderInterval) clearInterval(sliderInterval);
+  sliderInterval = setInterval(function() {
+    cambiarSlide(1); // Avanzar automáticamente cada 5 seg
+  }, 5000);
+}
+
+function cambiarSlide(delta) {
+  const slides = document.querySelectorAll('.slide');
+  if (slides.length <= 1) return;
+
+  // Ocultamos la slide actual
+  slides[slideIndex].classList.remove('active');
+  
+  // Calculamos el nuevo índice (cíclico: si llega al final, vuelve al inicio)
+  slideIndex = (slideIndex + delta + slides.length) % slides.length;
+  
+  // Mostramos la nueva slide
+  slides[slideIndex].classList.add('active');
+  
+  // Neuro-Marketing: Si el usuario interactúa, reiniciamos el temporizador para no interrumpir su lectura.
+  reiniciarTemporizadorSlider();
+}
+
+function reiniciarTemporizadorSlider() {
+  clearInterval(sliderInterval);
+  sliderInterval = setInterval(function() {
+    cambiarSlide(1);
+  }, 8000); // Damos un poco más de tiempo (8s) tras la interacción.
+}
+
+function mostrarToast(msj) {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.innerText = msj;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+function cerrarModal() { document.getElementById('modal-detalle').style.display = 'none'; }
+/**
+ * MOTOR DE LA COMUNIDAD: CONTROL DE ACCESO
+ * Evolución: Gestión de vistas de Login, Registro y Recuperación.
+ */
+/**
+ * FUNCIÓN: MOSTRAR ACCESO INTELIGENTE
+ * Decide si mostrar el Login o el Dashboard según el estado de la sesión.
+ */
+function mostrarAcceso(e) {
+    if (e) e.preventDefault();
+    
+    const portal = document.getElementById('comunidad-portal');
+    if (!portal) return console.error("Error: Portal de comunidad no encontrado.");
+
+    portal.style.display = 'flex';
+
+    // EL SENSOR: Si ya hay sesión, saltamos directo al Dashboard
+    if (sessionUser) {
+        console.log("Usuario detectado. Abriendo Dashboard directamente...");
+        cargarDashboard(); 
+    } else {
+        console.log("Navegante anónimo. Abriendo Login...");
+        cambiarVistaComunidad('login');
+    }
+}
+
+function cerrarComunidad() {
+    const portal = document.getElementById('comunidad-portal');
+    if(portal) portal.style.display = 'none';
+}
+
+// Cierre táctil: si el usuario hace clic fuera de la tarjeta, vuelve a la expedición
+window.onclick = function(event) {
+    const portal = document.getElementById('comunidad-portal');
+    const modal = document.getElementById('modal-detalle');
+    
+    if (event.target == portal) cerrarComunidad();
+    if (event.target == modal) cerrarModal();
+}
+
+/**
+ * FUNCIÓN QUIRÚRGICA: VOLVER AL INICIO
+ * Propósito: Limpiar filtros, buscador y restaurar el Hero-Slider.
+ */
+function volverInicio(e) {
+    // 1. Freno de seguridad: evita que el enlace '#' intente navegar
+    if (e) e.preventDefault();
+
+    console.log("Reseteando órbita: Volviendo al estado inicial...");
+
+    // 2. Restaurar el Hero-Slider (Destacados)
+    const slider = document.getElementById('hero-slider');
+    if (slider) {
+        slider.style.display = 'flex';
+        // Reiniciamos la animación por si estaba pausada
+        iniciarAnimacionSlider();
+    }
+
+    // 3. Limpiar el cuadro de búsqueda
+    const searchInput = document.getElementById('main-search');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+
+    // 4. Renderizar la vitrina completa con todos los productos
+    if (productosGlobal && productosGlobal.length > 0) {
+        renderProductos(productosGlobal);
+    }
+
+    // 5. Feedback visual: subida suave a la cima de la expedición
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+
+    // 6. Notificación sutil al usuario
+    mostrarToast("¡De vuelta a la base!");
+}
+
+async function ejecutarLogin() {
+  const email = document.getElementById('login-email').value;
+  const pass = document.getElementById('login-pass').value;
+
+  if (!email || !pass) return mostrarToast("Ingresa tus coordenadas de acceso.");
+
+  mostrarToast("Verificando coordenadas...");
+
+  try {
+    const res = await ejecutarEnServidor("login", { email: email, pass: pass });
+    if(res.success) {
+      sessionUser = res.user;
+      localStorage.setItem('weed_session', JSON.stringify(res.user));
+      cargarDashboard();
+    } else {
+      mostrarToast(res.msg);
+    }
+  } catch(e) {
+    mostrarToast("Error de conexión al ingresar.");
+  }
+}
+
+async function ejecutarRegistro() {
+  const datos = {
+    nombre: document.getElementById('reg-nombre').value,
+    email: document.getElementById('reg-email').value,
+    pass: document.getElementById('reg-pass').value,
+    passConf: document.getElementById('reg-pass-conf').value,
+    pregunta: document.getElementById('reg-pregunta').value,
+    respuesta: document.getElementById('reg-respuesta').value
+  };
+
+  if (!datos.nombre || !datos.email || !datos.pass) {
+    return mostrarToast("Faltan datos en el radar.");
+  }
+
+  if(datos.pass !== datos.passConf) {
+    return mostrarToast("Las claves no coinciden.");
+  }
+
+  mostrarToast("Inyectando datos a la Comunidad...");
+
+  try {
+    const res = await ejecutarEnServidor("registrarUsuario", datos);
+    mostrarToast(res.msg);
+    if(res.success) {
+      cambiarVistaComunidad('login');
+    }
+  } catch(e) {
+    mostrarToast("Error de conexión al registrarte.");
+  }
+}
+
+var sugIndex = 0;
+
+async function cargarDashboard() {
+  cambiarVistaComunidad('dashboard');
+
+  // Sincronización de Identidad
+  const linkAvatar = (sessionUser && sessionUser.avatar) ? sessionUser.avatar : 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Space1';
+  if (document.getElementById('user-avatar')) document.getElementById('user-avatar').src = linkAvatar;
+  document.getElementById('user-name-display').innerText = sessionUser.nombre;
+
+  // --- ESCÁNER DE RANGO ---
+  const toolsGrid = document.querySelector('.tools-grid');
+  if (sessionUser && sessionUser.rol === "Admin") {
+    console.log("¡Rango Admin Detectado!");
+    let btnAdmin = document.getElementById('btn-admin-portal');
+    if(!btnAdmin) {
+      btnAdmin = document.createElement('button');
+      btnAdmin.id = 'btn-admin-portal';
+      btnAdmin.className = 'tool-btn';
+      btnAdmin.style.borderColor = 'var(--amber)';
+      btnAdmin.style.color = 'var(--amber)';
+      btnAdmin.innerHTML = '<i class="fas fa-user-shield"></i> PANEL ADMIN';
+      btnAdmin.onclick = function() {
+        // CORRECCIÓN GITHUB: Ahora abre tu archivo admin.html físico
+        window.open("admin.html", "_blank"); 
+      };
+      toolsGrid.appendChild(btnAdmin);
+    }
+  }
+
+  // --- LÓGICA DE RADAR VS SUGERENCIAS (MANTENIDA) ---
+  const radarSkus = JSON.parse(localStorage.getItem('weed_radar') || '[]');
+  const titulo = document.getElementById('titulo-sugerencias');
+
+  try {
+    if (radarSkus.length > 0) {
+      if(titulo) titulo.innerText = "CONTINUAR VIENDO...";
+      const productosRadar = await ejecutarEnServidor("obtenerProductosPorLista", { skus: radarSkus });
+      renderRadar(productosRadar);
+    } else {
+      if(titulo) titulo.innerText = "SUGERENCIAS PARA TI";
+      const dataDash = await ejecutarEnServidor("getDashboardData", { email: sessionUser.email });
+      renderSugerenciasDinamicas(dataDash);
+    }
+  } catch (err) {
+    console.error("Falla de radar/sugerencias:", err);
+  }
+}
+
+function iniciarAutoSugerencias(total) {
+    setInterval(() => {
+        sugIndex = (sugIndex + 1) % total;
+        irASugerencia(sugIndex);
+    }, 4000);
+}
+
+function irASugerencia(index) {
+    sugIndex = index;
+    document.querySelectorAll('.sugerencia-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.dot').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById('sug-' + index).classList.add('active');
+    document.querySelectorAll('.dot')[index].classList.add('active');
+}
+
+function cambiarVistaComunidad(vista, e) {
+    if (e) e.preventDefault();
+
+    // 1. APAGÓN TOTAL: Ocultamos todas las secciones posibles
+    const secciones = ['login-section', 'registro-section', 'recuperar-section', 'dashboard-section', 'perfil-section', 'pagos-section', 'historial-section', 'buzon-section'];
+    secciones.forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // 2. ENCENDIDO ÚNICO: Mostramos solo la solicitada
+    const destino = document.getElementById(vista + '-section');
+    if (destino) {
+        destino.style.display = 'block';
+        console.log("Cambiando vista a: " + vista);
+    } else {
+        console.error("Error: No se encontró la sección " + vista + "-section");
+    }
+
+    if (vista === 'perfil') generarListaAvatares();
+}
+
+function generarListaAvatares() {
+    const container = document.getElementById('avatar-list');
+    if(!container) return;
+    let html = '';
+    for(let i=1; i<=20; i++) {
+        const url = 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Space' + i;
+        html += '<img src="' + url + '" class="avatar-opt" onclick="seleccionarAvatar(\'' + url + '\')">';
+    }
+    container.innerHTML = html;
+}
+
+function logout() {
+    localStorage.removeItem('weed_session');
+    sessionUser = null;
+    cambiarVistaComunidad('login');
+    actualizarInterfazSesion();
+}
+
+/**
+ * LÓGICA DE RECUPERACIÓN DE CONTRASEÑA
+ */
+async function buscarPregunta() {
+  const email = document.getElementById('recover-email').value;
+  if (!email) return mostrarToast("Ingresa un email para rastrear.");
+
+  mostrarToast("Buscando explorador...");
+
+  try {
+    const res = await ejecutarEnServidor("obtenerPreguntaSeguridad", { email: email });
+    if (res.success) {
+      // Mostramos la pregunta y pasamos al paso 2
+      document.getElementById('display-pregunta').innerText = "PREGUNTA: " + res.pregunta;
+      document.getElementById('recover-step-1').style.display = 'none';
+      document.getElementById('recover-step-2').style.display = 'block';
+      mostrarToast("Pregunta encontrada.");
+    } else {
+      mostrarToast(res.msg);
+    }
+  } catch (err) {
+    mostrarToast("Falla de conexión con la base de datos.");
+  }
+}
+
+async function validarRespuesta() {
+  const email = document.getElementById('recover-email').value;
+  const respuesta = document.getElementById('recover-respuesta').value;
+
+  if (!respuesta) return mostrarToast("Escribe la respuesta.");
+
+  mostrarToast("Generando nuevas coordenadas...");
+
+  try {
+    const res = await ejecutarEnServidor("validarRespuestaSeguridad", { email: email, respuesta: respuesta });
+    if (res.success) {
+      // FEEDBACK MODERNO: Sin alerts feos
+      mostrarToast("🚀 ¡Clave enviada con éxito! Revisa tu correo.");
+
+      // Esperamos 3 segundos para que lea el mensaje y volvemos al login
+      setTimeout(function() {
+        cambiarVistaComunidad('login');
+        // Limpiamos todo
+        document.getElementById('recover-step-1').style.display = 'block';
+        document.getElementById('recover-step-2').style.display = 'none';
+        document.getElementById('recover-email').value = '';
+        document.getElementById('recover-respuesta').value = '';
+      }, 3000);
+    } else {
+      mostrarToast(res.msg);
+    }
+  } catch (err) {
+    mostrarToast("Falla de validación en red.");
+  }
+}
+
+/**
+ * MOTOR DE PERFIL: CARGA Y AVATARES
+ */
+function abrirPerfil() {
+    // Reemplaza dashboard por perfil
+    cambiarVistaComunidad('perfil');
+    
+    if(sessionUser) {
+        document.getElementById('edit-nombre').value = sessionUser.nombre;
+        document.getElementById('edit-email').value = sessionUser.email;
+        document.getElementById('edit-pregunta').value = sessionUser.pregunta || "¿Nombre de tu mascota?";
+        document.getElementById('edit-respuesta').value = sessionUser.respuesta || "";
+    }
+}
+
+function generarListaAvatares() {
+    const container = document.getElementById('avatar-list');
+    if (!container) return;
+    
+    let html = '';
+    for (let i = 1; i <= 20; i++) {
+        const url = 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Space' + i;
+        // Si es el que ya tiene el usuario, le ponemos borde neón
+        const clase = (sessionUser.avatar === url) ? 'avatar-opt seleccionado' : 'avatar-opt';
+        html += '<img src="' + url + '" class="' + clase + '" onclick="seleccionarAvatar(\'' + url + '\', event)">';
+    }
+    container.innerHTML = html;
+}
+
+function seleccionarAvatar(url) {
+    // Feedback visual inmediato
+    const todos = document.querySelectorAll('.avatar-opt');
+    todos.forEach(img => img.style.borderColor = 'transparent');
+    event.target.style.borderColor = 'var(--neon-green)';
+    
+    // Guardamos temporalmente la elección
+    avatarTemporal = url; 
+    mostrarToast("Identidad visual seleccionada.");
+}
+
+var avatarTemporal = "";
+
+async function guardarCambiosPerfil() {
+  // Verificamos que tengamos al usuario en memoria
+  if (!sessionUser) return mostrarToast("Error: Sesión no encontrada.");
+
+  const datos = {
+    email: sessionUser.email,
+    nombre: document.getElementById('edit-nombre').value,
+    pregunta: document.getElementById('edit-pregunta').value,
+    respuesta: document.getElementById('edit-respuesta').value,
+    avatar: avatarTemporal || sessionUser.avatar
+  };
+
+  mostrarToast("Sincronizando coordenadas...");
+
+  try {
+    // FOCUS: Reemplazo exacto del motor manteniendo tu objeto 'datos'
+    const res = await ejecutarEnServidor("actualizarDatosPerfil", datos);
+    
+    if (res.success) {
+      // Actualizamos los datos en el navegador para que el cambio sea instantáneo
+      sessionUser.nombre = datos.nombre;
+      sessionUser.avatar = datos.avatar;
+      
+      // Persistencia en memoria local
+      localStorage.setItem('weed_session', JSON.stringify(sessionUser));
+
+      mostrarToast("¡Perfil actualizado con éxito!");
+
+      // Volvemos automáticamente al dashboard para ver el cambio
+      setTimeout(function() {
+        cambiarVistaComunidad('dashboard');
+        document.getElementById('user-avatar').src = sessionUser.avatar;
+        document.getElementById('user-name-display').innerText = sessionUser.nombre;
+      }, 1500);
+    } else {
+      mostrarToast("Error en el servidor: " + res.msg);
+    }
+  } catch (err) {
+    mostrarToast("Falla de conexión: " + err);
+  }
+}
+    
+function mostrarPagos(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const modal = document.getElementById('modal-pagos-unique');
+
+  if (modal) {
+    // Unimos el Nombre del Banco y el Tipo de Cuenta en una sola línea
+    const bancoCompleto = (configGlobal['BANCO_NOMBRE'] || '---') + " (" + (configGlobal['BANCO_TIPO'] || '---') + ")";
+    
+    document.getElementById('ind-pago-banco').innerText = bancoCompleto;
+    document.getElementById('ind-pago-rut').innerText = configGlobal['BANCO_RUT'] || '---';
+    document.getElementById('ind-pago-numero').innerText = configGlobal['BANCO_NUMERO'] || '---';
+    document.getElementById('ind-pago-email').innerText = configGlobal['BANCO_CORREO'] || '---';
+
+    modal.style.display = 'flex';
+  }
+}
+
+function cerrarModalPagos() {
+    document.getElementById('modal-pagos-unique').style.display = 'none';
+}
+
+/**
+ * FUNCIÓN: VOLVER AL INICIO DESDE DASHBOARD
+ * Cierra la Nave y actualiza el saludo en la pantalla principal.
+ */
+function volverInicioDesdeDashboard(e) {
+    if (e) e.preventDefault();
+    
+    // 1. Cerramos el portal de comunidad
+    cerrarComunidad();
+    
+    // 2. Ejecutamos la actualización de la interfaz principal
+    actualizarInterfazSesion();
+    
+    // 3. Feedback visual
+    mostrarToast("¡Bienvenido de vuelta a la expedición, " + sessionUser.nombre.split(' ')[0] + "!");
+}
+
+/**
+ * FUNCIÓN: ACTUALIZAR INTERFAZ SESIÓN
+ * Muestra u oculta el nombre del usuario en la barra superior de la web.
+ */
+function actualizarInterfazSesion() {
+    const welcomeCard = document.getElementById('user-welcome-card');
+    const nameSpan = document.getElementById('main-user-name');
+    
+    // Buscamos el enlace del menú por su función onclick
+    const accesoLink = document.querySelector('a[onclick="mostrarAcceso(event)"]');
+    
+    if (sessionUser) {
+        // 1. Mostrar cápsula de bienvenida en el TopBar
+        if (welcomeCard) welcomeCard.style.display = 'flex';
+        if (nameSpan) nameSpan.innerText = "EXPLORADOR: " + sessionUser.nombre.toUpperCase();
+        
+        // 2. Cambiar etiqueta del Menú a MI PANEL
+        if (accesoLink) accesoLink.innerHTML = 'MI PANEL <i class="fas fa-user-check" style="font-size:0.6rem; margin-left:5px;"></i>';
+    } else {
+        // 3. Resetear si no hay sesión
+        if (welcomeCard) welcomeCard.style.display = 'none';
+        if (accesoLink) accesoLink.innerText = "ACCESO";
+    }
+}
+
+/**
+ * MOTOR DE HISTORIAL DE EXPEDICIONES
+ * Renderiza los últimos 10 carritos con lógica de estados y re-compra.
+ */
+async function mostrarHistorial() {
+  if (!sessionUser) return;
+  
+  // 1. CORRECCIÓN FOCUS: Cambiamos la vista para que el cliente VEA la pantalla
+  cambiarVistaComunidad('historial');
+  
+  // 2. CORRECCIÓN FOCUS: El ID exacto que tienes en tu HTML (Línea 1267)
+  const container = document.getElementById('lista-historial');
+  if (!container) return;
+
+  container.innerHTML = "<div class='loading-spinner-small'></div><p style='text-align:center; font-size:0.8rem;'>Rastreando registros pasados...</p>";
+
+  try {
+    const res = await ejecutarEnServidor("obtenerHistorial", { email: sessionUser.email });
+
+    if (res && res.length > 0) {
+      // 3. CORRECCIÓN FOCUS: Usar las variables exactas que devuelve tu Codigo.gs (Líneas 4824-4828)
+      container.innerHTML = res.map(v => `
+        <div class="historial-item" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border: 1px solid var(--glass);">
+          <div class="h-info" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span class="h-id" style="color:var(--cian); font-weight:bold; font-size: 0.85rem;">${v.skuMaestro}</span>
+            <span class="h-date" style="color:#888; font-size: 0.7rem;">${v.fecha}</span>
+          </div>
+          <div class="h-details" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="h-total" style="font-family:var(--font-brand); font-size: 1.1rem; color:var(--amber);">$${Number(v.total).toLocaleString('es-CL')}</div>
+            <div class="h-status" style="font-size: 0.75rem; font-weight: bold; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px;">${v.estado}</div>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      container.innerHTML = `
+        <div style="text-align:center; padding:30px; color:#555;">
+          <i class="fas fa-box-open" style="font-size:2rem; margin-bottom:10px; opacity:0.3;"></i>
+          <p>Aún no has realizado compras en esta dimensión.</p>
+        </div>`;
+    }
+  } catch (e) {
+    console.error("Falla en el historial:", e);
+    container.innerHTML = "<p style='color:var(--amber); text-align:center;'>Error al conectar con la base de datos.</p>";
+  }
+}
+
+// LA FUNCIÓN MÁGICA: Desglosa el SKU Maestro y llena el carrito real
+function recomprarDesdeSKUMaestro(receta) {
+    if(!receta || receta.length === 0) return;
+    
+    mostrarToast("Inyectando suministros al carrito...");
+    
+    receta.forEach(item => {
+        // Buscamos el producto por su SKU original ('s') e insertamos según cantidad ('q')
+        for(let i = 0; i < item.q; i++) {
+            agregarAlCarrito(item.s);
+        }
+    });
+
+    cerrarComunidad();
+    toggleCart();
+    mostrarToast("¡Carrito reconstruido con éxito!");
+}
+
+function mostrarBuzon() {
+    cambiarVistaComunidad('buzon');
+    // FOCUS: Cargamos los mensajes inmediatamente al entrar
+    cargarChat();
+    
+    // Contador de caracteres dinámico (Línea 2262)
+    setTimeout(() => {
+        const input = document.getElementById('msg-input');
+        if(input) {
+            input.oninput = function() {
+                document.getElementById('char-count').innerText = this.value.length + "/250";
+            };
+        }
+    }, 50);
+}
+
+async function cargarChat() {
+  if (!sessionUser) return;
+  const container = document.getElementById('chat-messages');
+  if (!container) return;
+
+  try {
+    // FOCUS: Petición al servidor mediante el nuevo motor fetch
+    const res = await ejecutarEnServidor("obtenerMensajes", { email: sessionUser.email });
+    
+    if (res && res.length > 0) {
+      container.innerHTML = res.map(m => `
+        <div class="message ${m.EMISOR === 'ADMIN' ? 'admin' : 'user'}">
+          <div class="msg-bubble">${m.MENSAJE}</div>
+          <div class="msg-time">${m.FECHA}</div>
+        </div>
+      `).join('');
+      // FOCUS: Micro-pausa para asegurar que el HTML se dibujó antes de bajar
+      setTimeout(() => { container.scrollTop = container.scrollHeight; }, 100);
+    } else {
+      container.innerHTML = '<p style="text-align:center; color:#666; font-size:0.8rem; margin-top:20px;">No hay transmisiones aún. ¡Inicia el contacto!</p>';
+    }
+  } catch (e) {
+    console.error("Error en el sensor de mensajes:", e);
+  }
+}
+
+async function ejecutarEnvioMensaje() {
+  const input = document.getElementById('msg-input');
+  if(!input) return;
+  const msg = input.value.trim();
+  if(!msg || !sessionUser) return;
+
+  // FOCUS: Bloqueo visual para evitar doble envío
+  input.disabled = true;
+  input.placeholder = "Transmitiendo...";
+
+  try {
+    const res = await ejecutarEnServidor("enviarMensaje", { emisor: sessionUser.email, mensaje: msg });
+    if(res.success) {
+      input.value = '';
+      input.disabled = false;
+      input.placeholder = "Escribe tu mensaje...";
+      document.getElementById('char-count').innerText = "0/250";
+      // FOCUS: Recargamos el chat para ver nuestro propio mensaje enviado
+      cargarChat();
+    }
+  } catch(e) {
+    console.error("Error al enviar msj:", e);
+    input.disabled = false;
+    input.placeholder = "Error. Intenta de nuevo.";
+  }
+}
+
+function calcularSubtotal() {
+    return carrito.reduce((sum, item) => sum + (Number(item.precio) * item.cantidad), 0);
+}
+
+/**
+ * SENSOR DE RETORNO DE MERCADO PAGO (SENSOR FOCUS)
+ */
+window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    const paymentId = urlParams.get('payment_id');
+    const externalRef = urlParams.get('external_reference');
+
+    if (status === 'approved' && paymentId && externalRef) {
+        // Esta función llama al WhatsApp con el link del comprobante
+        enviarWhatsAppPostPago(externalRef, paymentId);
+    }
+});
+
+function enviarWhatsAppPostPago(idPedido, idTransaccion) {
+    const num = (configGlobal['WHATSAPP_ADMIN'] || '569').toString().replace(/\D/g, '');
+    const comprobanteUrl = "https://www.mercadopago.cl/payments/" + idTransaccion + "/receipt";
+    const msg = "🚀 *¡PAGO CONFIRMADO ESPACIO WEED!*\n\n📌 *ID Pedido:* " + idPedido + "\n🧾 *Comprobante:* " + comprobanteUrl + "\n\n*Hola, acabo de pagar. Coordinemos el retiro/envío.*";
+    
+    mostrarToast("¡Pago detectado! Abriendo WhatsApp...");
+    setTimeout(() => {
+        window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(msg), '_blank');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }, 2000);
+}
+
+// --- LÓGICA MÓDULO SOPORTE ---
+function abrirSoporte() { 
+  const modal = document.getElementById('modal-soporte');
+  modal.style.display = 'flex'; // Cambiamos 'block' por 'flex' para centrado perfecto
+}
+function cerrarSoporte() { document.getElementById('modal-soporte').style.display = 'none'; }
+
+function enviarSolicitudSoporte() {
+  const mensaje = document.getElementById('soporte-mensaje').value;
+  const fileInput = document.getElementById('soporte-adjunto');
+  const btn = document.getElementById('btn-envio-soporte');
+
+  if (!mensaje.trim()) return mostrarToast("Escribe tu duda primero.");
+
+  btn.disabled = true;
+  btn.innerText = "PROCESANDO SEÑAL...";
+
+  let archivoData = null;
+  if (fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    if (file.size > 4 * 1024 * 1024) {
+      btn.disabled = false;
+      btn.innerText = "ENVIAR SOLICITUD";
+      return mostrarToast("La imagen es muy pesada (Máx 4MB)");
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      archivoData = {
+        base64: e.target.result.split(',')[1],
+        type: file.type,
+        name: file.name
+      };
+      ejecutarEnvioFinal(mensaje, archivoData);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    ejecutarEnvioFinal(mensaje, null);
+  }
+}
+
+async function ejecutarEnvioFinal(msg, adjunto) {
+  try {
+    const res = await ejecutarEnServidor("enviarCorreoSoporte", { msg: msg, adjunto: adjunto });
+    mostrarToast("🚀 Solicitud enviada al Centro de Mando.");
+    cerrarSoporte();
+    document.getElementById('soporte-mensaje').value = "";
+    document.getElementById('soporte-adjunto').value = "";
+    document.getElementById('btn-envio-soporte').disabled = false;
+    document.getElementById('btn-envio-soporte').innerText = "ENVIAR SOLICITUD";
+  } catch (err) {
+    mostrarToast("Falla de conexión al enviar la solicitud.");
+    document.getElementById('btn-envio-soporte').disabled = false;
+    document.getElementById('btn-envio-soporte').innerText = "ENVIAR SOLICITUD";
+  }
+}
+
+async function renderRadar(productos) {
+  const wrapper = document.getElementById('wrapper-sugerencias');
+  if (!wrapper) return;
+
+  // Si no hay productos en el radar, cargamos las sugerencias generales
+  if (!productos || productos.length === 0) {
+    try {
+      // CORRECCIÓN FOCUS: Cambio a ejecutarEnServidor
+      const dataDash = await ejecutarEnServidor("getDashboardData", { email: sessionUser.email });
+      renderSugerenciasDinamicas(dataDash);
+    } catch (err) {
+      console.error("Error al cargar sugerencias:", err);
+    }
+    return;
+  }
+
+  document.getElementById('titulo-sugerencias').innerText = "CONTINUAR VIENDO...";
+
+  wrapper.innerHTML = productos.map((p, i) => `
+  <div class="sugerencia-item ${i === 0 ? 'active' : ''}" id="sug-${i}">
+    <img src="${p.IMAGEN_URL}" class="img-sug">
+    <div class="info-sug">
+      <span class="badge-desc">VISTO RECIENTEMENTE</span>
+      <div style="font-size:0.8rem; font-weight:bold; color:white; margin:5px 0;">${p.NOMBRE}</div>
+      <div class="cian" style="font-weight:bold; margin-top:5px;">$${Number(p.PRECIO).toLocaleString('es-CL')}</div>
+      <button class="btn-buy-now" style="font-size:0.5rem; padding:5px 10px; margin-top:5px;"
+      onclick="agregarAlCarrito('${p.SKU}')">AÑADIR</button>
+    </div>
+  </div>
+  `).join('');
+}
+
+/**
+ * FUNCIÓN: cargarChatAdmin
+ * Esta función es solo para Diego. Carga TODOS los mensajes de la hoja BUZON.
+ */
+async function cargarChatAdmin() {
+  try {
+    // CORRECCIÓN FOCUS: Cambio a ejecutarEnServidor
+    const todosLosMensajes = await ejecutarEnServidor("obtenerTodosLosMensajes");
+    
+    const chatBox = document.getElementById('chat-box');
+    if(!chatBox) return;
+
+    chatBox.innerHTML = todosLosMensajes.map(m => `
+    <div style="margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">
+      <small style="color:var(--amber);">${m.emisor} -> ${m.receptor}</small>
+      <p style="font-size:0.75rem; margin:2px 0;">${m.mensaje}</p>
+      <button onclick="prepararRespuesta('${m.emisor}')" style="font-size:0.5rem; background:var(--cian); border:none; padding:2px 5px; cursor:pointer;">RESPONDER</button>
+    </div>
+    `).join('');
+  } catch (err) {
+    console.error("Error al cargar chat admin", err);
+  }
+}
+    
+function prepararRespuesta(clienteEmail) {
+    document.getElementById('msg-input').value = "@" + clienteEmail + " ";
+    document.getElementById('msg-input').focus();
+}
+
+/**
+ * FUNCIÓN: renderSugerenciasDinamicas
+ * Propósito: Dibujar las sugerencias generales cuando el Radar no tiene datos.
+ * Ubicación: Fallback de cargarDashboard()
+ */
+function renderSugerenciasDinamicas(res) {
+    const wrapper = document.getElementById('wrapper-sugerencias');
+    const dots = document.getElementById('dots-sugerencias');
+    
+    if (!wrapper || !res || !res.sugerencias) {
+        console.error("Falla en la señal: No hay datos de sugerencias.");
+        return;
+    }
+
+    // 1. Renderizar los productos sugeridos
+    wrapper.innerHTML = res.sugerencias.map((s, i) => `
+        <div class="sugerencia-item ${i === 0 ? 'active' : ''}" id="sug-${i}">
+            <img src="${s.img}" class="img-sug">
+            <div class="info-sug">
+                <span class="badge-desc">${s.descuentoEtiqueta || 'DESTACADO'}</span>
+                <div style="font-size:0.8rem; font-weight:bold; color:white; margin:5px 0;">${s.nombre}</div>
+                <div class="cian" style="font-weight:bold; margin-top:5px;">$${Number(s.precioEspecial).toLocaleString('es-CL')}</div>
+                <button class="btn-buy-now" style="font-size:0.5rem; padding:5px 10px; margin-top:5px;" 
+                        onclick="agregarAlCarrito('${s.sku}')">AÑADIR</button>
+            </div>
+        </div>
+    `).join('');
+
+    // 2. Renderizar los indicadores (dots)
+    if (dots) {
+        dots.innerHTML = res.sugerencias.map((_, i) => `
+            <div class="dot ${i === 0 ? 'active' : ''}" onclick="irASugerencia(${i})"></div>
+        `).join('');
+    }
+
+    // 3. Iniciar el movimiento automático (Si tienes la función definida)
+    if (typeof iniciarAutoSugerencias === "function") {
+        iniciarAutoSugerencias(res.sugerencias.length);
+    }
+}
+
+function renderSugerenciasDinamicas(res) {
+    const wrapper = document.getElementById('wrapper-sugerencias');
+    const dots = document.getElementById('dots-sugerencias');
+    if (!wrapper || !res || !res.sugerencias) return;
+
+    wrapper.innerHTML = res.sugerencias.map((s, i) => `
+        <div class="sugerencia-item ${i === 0 ? 'active' : ''}" id="sug-${i}">
+            <img src="${s.img}" class="img-sug">
+            <div class="info-sug">
+                <span class="badge-desc">${s.descuentoEtiqueta || 'DESTACADO'}</span>
+                <div style="font-size:0.8rem; font-weight:bold; color:white; margin:5px 0;">${s.nombre}</div>
+                <div class="cian" style="font-weight:bold; margin-top:5px;">$${Number(s.precioEspecial).toLocaleString('es-CL')}</div>
+                <button class="btn-buy-now" style="font-size:0.5rem; padding:5px 10px; margin-top:5px;" 
+                        onclick="agregarAlCarrito('${s.sku}')">AÑADIR</button>
+            </div>
+        </div>
+    `).join('');
+
+    if (dots) {
+        dots.innerHTML = res.sugerencias.map((_, i) => `
+            <div class="dot ${i === 0 ? 'active' : ''}" onclick="irASugerencia(${i})"></div>
+        `).join('');
+    }
+}
+
+function agregarConVariantes(sku) {
+    const sabor = document.getElementById('var-sabor') ? document.getElementById('var-sabor').value : '';
+    const color = document.getElementById('var-color') ? document.getElementById('var-color').value : '';
+    const tamano = document.getElementById('var-tamaño') ? document.getElementById('var-tamaño').value : '';
+
+    // Creamos una nota con las variantes
+    let variantesStr = [sabor, color, tamano].filter(v => v !== "").join(' | ');
+    
+    // Llamamos a tu función original de agregar al carrito
+    // Pero le pasamos el SKU y las variantes (puedes ajustar tu función para recibir esto)
+    agregarAlCarrito(sku, variantesStr); 
+    
+    cerrarModal();
+    mostrarToast("PRODUCTO AÑADIDO CON ÉXITO");
+}
+
+function renderSocialIcons() {
+  const container = document.getElementById('social-icons-container');
+  if (!container) return;
+
+  const redes = [
+    { key: 'LINK_INSTAGRAM', icon: 'fab fa-instagram' },
+    { key: 'LINK_FACEBOOK', icon: 'fab fa-facebook' },
+    { key: 'LINK_YOUTUBE', icon: 'fab fa-youtube' },
+    { key: 'LINK_TIKTOK', icon: 'fab fa-tiktok' }
+  ];
+
+  container.innerHTML = redes.map(red => {
+    const link = configGlobal[red.key];
+    // Si hay un link guardado, pinta el icono. Si está vacío, no pinta nada.
+    if (link && link.trim() !== "") {
+      return `<a href="${link}" target="_blank" style="color:white; margin-left:15px; font-size:1.1rem; transition:0.3s;" onmouseover="this.style.color='var(--cian)'" onmouseout="this.style.color='white'"><i class="${red.icon}"></i></a>`;
+    }
+    return '';
+  }).join('');
+}
+
+/**
+ * SENSOR DE ANUNCIO EMERGENTE (FOCUS)
+ * Dispara instantáneamente para cubrir el tiempo de carga del catálogo.
+ */
+function verificarAnuncio() {
+    const txt = configGlobal['ANUNCIO_TEXTO'];
+    const img = configGlobal['ANUNCIO_IMAGEN'];
+
+    // Si hay datos en el Excel (Config), armamos y disparamos
+    if ((txt && txt.trim() !== "") || (img && img.trim() !== "")) {
+        const modal = document.getElementById('modal-anuncio');
+        const pTxt = document.getElementById('anuncio-texto');
+        const pImg = document.getElementById('anuncio-img');
+
+        if (txt && txt.trim() !== "") {
+            pTxt.innerText = txt;
+            pTxt.style.display = 'block';
+        }
+
+        if (img && img.trim() !== "") {
+            pImg.src = img;
+            pImg.style.display = 'block';
+        }
+
+        // Ejecución inmediata, sin esperas.
+        modal.style.display = 'flex';
+    }
+}
+
+</script>
+</body>
+</html>

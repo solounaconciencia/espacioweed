@@ -1180,36 +1180,20 @@ select.nave-input {
 
 @keyframes aparecer { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @media (min-width: 768px) { .modal-body-ubic { flex-direction: row; } }
-/* --- AJUSTES QUIRÚRGICOS: VIDEO Y MAPA --- */
-/* El parche que oculta el botón de Drive */
+/* --- AJUSTES QUIRÚRGICOS: VIDEO Y MAPA (CORREGIDO) --- */
 .parche-drive {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 60px;
-    height: 60px;
-    background: #000; /* Se camufla con el fondo del video */
-    z-index: 10;
+    position: absolute; top: 0; right: 0; width: 50px; height: 50px;
+    background: #000; z-index: 10;
 }
 
-/* En celulares (se apilan y el video se centra) */
-.caja-video {
-    margin: 0 auto;
-    max-width: 250px; /* Fuerza la forma vertical en el celular */
-    width: 100%;
-}
-
-/* En PC: El mapa toma más espacio, el video se ajusta a su proporción vertical real */
+/* Restauramos el equilibrio 50/50 para evitar desproporciones */
 @media (min-width: 768px) {
     .modal-body-ubic { 
         flex-direction: row; 
     }
-    .caja-mapa { 
-        flex: 2; /* El mapa crece al doble */
-    }
-    .caja-video { 
-        flex: 1; /* El video se restringe a su forma natural vertical */
-        max-width: 220px; 
+    .caja-mapa, .caja-video { 
+        flex: 1; /* Ambos toman el mismo espacio */
+        max-width: none; 
         margin: 0;
     }
 }
@@ -1436,6 +1420,19 @@ select.nave-input {
         const btnAbrirUbic = document.getElementById("btn-ubicacion");
         const btnCerrarUbic = document.getElementById("close-ubicacion");
 
+        // FUNCIÓN KILL SWITCH: Oculta la ventana y recarga los iframes para matar el audio
+        function apagarYcerrarModal() {
+            if(modalUbic) {
+                modalUbic.style.display = "none";
+                // Busca el video y el mapa, y los reinicia silenciosamente
+                const iframes = modalUbic.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    let srcOriginal = iframe.src;
+                    iframe.src = srcOriginal; 
+                });
+            }
+        }
+
         if (btnAbrirUbic) {
             btnAbrirUbic.addEventListener("click", function(e) {
                 e.preventDefault();
@@ -1443,16 +1440,15 @@ select.nave-input {
             });
         }
 
+        // Al hacer clic en la X
         if (btnCerrarUbic) {
-            btnCerrarUbic.addEventListener("click", function() {
-                modalUbic.style.display = "none";
-            });
+            btnCerrarUbic.addEventListener("click", apagarYcerrarModal);
         }
 
-        // Cierra el modal si haces clic en lo oscuro afuera
+        // Al hacer clic afuera en lo oscuro
         window.addEventListener("click", function(e) {
             if (e.target === modalUbic) {
-                modalUbic.style.display = "none";
+                apagarYcerrarModal();
             }
         });
     });

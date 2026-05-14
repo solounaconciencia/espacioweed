@@ -1180,6 +1180,39 @@ select.nave-input {
 
 @keyframes aparecer { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @media (min-width: 768px) { .modal-body-ubic { flex-direction: row; } }
+/* --- AJUSTES QUIRÚRGICOS: VIDEO Y MAPA --- */
+/* El parche que oculta el botón de Drive */
+.parche-drive {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: #000; /* Se camufla con el fondo del video */
+    z-index: 10;
+}
+
+/* En celulares (se apilan y el video se centra) */
+.caja-video {
+    margin: 0 auto;
+    max-width: 250px; /* Fuerza la forma vertical en el celular */
+    width: 100%;
+}
+
+/* En PC: El mapa toma más espacio, el video se ajusta a su proporción vertical real */
+@media (min-width: 768px) {
+    .modal-body-ubic { 
+        flex-direction: row; 
+    }
+    .caja-mapa { 
+        flex: 2; /* El mapa crece al doble */
+    }
+    .caja-video { 
+        flex: 1; /* El video se restringe a su forma natural vertical */
+        max-width: 220px; 
+        margin: 0;
+    }
+}
 </style>    
 </head>
 <body>
@@ -1386,11 +1419,12 @@ select.nave-input {
             <h2><i class="fas fa-map-marker-alt"></i> NUESTRA UBICACIÓN</h2>
         </div>
         <div class="modal-body-ubic">
-            <div class="media-container-ubic">
-                <iframe src="https://www.google.com/maps?q=Calle+Victoria+585,+Local+9,+Cauquenes&output=embed" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <div class="media-container-ubic caja-mapa">
+                <iframe src="https://www.google.com/maps?q=Calle+Victoria+585,+Local+9,+Cauquenes&output=embed" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
-            <div class="media-container-ubic">
-                <iframe src="https://drive.google.com/file/d/1f_LD_zdHRSa3wYCm3_IdwoHTe2nrIr89/preview" width="100%" height="300" style="border:0;" allow="autoplay"></iframe>
+            <div class="media-container-ubic caja-video" style="position: relative;">
+                <div class="parche-drive"></div>
+                <iframe src="https://drive.google.com/file/d/1f_LD_zdHRSa3wYCm3_IdwoHTe2nrIr89/preview" width="100%" height="350" style="border:0;" allow="autoplay"></iframe>
             </div>
         </div>
     </div>

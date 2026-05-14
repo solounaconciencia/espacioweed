@@ -3023,24 +3023,38 @@ function agregarConVariantes(sku) {
 }
 
 function renderSocialIcons() {
-  const container = document.getElementById('social-icons-container');
-  if (!container) return;
+    const container = document.getElementById('social-icons-container');
+    if (!container) return;
 
-  const redes = [
-    { key: 'LINK_INSTAGRAM', icon: 'fab fa-instagram' },
-    { key: 'LINK_FACEBOOK', icon: 'fab fa-facebook' },
-    { key: 'LINK_YOUTUBE', icon: 'fab fa-youtube' },
-    { key: 'LINK_TIKTOK', icon: 'fab fa-tiktok' }
-  ];
+    const redes = [
+        { key: 'LINK_INSTAGRAM', icon: 'fab fa-instagram' },
+        { key: 'LINK_FACEBOOK', icon: 'fab fa-facebook' },
+        { key: 'LINK_YOUTUBE', icon: 'fab fa-youtube' },
+        { key: 'LINK_TIKTOK', icon: 'fab fa-tiktok' }
+    ];
 
-  container.innerHTML = redes.map(red => {
-    const link = configGlobal[red.key];
-    // Si hay un link guardado, pinta el icono. Si está vacío, no pinta nada.
-    if (link && link.trim() !== "") {
-      return `<a href="${link}" target="_blank" style="color:white; margin-left:15px; font-size:1.1rem; transition:0.3s;" onmouseover="this.style.color='var(--cian)'" onmouseout="this.style.color='white'"><i class="${red.icon}"></i></a>`;
-    }
-    return '';
-  }).join('');
+    container.innerHTML = redes.map(red => {
+        let link = configGlobal[red.key];
+        
+        // Si hay un link guardado en la base de datos
+        if (link && link.trim() !== "") {
+            link = link.trim();
+            
+            // --- NEURO-FILTRO DE CORRECCIÓN ---
+            // 1. Corrige el error común de las 3 't'
+            if (link.startsWith('htttps')) {
+                link = link.replace('htttps', 'https');
+            } 
+            // 2. Si escriben solo "www.instagram...", le inyecta el protocolo seguro
+            else if (!link.startsWith('http')) {
+                link = 'https://' + link;
+            }
+            
+            // Inyectamos el botón blindado con z-index para asegurar el clic
+            return `<a href="${link}" target="_blank" style="color:white; margin-left:15px; font-size:1.2rem; transition:0.3s; position:relative; z-index:10000;" onmouseover="this.style.color='var(--cian)'" onmouseout="this.style.color='white'"><i class="${red.icon}"></i></a>`;
+        }
+        return '';
+    }).join('');
 }
 
 /**

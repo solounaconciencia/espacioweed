@@ -1153,6 +1153,33 @@ select.nave-input {
     transform: scale(0.95); /* Hundimiento al hacer clic */
     box-shadow: none;
 }
+/* --- MODAL DE UBICACIÓN (INTEGRADO AL TEMA) --- */
+.modal-overlay-ubic {
+    display: none; position: fixed; z-index: 150000; left: 0; top: 0;
+    width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px); align-items: center; justify-content: center;
+}
+
+.modal-box-ubic {
+    background-color: var(--bg-space); padding: 25px; border-radius: 15px;
+    width: 90%; max-width: 900px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+    border: 1px solid var(--cian); position: relative;
+    animation: aparecer 0.3s ease-out;
+}
+
+.modal-header-ubic { 
+    margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; 
+}
+
+.modal-header-ubic h2 { 
+    margin: 0; font-size: 1.2rem; color: var(--cian); font-family: var(--font-brand); letter-spacing: 2px;
+}
+
+.modal-body-ubic { display: flex; flex-direction: column; gap: 20px; }
+.media-container-ubic { flex: 1; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+
+@keyframes aparecer { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@media (min-width: 768px) { .modal-body-ubic { flex-direction: row; } }
 </style>    
 </head>
 <body>
@@ -1179,11 +1206,16 @@ select.nave-input {
             <div class="trust-card"><i class="fas fa-truck"></i> <span>ENVÍOS A TODO CHILE</span></div>
             <div class="trust-card"><i class="fas fa-certificate"></i> <span>GARANTÍA OFICIAL</span></div>
             <div class="trust-card wa-link" onclick="abrirSoporte()">
-              <i class="fas fa-headset"></i> <span>SOPORTE TÉCNICO</span>
+                <i class="fas fa-headset"></i> <span>SOPORTE TÉCNICO</span>
             </div>
+            
+            <div class="trust-card" id="btn-ubicacion" style="cursor: pointer; color: #fff; border-color: var(--cian);">
+                <i class="fas fa-map-marker-alt" style="color: var(--cian);"></i> <span style="font-weight: bold;">UBICACIÓN</span>
+            </div>
+        
             <div id="social-icons-container" class="top-bar-socials">
-            </div>
         </div>
+    </div>
     </div>
 
     <header class="header-wrap">
@@ -1347,6 +1379,50 @@ select.nave-input {
     </button>
   </div>
 </div>
+<div id="modal-ubicacion" class="modal-overlay-ubic">
+    <div class="modal-box-ubic">
+        <span class="close-nave" id="close-ubicacion" style="position: absolute; top: 15px; right: 15px;">&times;</span>
+        <div class="modal-header-ubic">
+            <h2><i class="fas fa-map-marker-alt"></i> NUESTRA UBICACIÓN</h2>
+        </div>
+        <div class="modal-body-ubic">
+            <div class="media-container-ubic">
+                <iframe src="https://www.google.com/maps?q=Calle+Victoria+585,+Local+9,+Cauquenes&output=embed" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            <div class="media-container-ubic">
+                <iframe src="https://drive.google.com/file/d/1f_LD_zdHRSa3wYCm3_IdwoHTe2nrIr89/preview" width="100%" height="300" style="border:0;" allow="autoplay"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalUbic = document.getElementById("modal-ubicacion");
+        const btnAbrirUbic = document.getElementById("btn-ubicacion");
+        const btnCerrarUbic = document.getElementById("close-ubicacion");
+
+        if (btnAbrirUbic) {
+            btnAbrirUbic.addEventListener("click", function(e) {
+                e.preventDefault();
+                modalUbic.style.display = "flex";
+            });
+        }
+
+        if (btnCerrarUbic) {
+            btnCerrarUbic.addEventListener("click", function() {
+                modalUbic.style.display = "none";
+            });
+        }
+
+        // Cierra el modal si haces clic en lo oscuro afuera
+        window.addEventListener("click", function(e) {
+            if (e.target === modalUbic) {
+                modalUbic.style.display = "none";
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

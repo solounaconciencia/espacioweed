@@ -1629,6 +1629,7 @@ function inicializarAdmin(res) {
   document.getElementById('ventas-hoy').innerText = "$" + (res.hoy || 0).toLocaleString();
   document.getElementById('ventas-mes').innerText = "$" + (res.mes || 0).toLocaleString();
   renderStock(globalStock);
+  renderCatalogo(globalStock); // <-- INYECCIÓN FOCUS: Enciende la lista de productos
   
   // FORZAR EL SELECTOR AL MES ACTUAL (0)
   const selector = document.getElementById('periodo-selector');
@@ -2095,6 +2096,39 @@ async function procesarNuevoProducto() {
         btn.disabled = false;
     }
 }
+
+// ==========================================
+// MOTOR FOCUS: RENDERIZADO DEL CATÁLOGO
+// ==========================================
+function renderCatalogo(lista) {
+  const tbody = document.getElementById('tbody-catalogo');
+  if(!tbody) return;
+  
+  tbody.innerHTML = lista.map(p => `
+    <tr>
+      <td>
+        <img src="${p.IMAGEN_URL || 'https://via.placeholder.com/50'}" style="width:50px; height:50px; object-fit:cover; border-radius:5px; border:1px solid rgba(0,255,255,0.3);">
+      </td>
+      <td><strong class="cian">${p.NOMBRE}</strong><br><small style="color:#888;">${p.SKU}</small></td>
+      <td>${p.CATEGORIA || '-'}</td>
+      <td class="amber" style="font-weight:bold;">$${Number(p.PRECIO).toLocaleString()}</td>
+      <td>
+        <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="alert('Función de edición en construcción')"><i class="fas fa-edit"></i></button>
+        <button class="tool-btn" style="border-color:#ff4444; color:#ff4444;" onclick="alert('Función de borrado en construcción')"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filtrarCatalogo() {
+  const texto = document.getElementById('search-catalogo').value.toLowerCase();
+  const filtrados = globalStock.filter(p => 
+    (p.NOMBRE && p.NOMBRE.toLowerCase().includes(texto)) || 
+    (p.SKU && p.SKU.toLowerCase().includes(texto))
+  );
+  renderCatalogo(filtrados);
+}
+    
 </script>
 
 </body>

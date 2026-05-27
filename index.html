@@ -1462,7 +1462,7 @@ select.nave-input {
     <div id="login-section" style="width: 100%;">
         <div class="login-card">
             <span class="close-nave" onclick="cerrarComunidad()">&times;</span>
-            <img src="https://i.postimg.cc/1RF0H6Ff/Logoew.png" class="nave-logo">
+            <img src="https://i.postimg.cc/hj6mws46/Logoew.png" class="nave-logo">
             <h2 class="nave-title">CENTRO DE MANDO</h2>
             
             <input type="email" id="login-email" class="nave-input" placeholder="EMAIL">
@@ -1686,7 +1686,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       if (data.destacados && data.destacados.length > 0 && containerSlider) {
         containerSlider.innerHTML = data.destacados.map((s, i) => `
           <div class="slide ${i === 0 ? 'active' : ''}">
-            <img src="${s.img}" class="img-slide" alt="${s.nombre}" onerror="this.src='https://i.postimg.cc/1RF0H6Ff/Logoew.png'">
+            <img src="${s.img}" class="img-slide" alt="${s.nombre}" onerror="this.src='https://i.postimg.cc/hj6mws46/Logoew.png'">
             <div class="slide-content">
               <h2 class="amber">${s.titulo}</h2>
               <h1>${s.nombre}</h1>
@@ -1807,7 +1807,7 @@ function renderProductos(lista) {
 
   grid.innerHTML = lista.map(function(p) {
     const stockBajo = (Number(p.STOCK) < 5);
-    const imgUrl = p.IMAGEN_URL || 'https://i.postimg.cc/1RF0H6Ff/Logoew.png';
+    const imgUrl = p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png';
     // FOCUS: Lógica de etiquetas de promoción
     let promoLabel = '';
     if (p.TIPO_PROMO === 'Descuento') {
@@ -1819,7 +1819,7 @@ function renderProductos(lista) {
       <div class="product-card" onclick="abrirDetalle('${p.SKU}')">
         ${stockBajo ? '<div class="scarcity-label">STOCK CRÍTICO</div>' : ''}
         ${promoLabel}
-        <img src="${imgUrl}" loading="lazy" alt="${p.NOMBRE}" onerror="this.src='https://i.postimg.cc/1RF0H6Ff/Logoew.png'">
+        <img src="${imgUrl}" loading="lazy" alt="${p.NOMBRE}" onerror="this.src='https://i.postimg.cc/hj6mws46/Logoew.png'">
         <div class="more-info-btn">MÁS INFO</div>
         <div style="padding:15px; text-align:center;">
           <small style="color:var(--amber); font-weight:bold;">${p.MARCA}</small>

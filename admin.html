@@ -1588,7 +1588,7 @@ to { transform: translateX(0); opacity: 1; }
                             <input type="number" id="ed-precio-promo" class="nave-input" placeholder="$0">
                         </div>
                         <div style="flex:1;">
-                            <label style="font-size:0.65rem; color:#ccc;">DETALLE/SKU:</label>
+                            <label style="font-size:0.65rem; color:#ccc;">MONTO DESC. O SKU REGALO:</label>
                             <input type="text" id="ed-detalle-promo" class="nave-input" placeholder="Ej: EW-001">
                         </div>
                     </div>
@@ -1613,7 +1613,7 @@ to { transform: translateX(0); opacity: 1; }
         </div>
 
         <label style="font-size:0.7rem; color:var(--cian); margin-top:10px; display:block;">DESCRIPCIÓN:</label>
-        <textarea id="ed-descripcion" class="nave-input" rows="3" style="resize:vertical;"></textarea>
+        <textarea id="ed-descripcion" class="nave-input" style="min-height: 110px; resize:vertical; padding:15px; font-family:var(--font-main);"></textarea>
 
         <h4 style="color:var(--neon-green); border-bottom: 1px solid var(--neon-green); padding-bottom:5px; margin-top:15px;">
             <i class="fas fa-images"></i> GESTIÓN DE FOTOS
@@ -2162,16 +2162,21 @@ async function procesarNuevoProducto() {
 }
 
 // ==========================================
-// MOTOR FOCUS: RENDERIZADO DEL CATÁLOGO HÍBRIDO
+// MOTOR FOCUS: RENDERIZADO DEL CATÁLOGO HÍBRIDO (CORREGIDO)
 // ==========================================
 function renderCatalogo(lista) {
   const tbody = document.getElementById('tbody-catalogo');
   if(!tbody) return;
   
-  tbody.innerHTML = lista.map(p => `
+  tbody.innerHTML = lista.map(p => {
+    // CORRECCIÓN: Leer correctamente la primera foto del Array
+    let imgPortada = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : p.IMAGEN_URL;
+    if (!imgPortada || imgPortada.trim() === "") imgPortada = 'https://i.postimg.cc/1RF0H6Ff/Logoew.png';
+
+    return `
     <tr>
       <td>
-        <img src="${p.IMAGEN_URL || 'https://via.placeholder.com/50'}" style="width:50px; height:50px; object-fit:cover; border-radius:5px; border:1px solid rgba(0,255,255,0.3);">
+        <img src="${imgPortada}" style="width:50px; height:50px; object-fit:cover; border-radius:5px; border:1px solid rgba(0,255,255,0.3);">
       </td>
       <td><strong class="cian">${p.NOMBRE}</strong><br><small style="color:#888;">${p.SKU}</small></td>
       <td>${p.CATEGORIA || '-'}</td>
@@ -2183,13 +2188,14 @@ function renderCatalogo(lista) {
       </td>
       <td>
         <div style="display:flex; flex-direction:column; gap:5px;">
-            <button class="tool-btn" style="border-color:var(--neon-green); color:var(--neon-green);" onclick="guardarRapido('${p.SKU}')"><i class="fas fa-bolt"></i> GUARDAR</button>
+            <button class="tool-btn" style="border-color:var(--neon-green); color:var(--neon-green);" onclick="guardarRapido('${p.SKU}')"><i class="fas fa-bolt"></i> RÁPIDO</button>
             <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="abrirModalEdicion('${p.SKU}')"><i class="fas fa-edit"></i> DETALLES</button>
         </div>
       </td>
     </tr>
-  `).join('');
-}
+    `;
+  }).join('');
+}    
 
 async function guardarRapido(sku) {
   const precio = document.getElementById('q-pr-' + sku).value;
@@ -2256,8 +2262,13 @@ function abrirModalEdicion(sku) {
 
     // 4. Procesar Fotos (Soporta múltiples separadas por coma)
     fotosEditando = [];
-    if (p.IMAGEN_URL && p.IMAGEN_URL.trim() !== "") {
-        fotosEditando = p.IMAGEN_URL.split(',').map(url => url.trim());
+    if (p.IMAGEN_URL) {
+        // CORRECCIÓN: El backend ya nos envía un Array, lo copiamos directamente
+        if (Array.isArray(p.IMAGEN_URL)) {
+            fotosEditando = [...p.IMAGEN_URL];
+        } else if (typeof p.IMAGEN_URL === 'string' && p.IMAGEN_URL.trim() !== "") {
+            fotosEditando = p.IMAGEN_URL.split(',').map(url => url.trim());
+        }
     }
     
     renderFotosEdicion(); // Dibujar las miniaturas

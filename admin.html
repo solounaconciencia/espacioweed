@@ -1326,7 +1326,6 @@ to { transform: translateX(0); opacity: 1; }
 
 <div class="admin-nav">
     <button class="tab-btn active" onclick="showSection('dash', this)"><i class="fas fa-chart-line"></i> MÉTRICAS</button>
-    <button class="tab-btn" onclick="showSection('stock', this)"><i class="fas fa-boxes"></i> INVENTARIO</button>
     <button class="tab-btn" onclick="showSection('buzon', this)"><i class="fas fa-envelope"></i> BUZÓN</button>
     <button class="tab-btn" onclick="showSection('productos_manager', this)"><i class="fas fa-box-open"></i> PRODUCTOS</button>
     <button class="tab-btn" onclick="showSection('config', this)"><i class="fas fa-cog"></i> AJUSTES</button>
@@ -1352,17 +1351,6 @@ to { transform: translateX(0); opacity: 1; }
 
       <div class="metric-card" style="margin-top:15px; padding:10px; height:300px;">
         <canvas id="ventasChart"></canvas>
-      </div>
-    </div>
-
-    <div id="stock" class="section">
-      <h2 class="cian">LISTADO DE PRODUCTOS</h2>
-      <input type="text" id="search-stock" class="nave-input" placeholder="Buscar producto..." onkeyup="filtrarStock()">
-      <div style="overflow-x: auto;">
-        <table class="admin-table">
-          <thead><tr><th>PRODUCTO</th><th>PRECIO</th><th>STOCK</th><th>ACCIONES</th></tr></thead>
-          <tbody id="tbody-stock"></tbody>
-        </table>
       </div>
     </div>
 
@@ -1415,7 +1403,7 @@ to { transform: translateX(0); opacity: 1; }
                     <th>FOTO</th>
                     <th>PRODUCTO / SKU</th>
                     <th>CATEGORÍA</th>
-                    <th>PRECIO</th>
+                    <th>PRECIO Y STOCK</th>
                     <th>ACCIONES</th>
                 </tr>
             </thead>
@@ -1650,30 +1638,7 @@ to { transform: translateX(0); opacity: 1; }
     </div>
 </div>
 
-  <div id="modal-promo" class="modal" style="display:none;">
-  <div class="modal-content" style="max-width:400px; padding:20px !important; border: 1px solid var(--amber);">
-    <h3 class="amber" style="font-family:'Orbitron'; margin-top:0;">CREAR PROMOCIÓN</h3>
-    <p id="p-promo-name" style="font-size:0.9rem; color:#ccc; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:5px;"></p>
-    
-    <label style="font-size:0.7rem; color:var(--cian); display:block; margin-bottom:5px;">TIPO DE ACCIÓN:</label>
-    <select id="tipo-promo-select" class="nave-input">
-      <option value="Ninguna">SIN PROMO / NORMAL</option>
-      <option value="Descuento">DESCUENTO DIRECTO ($)</option>
-      <option value="Regalo">REGALO POR COMPRA (SKU)</option>
-    </select>
-    
-    <label style="font-size:0.7rem; color:var(--cian); display:block; margin-top:15px; margin-bottom:5px;">VALOR O SKU DE REGALO:</label>
-    <input type="text" id="detalle-promo-input" class="nave-input" placeholder="Ej: 5000 o EW-E-006">
-    
-    <div style="margin-top:20px; display:flex; gap:10px;">
-      <button class="btn-save" onclick="aplicarPromo()" style="flex:1;">APLICAR PROMO</button>
-      <button onclick="cerrarPromo()" style="background:transparent; color:white; border:1px solid #444; padding:5px 10px; border-radius:5px; cursor:pointer;">CERRAR</button>
-    </div>
-  </div>
-</div>
-
 <script>
-
 // ==========================================
 // MOTOR API GITHUB -> GOOGLE (FOCUS)
 // ==========================================
@@ -2197,7 +2162,7 @@ async function procesarNuevoProducto() {
 }
 
 // ==========================================
-// MOTOR FOCUS: RENDERIZADO DEL CATÁLOGO
+// MOTOR FOCUS: RENDERIZADO DEL CATÁLOGO HÍBRIDO
 // ==========================================
 function renderCatalogo(lista) {
   const tbody = document.getElementById('tbody-catalogo');
@@ -2210,13 +2175,45 @@ function renderCatalogo(lista) {
       </td>
       <td><strong class="cian">${p.NOMBRE}</strong><br><small style="color:#888;">${p.SKU}</small></td>
       <td>${p.CATEGORIA || '-'}</td>
-      <td class="amber" style="font-weight:bold;">$${Number(p.PRECIO).toLocaleString()}</td>
       <td>
-        <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="abrirModalEdicion('${p.SKU}')"><i class="fas fa-edit"></i></button>
-        <button class="tool-btn" style="border-color:#ff4444; color:#ff4444;" onclick="alert('Función de borrado en construcción')"><i class="fas fa-trash"></i></button>
+        <div style="display:flex; flex-direction:column; gap:5px; width: 80px;">
+          <input type="number" class="input-admin" style="width:100%;" value="${p.PRECIO}" id="q-pr-${p.SKU}" title="Precio">
+          <input type="number" class="input-admin" style="width:100%; border-color:var(--amber);" value="${p.STOCK}" id="q-st-${p.SKU}" title="Stock">
+        </div>
+      </td>
+      <td>
+        <div style="display:flex; flex-direction:column; gap:5px;">
+            <button class="tool-btn" style="border-color:var(--neon-green); color:var(--neon-green);" onclick="guardarRapido('${p.SKU}')"><i class="fas fa-bolt"></i> RÁPIDO</button>
+            <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="abrirModalEdicion('${p.SKU}')"><i class="fas fa-edit"></i> DETALLES</button>
+        </div>
       </td>
     </tr>
   `).join('');
+}
+
+async function guardarRapido(sku) {
+  const precio = document.getElementById('q-pr-' + sku).value;
+  const stock = document.getElementById('q-st-' + sku).value;
+  
+  // Efecto visual en los inputs
+  document.getElementById('q-pr-' + sku).style.backgroundColor = "rgba(46, 204, 113, 0.2)";
+  document.getElementById('q-st-' + sku).style.backgroundColor = "rgba(46, 204, 113, 0.2)";
+  
+  try {
+    // Usamos el motor antiguo ultrarrápido
+    await ejecutarEnServidor("actualizarProductoAdmin", {sku: sku, precio: precio, stock: stock});
+    mostrarNotificacion("Stock y Precio guardados: " + sku); // Usa tu bonita notificación verde
+    
+    // Actualizamos la memoria global sin recargar la página
+    const idx = globalStock.findIndex(it => it.SKU === sku);
+    if(idx !== -1) { 
+        globalStock[idx].PRECIO = precio; 
+        globalStock[idx].STOCK = stock; 
+    }
+  } catch(e) {
+    alert("Error de conexión al guardar rápido.");
+    document.getElementById('q-pr-' + sku).style.backgroundColor = "rgba(255, 0, 0, 0.2)";
+  }
 }
 
 function filtrarCatalogo() {

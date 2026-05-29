@@ -1551,6 +1551,105 @@ to { transform: translateX(0); opacity: 1; }
     </div>
 </div>
 
+<div id="modal-editar-producto" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 100000;">
+    <div class="modal-content" style="max-width:650px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
+        <h2 class="amber"><i class="fas fa-edit"></i> EDICIÓN MAESTRA</h2>
+        
+        <input type="hidden" id="ed-sku"> <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <label style="font-size:0.7rem; color:var(--cian);">NOMBRE:</label>
+                <input type="text" id="ed-nombre" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">CATEGORÍA:</label>
+                <input type="text" id="ed-categoria" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">MARCA:</label>
+                <input type="text" id="ed-marca" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">ESTADO:</label>
+                <select id="ed-estado" class="nave-input">
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="PAUSA">PAUSADO / OCULTO</option>
+                </select>
+            </div>
+            
+            <div>
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.7rem; color:var(--cian);">PRECIO ($):</label>
+                        <input type="number" id="ed-precio" class="nave-input">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:0.7rem; color:var(--cian);">STOCK:</label>
+                        <input type="number" id="ed-stock" class="nave-input">
+                    </div>
+                </div>
+
+                <div style="background: rgba(241, 196, 15, 0.1); border: 1px solid var(--amber); padding: 10px; border-radius: 8px; margin-top: 10px;">
+                    <h4 style="margin:0 0 10px 0; color:var(--amber); font-size:0.8rem;"><i class="fas fa-star"></i> PROMOCIÓN</h4>
+                    <label style="font-size:0.65rem; color:#ccc;">TIPO DE PROMO:</label>
+                    <select id="ed-tipo-promo" class="nave-input" style="padding: 8px;">
+                        <option value="Ninguna">SIN PROMO / NORMAL</option>
+                        <option value="Descuento">DESCUENTO DIRECTO ($)</option>
+                        <option value="Regalo">REGALO POR COMPRA (SKU)</option>
+                    </select>
+                    
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <div style="flex:1;">
+                            <label style="font-size:0.65rem; color:#ccc;">PRECIO PROMO:</label>
+                            <input type="number" id="ed-precio-promo" class="nave-input" placeholder="$0">
+                        </div>
+                        <div style="flex:1;">
+                            <label style="font-size:0.65rem; color:#ccc;">DETALLE/SKU:</label>
+                            <input type="text" id="ed-detalle-promo" class="nave-input" placeholder="Ej: EW-001">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="color:var(--cian); border-bottom: 1px solid var(--cian); padding-bottom:5px; margin-top:20px;">VARIANTES (Separar con comas)</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div>
+                <label style="font-size:0.65rem; color:#888;">SABORES:</label>
+                <input type="text" id="ed-sabor" class="nave-input" placeholder="Menta, Fresa...">
+            </div>
+            <div>
+                <label style="font-size:0.65rem; color:#888;">COLORES:</label>
+                <input type="text" id="ed-color" class="nave-input" placeholder="Rojo, Azul...">
+            </div>
+            <div>
+                <label style="font-size:0.65rem; color:#888;">TAMAÑOS:</label>
+                <input type="text" id="ed-tamano" class="nave-input" placeholder="10ml, 50ml...">
+            </div>
+        </div>
+
+        <label style="font-size:0.7rem; color:var(--cian); margin-top:10px; display:block;">DESCRIPCIÓN:</label>
+        <textarea id="ed-descripcion" class="nave-input" rows="3" style="resize:vertical;"></textarea>
+
+        <h4 style="color:var(--neon-green); border-bottom: 1px solid var(--neon-green); padding-bottom:5px; margin-top:15px;">
+            <i class="fas fa-images"></i> GESTIÓN DE FOTOS
+        </h4>
+        
+        <div id="ed-fotos-container" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0; min-height:120px;">
+            </div>
+
+        <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+            <input type="file" id="ed-nueva-foto" accept="image/*" class="nave-input" style="flex:1; padding:8px;">
+            <button class="btn-nave-main" style="width:auto; margin:0;" onclick="agregarFotoEdicion()">+ AGREGAR</button>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:25px;">
+            <button id="btn-guardar-edicion" class="btn-nave-main" onclick="guardarEdicionProducto()" style="flex:2;">
+                <i class="fas fa-save"></i> GUARDAR CAMBIOS
+            </button>
+            <button class="btn-save" onclick="cerrarModalEdicion()" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CANCELAR
+            </button>
+        </div>
+    </div>
+</div>
+
   <div id="modal-promo" class="modal" style="display:none;">
   <div class="modal-content" style="max-width:400px; padding:20px !important; border: 1px solid var(--amber);">
     <h3 class="amber" style="font-family:'Orbitron'; margin-top:0;">CREAR PROMOCIÓN</h3>
@@ -2113,7 +2212,7 @@ function renderCatalogo(lista) {
       <td>${p.CATEGORIA || '-'}</td>
       <td class="amber" style="font-weight:bold;">$${Number(p.PRECIO).toLocaleString()}</td>
       <td>
-        <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="alert('Función de edición en construcción')"><i class="fas fa-edit"></i></button>
+        <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="abrirModalEdicion('${p.SKU}')"><i class="fas fa-edit"></i></button>
         <button class="tool-btn" style="border-color:#ff4444; color:#ff4444;" onclick="alert('Función de borrado en construcción')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -2128,7 +2227,154 @@ function filtrarCatalogo() {
   );
   renderCatalogo(filtrados);
 }
+
+// ==========================================
+// MOTOR FOCUS: LÓGICA DE EDICIÓN AVANZADA Y FOTOS
+// ==========================================
+let fotosEditando = []; // Array táctico para guardar y mover las fotos
+
+function abrirModalEdicion(sku) {
+    const p = globalStock.find(item => item.SKU === sku);
+    if(!p) return alert("Error: Producto no encontrado en el radar.");
+
+    // 1. Cargar Datos Básicos
+    document.getElementById('ed-sku').value = p.SKU || '';
+    document.getElementById('ed-nombre').value = p.NOMBRE || '';
+    document.getElementById('ed-categoria').value = p.CATEGORIA || '';
+    document.getElementById('ed-marca').value = p.MARCA || 'EW';
+    document.getElementById('ed-estado').value = p.ESTADO || 'ACTIVO';
+    document.getElementById('ed-precio').value = p.PRECIO || 0;
+    document.getElementById('ed-stock').value = p.STOCK || 0;
     
+    // 2. Cargar Promociones
+    document.getElementById('ed-tipo-promo').value = p.TIPO_PROMO || 'Ninguna';
+    document.getElementById('ed-precio-promo').value = p.PRECIO_PROMO || '';
+    document.getElementById('ed-detalle-promo').value = p.DETALLE_PROMO || '';
+
+    // 3. Cargar Variantes
+    document.getElementById('ed-sabor').value = p.SABOR || '';
+    document.getElementById('ed-color').value = p.COLOR || '';
+    document.getElementById('ed-tamano').value = p.TAMAÑO || '';
+    document.getElementById('ed-descripcion').value = p.DESCRIPCION || '';
+
+    // 4. Procesar Fotos (Soporta múltiples separadas por coma)
+    fotosEditando = [];
+    if (p.IMAGEN_URL && p.IMAGEN_URL.trim() !== "") {
+        fotosEditando = p.IMAGEN_URL.split(',').map(url => url.trim());
+    }
+    
+    renderFotosEdicion(); // Dibujar las miniaturas
+    document.getElementById('modal-editar-producto').style.display = 'flex';
+}
+
+function cerrarModalEdicion() {
+    document.getElementById('modal-editar-producto').style.display = 'none';
+    fotosEditando = [];
+}
+
+// DIBUJAR LAS FOTOS Y SUS BOTONES
+function renderFotosEdicion() {
+    const container = document.getElementById('ed-fotos-container');
+    container.innerHTML = '';
+
+    if(fotosEditando.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; margin:auto;">Sin fotos. Agrega una nueva.</p>';
+        return;
+    }
+
+    fotosEditando.forEach((foto, index) => {
+        container.innerHTML += `
+        <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:5px; border-radius:8px; text-align:center; min-width:110px;">
+            <img src="${foto}" style="width:80px; height:80px; object-fit:cover; border-radius:5px; margin-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; gap:2px;">
+                <button class="tool-btn" onclick="moverFoto(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
+                <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarFoto(${index})"><i class="fas fa-trash"></i></button>
+                <button class="tool-btn" onclick="moverFoto(${index}, 1)" ${index === fotosEditando.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
+            </div>
+            ${index === 0 ? '<span style="font-size:0.5rem; color:var(--amber); display:block; margin-top:3px;">PORTADA</span>' : ''}
+        </div>`;
+    });
+}
+
+// FUNCIONES DE ORDENAMIENTO DE FOTOS
+function moverFoto(index, direccion) {
+    const nuevaPos = index + direccion;
+    if(nuevaPos < 0 || nuevaPos >= fotosEditando.length) return;
+    
+    // Intercambio táctico en el array
+    const temp = fotosEditando[index];
+    fotosEditando[index] = fotosEditando[nuevaPos];
+    fotosEditando[nuevaPos] = temp;
+    
+    renderFotosEdicion();
+}
+
+function borrarFoto(index) {
+    fotosEditando.splice(index, 1);
+    renderFotosEdicion();
+}
+
+// CONVERTIR NUEVA FOTO A BASE64 Y AÑADIR A LA LISTA
+document.getElementById('ed-nueva-foto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        fotosEditando.push(evt.target.result); // Guardar Base64 en el array
+        renderFotosEdicion();
+        document.getElementById('ed-nueva-foto').value = ''; // Limpiar el input
+    };
+    reader.readAsDataURL(file);
+});
+
+// DISPARO AL SERVIDOR
+async function guardarEdicionProducto() {
+    const btn = document.getElementById('btn-guardar-edicion');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> TRANSMITIENDO A LA NAVE...';
+    btn.disabled = true;
+
+    const payload = {
+        sku: document.getElementById('ed-sku').value,
+        nombre: document.getElementById('ed-nombre').value.trim(),
+        categoria: document.getElementById('ed-categoria').value.trim(),
+        marca: document.getElementById('ed-marca').value.trim(),
+        estado: document.getElementById('ed-estado').value,
+        precio: document.getElementById('ed-precio').value,
+        stock: document.getElementById('ed-stock').value,
+        
+        tipo_promo: document.getElementById('ed-tipo-promo').value,
+        precio_promo: document.getElementById('ed-precio-promo').value,
+        detalle_promo: document.getElementById('ed-detalle-promo').value,
+        
+        sabor: document.getElementById('ed-sabor').value.trim(),
+        color: document.getElementById('ed-color').value.trim(),
+        tamano: document.getElementById('ed-tamano').value.trim(),
+        descripcion: document.getElementById('ed-descripcion').value.trim(),
+        
+        // Enviamos el array con todas las fotos (las que ya estaban y las nuevas en Base64)
+        fotosUrlArr: fotosEditando 
+    };
+
+    try {
+        await ejecutarEnServidor("actualizarProductoAvanzado", payload);
+        alert("¡ÉXITO! Producto actualizado.");
+        cerrarModalEdicion();
+        
+        // Recargar panel para reflejar cambios
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR CAMBIOS';
+        btn.disabled = false;
+        
+        const refresh = await ejecutarEnServidor("getAdminDashboardData");
+        inicializarAdmin(refresh);
+        
+    } catch(e) {
+        console.error("Falla al editar:", e);
+        alert("Error de red. Intenta de nuevo.");
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR CAMBIOS';
+        btn.disabled = false;
+    }
+}
 </script>
 
 </body>

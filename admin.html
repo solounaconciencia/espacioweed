@@ -2817,26 +2817,46 @@ function borrarAuspiciador(index) {
     renderAuspiciadoresEstilo();
 }
 
-// Absorber imagen del patrocinador a Base64
+// Absorber imagen del patrocinador a Base64 y recolectar textos
 const inputAuspiciador = document.getElementById('est-nuevo-auspiciador');
 if(inputAuspiciador) {
     inputAuspiciador.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if(!file) return;
+
+        // Recolectamos los textos de las casillas nuevas
+        const nombre = document.getElementById('ausp-nombre').value.trim() || 'Sin Nombre';
+        const desc = document.getElementById('ausp-desc').value.trim();
+        const url = document.getElementById('ausp-url').value.trim();
+        const btn = document.getElementById('ausp-btn').value.trim();
+
         const reader = new FileReader();
         reader.onload = function(evt) {
-            auspiciadoresActivos.push(evt.target.result);
+            // Guardamos el paquete completo en la memoria
+            auspiciadoresActivos.push({
+                nombre: nombre,
+                desc: desc,
+                url: url,
+                btn: btn,
+                logo: evt.target.result // La foto en Base64
+            });
             renderAuspiciadoresEstilo();
             
+            // Feedback Visual
             const lbl = document.getElementById('lbl-est-ausp');
             lbl.innerHTML = '<i class="fas fa-check"></i> MARCA AÑADIDA';
             lbl.style.color = 'var(--neon-green)';
             setTimeout(() => {
-                lbl.innerHTML = '<i class="fas fa-upload"></i> SUBIR NUEVA MARCA (Imagen Base64)';
+                lbl.innerHTML = '<i class="fas fa-upload"></i> SUBIR LOGO Y GUARDAR MARCA';
                 lbl.style.color = 'var(--cian)';
             }, 2000);
             
+            // Limpiar formulario para la siguiente marca
             inputAuspiciador.value = ''; 
+            document.getElementById('ausp-nombre').value = '';
+            document.getElementById('ausp-desc').value = '';
+            document.getElementById('ausp-url').value = '';
+            document.getElementById('ausp-btn').value = '';
         };
         reader.readAsDataURL(file);
     });

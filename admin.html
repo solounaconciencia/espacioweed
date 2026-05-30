@@ -2097,7 +2097,8 @@ function showSection(id, btn) {
   btn.classList.add('active');
 
   if (id === 'buzon') cargarBuzon();
-  if (id === 'config') cargarAjustesPanel(); // <--- ESTO ES LO NUEVO
+  if (id === 'config') cargarAjustesPanel();
+  if (id === 'estilo') cargarEstilosPanel(); // <--- INYECCIÓN FOCUS
 }
 
 function renderizarGrafico(listaData) {
@@ -2733,6 +2734,9 @@ function limpiarEtiquetas(texto) {
 // ==========================================
 let auspiciadoresActivos = []; 
 
+// ==========================================
+// DIBUJAR MINIATURAS DE MARCAS
+// ==========================================
 function renderAuspiciadoresEstilo() {
     const container = document.getElementById('est-auspiciadores-container');
     if (!container) return;
@@ -2742,16 +2746,61 @@ function renderAuspiciadoresEstilo() {
         return;
     }
     
-    container.innerHTML = auspiciadoresActivos.map((foto, index) => `
+    container.innerHTML = auspiciadoresActivos.map((marca, index) => `
         <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:5px; border-radius:8px; text-align:center; min-width:110px;">
-            <img src="${foto}" style="width:80px; height:40px; object-fit:contain; border-radius:5px; margin-bottom:5px; background:rgba(255,255,255,0.1);">
-            <div style="display:flex; justify-content:space-between; gap:2px;">
+            <img src="${marca.logo || marca}" style="width:80px; height:40px; object-fit:contain; border-radius:5px; margin-bottom:2px; background:rgba(255,255,255,0.1);">
+            <p style="font-size:0.6rem; color:var(--amber); margin:2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80px; font-weight:bold;">${marca.nombre || 'Marca'}</p>
+            <div style="display:flex; justify-content:space-between; gap:2px; margin-top:5px;">
                 <button class="tool-btn" onclick="moverAuspiciador(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
                 <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarAuspiciador(${index})"><i class="fas fa-trash"></i></button>
                 <button class="tool-btn" onclick="moverAuspiciador(${index}, 1)" ${index === auspiciadoresActivos.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     `).join('');
+}
+
+// ==========================================
+// CARGAR DATOS DESDE EL EXCEL AL ABRIR PESTAÑA
+// ==========================================
+async function cargarEstilosPanel() {
+    try {
+        const res = await ejecutarEnServidor("getEstilosPanelData");
+        if(res.success) {
+            const conf = res.config;
+            
+            // Llenar Identidad
+            if(conf['LOGO_PRINCIPAL']) document.getElementById('est-logo').value = conf['LOGO_PRINCIPAL'];
+            if(conf['LOGO_ERROR']) document.getElementById('est-logo-error').value = conf['LOGO_ERROR'];
+            if(conf['FAVICON']) document.getElementById('est-favicon').value = conf['FAVICON'];
+            if(conf['BG_IMG']) document.getElementById('est-bg-img').value = conf['BG_IMG'];
+            if(conf['BG_MODO']) document.getElementById('est-bg-modo').value = conf['BG_MODO'];
+            if(conf['BANNER_BG']) document.getElementById('est-banner-bg').value = conf['BANNER_BG'];
+            
+            // Llenar Colores
+            if(conf['COLOR_NEON']) document.getElementById('est-color-neon').value = conf['COLOR_NEON'];
+            if(conf['COLOR_AMBER']) document.getElementById('est-color-amber').value = conf['COLOR_AMBER'];
+            if(conf['COLOR_CIAN']) document.getElementById('est-color-cian').value = conf['COLOR_CIAN'];
+            if(conf['COLOR_BG']) document.getElementById('est-color-bg').value = conf['COLOR_BG'];
+            if(conf['COLOR_GLASS']) document.getElementById('est-color-glass').value = conf['COLOR_GLASS'];
+            if(conf['OPACIDAD_GLASS']) document.getElementById('est-opacidad').value = conf['OPACIDAD_GLASS'];
+            
+            // Llenar Tipografías y Atmósfera
+            if(conf['FONT_TITULOS']) document.getElementById('est-font-titulos').value = conf['FONT_TITULOS'];
+            if(conf['FONT_MENU']) document.getElementById('est-font-menu').value = conf['FONT_MENU'];
+            if(conf['FONT_CUERPO']) document.getElementById('est-font-cuerpo').value = conf['FONT_CUERPO'];
+            if(conf['ATMOSFERA']) document.getElementById('est-atmosfera').value = conf['ATMOSFERA'];
+            
+            // Llenar Pop-Up
+            if(conf['ANUNCIO_IMAGEN']) document.getElementById('est-popup-img').value = conf['ANUNCIO_IMAGEN'];
+            if(conf['ANUNCIO_TEXTO']) document.getElementById('est-popup-txt').value = conf['ANUNCIO_TEXTO'];
+
+            // Cargar y Dibujar Auspiciadores
+            auspiciadoresActivos = res.auspiciadores || [];
+            renderAuspiciadoresEstilo();
+        }
+    } catch(e) {
+        console.error("Error al cargar la matriz de estilos:", e);
+    }
 }
 
 function moverAuspiciador(index, direccion) {

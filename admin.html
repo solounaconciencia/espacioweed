@@ -1236,6 +1236,16 @@ input[type="file"].hidden-file {
 }
 
 input[type="file"].hidden-file { display: none; }    
+/* ==========================================
+   ESTÉTICA FOCUS: UNIFICACIÓN DE IMÁGENES
+   ========================================== */
+.producto-card img, .producto-img {
+    width: 100% !important;
+    height: 200px !important; /* Altura fija y estricta para todas las fotos */
+    object-fit: contain !important; /* Ajusta la foto sin deformarla ni recortarla */
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
 </style>    
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

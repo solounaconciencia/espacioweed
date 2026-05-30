@@ -1198,15 +1198,44 @@ select.nave-input {
     }
 }
 /* ==========================================
-   ESTÉTICA FOCUS: UNIFICACIÓN DE IMÁGENES
+   ESTÉTICA FOCUS: UNIFICACIÓN IMÁGENES Y BOTONES
    ========================================== */
-.producto-card img, .producto-img {
+.product-card img {
     width: 100% !important;
-    height: 200px !important; /* Altura fija y estricta para todas las fotos */
-    object-fit: contain !important; /* Ajusta la foto sin deformarla ni recortarla */
+    height: 200px !important; /* Altura estricta, adiós papelillos gigantes */
+    object-fit: contain !important; /* Ajusta sin recortar */
     border-radius: 8px;
     margin-bottom: 10px;
+    background: transparent;
 }
+
+.custom-file-upload {
+    border: 1px dashed var(--cian);
+    background: rgba(0, 255, 255, 0.05);
+    color: var(--cian);
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-brand);
+    font-size: 0.75rem;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.custom-file-upload:hover {
+    background: rgba(0, 255, 255, 0.2);
+    color: white;
+    border-style: solid;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+input[type="file"].hidden-file { display: none; }
 </style>    
 </head>
 <body>
@@ -1388,24 +1417,34 @@ select.nave-input {
 <button class="btn-nave-main" style="margin-top:15px; padding: 12px;" onclick="cerrarModalPagos()">ENTENDIDO</button>
 </div>
 </div>
+
 <div id="modal-soporte" class="modal">
-  <div class="modal-content" style="max-width: 500px;">
-    <span class="close-modal" onclick="cerrarSoporte()">&times;</span>
-    <h2 style="font-family:var(--font-brand); color:var(--cian); margin-bottom:20px; font-size:1.2rem;">SOPORTE TÉCNICO</h2>
-    <p style="font-size:0.75rem; color:#888; margin-bottom:15px;">Describe tu solicitud o problema (máx. 300 caracteres)</p>
+  <div class="modal-content" style="max-width: 500px; padding:25px;">
+    <span class="close-modal" onclick="cerrarSoporte()">×</span>
+    <h2 style="font-family:var(--font-brand); color:var(--cian); margin-bottom:20px; font-size:1.2rem;"><i class="fas fa-headset"></i> SOPORTE TÉCNICO</h2>
+    
+    <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px;">TU NOMBRE:</label>
+    <input type="text" id="sp-nombre" class="nave-input" placeholder="Ej: Juan Pérez">
+    
+    <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px; margin-top:10px;">TU CORREO:</label>
+    <input type="email" id="sp-correo" class="nave-input" placeholder="Para responderte...">
 
-    <textarea id="soporte-mensaje" class="nave-input" maxlength="300" placeholder="Escribe aquí..." style="height:120px; resize:none;"></textarea>
+    <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px; margin-top:10px;">MENSAJE:</label>
+    <textarea id="sp-mensaje" class="nave-input" maxlength="300" placeholder="Describe tu solicitud o problema..." style="height:100px; resize:vertical;"></textarea>
 
-    <div style="margin-top:20px; margin-bottom:20px; text-align:left;">
-      <label style="display:block; font-size:0.7rem; color:var(--amber); margin-bottom:8px; font-weight:bold;">ADJUNTAR IMAGEN DE REFERENCIA (MÁX. 4MB):</label>
-      <input type="file" id="soporte-adjunto" accept="image/*" class="nave-input" style="font-size:0.7rem;">
+    <div style="margin-top:15px; margin-bottom:25px;">
+      <label for="sp-adjunto" class="custom-file-upload" id="lbl-sp-foto">
+          <i class="fas fa-camera"></i> ADJUNTAR IMAGEN (MÁX 4MB)
+      </label>
+      <input type="file" id="sp-adjunto" accept="image/*" class="hidden-file" onchange="actualizarLabelSoporte(this)">
     </div>
 
-    <button class="btn-checkout" onclick="enviarSolicitudSoporte()" id="btn-envio-soporte">
-      ENVIAR SOLICITUD
+    <button class="btn-checkout" onclick="enviarSolicitudSoporte()" id="btn-envio-soporte" style="width:100%;">
+      <i class="fas fa-paper-plane"></i> ENVIAR AL MANDO CENTRAL
     </button>
   </div>
 </div>
+    
 <div id="modal-ubicacion" class="modal-overlay-ubic">
     <div class="modal-box-ubic">
         <span class="close-nave" id="close-ubicacion" style="position: absolute; top: 15px; right: 15px;">&times;</span>
@@ -2832,63 +2871,76 @@ function enviarWhatsAppPostPago(idPedido, idTransaccion) {
     }, 2000);
 }
 
-// --- LÓGICA MÓDULO SOPORTE ---
-function abrirSoporte() { 
-  const modal = document.getElementById('modal-soporte');
-  modal.style.display = 'flex'; // Cambiamos 'block' por 'flex' para centrado perfecto
-}
+// --- LÓGICA MÓDULO SOPORTE EVOLUCIONADO ---
+function abrirSoporte() { document.getElementById('modal-soporte').style.display = 'flex'; }
 function cerrarSoporte() { document.getElementById('modal-soporte').style.display = 'none'; }
 
+function actualizarLabelSoporte(input) {
+    const label = document.getElementById('lbl-sp-foto');
+    if (input.files && input.files.length > 0) {
+        label.innerHTML = '<i class="fas fa-check"></i> IMAGEN LISTA: ' + input.files[0].name;
+        label.style.borderColor = 'var(--neon-green)';
+        label.style.color = 'var(--neon-green)';
+    } else {
+        label.innerHTML = '<i class="fas fa-camera"></i> ADJUNTAR IMAGEN (MÁX 4MB)';
+        label.style.borderColor = 'var(--cian)';
+        label.style.color = 'var(--cian)';
+    }
+}
+
 function enviarSolicitudSoporte() {
-  const mensaje = document.getElementById('soporte-mensaje').value;
-  const fileInput = document.getElementById('soporte-adjunto');
+  const nombre = document.getElementById('sp-nombre').value.trim();
+  const correo = document.getElementById('sp-correo').value.trim();
+  const mensaje = document.getElementById('sp-mensaje').value.trim();
+  const fileInput = document.getElementById('sp-adjunto');
   const btn = document.getElementById('btn-envio-soporte');
 
-  if (!mensaje.trim()) return mostrarToast("Escribe tu duda primero.");
+  if (!nombre || !correo || !mensaje) return mostrarToast("Rellena nombre, correo y mensaje.");
 
   btn.disabled = true;
-  btn.innerText = "PROCESANDO SEÑAL...";
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> TRANSMITIENDO...';
 
-  let archivoData = null;
+  let fotoBase64 = "";
   if (fileInput.files.length > 0) {
     const file = fileInput.files[0];
     if (file.size > 4 * 1024 * 1024) {
       btn.disabled = false;
-      btn.innerText = "ENVIAR SOLICITUD";
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> ENVIAR AL MANDO CENTRAL';
       return mostrarToast("La imagen es muy pesada (Máx 4MB)");
     }
-
     const reader = new FileReader();
     reader.onload = function(e) {
-      archivoData = {
-        base64: e.target.result.split(',')[1],
-        type: file.type,
-        name: file.name
-      };
-      ejecutarEnvioFinal(mensaje, archivoData);
+      fotoBase64 = e.target.result; // Se envía el Base64 completo con el mime-type
+      dispararSoporteAlServidor({ nombre, correo, mensaje, fotoBase64 });
     };
     reader.readAsDataURL(file);
   } else {
-    ejecutarEnvioFinal(mensaje, null);
+    dispararSoporteAlServidor({ nombre, correo, mensaje, fotoBase64 });
   }
 }
 
-async function ejecutarEnvioFinal(msg, adjunto) {
+async function dispararSoporteAlServidor(payload) {
   try {
-    const res = await ejecutarEnServidor("enviarCorreoSoporte", { msg: msg, adjunto: adjunto });
-    mostrarToast("🚀 Solicitud enviada al Centro de Mando.");
+    // LLAMA A LA FUNCIÓN DE CORREO QUE CREAMOS EN GOOGLE APPS SCRIPT
+    const res = await ejecutarEnServidor("registrarTicketSoporte", payload);
+    mostrarToast("🚀 ¡Mensaje enviado a tu correo exitosamente!");
     cerrarSoporte();
-    document.getElementById('soporte-mensaje').value = "";
-    document.getElementById('soporte-adjunto').value = "";
-    document.getElementById('btn-envio-soporte').disabled = false;
-    document.getElementById('btn-envio-soporte').innerText = "ENVIAR SOLICITUD";
+    
+    // Limpieza
+    document.getElementById('sp-nombre').value = "";
+    document.getElementById('sp-correo').value = "";
+    document.getElementById('sp-mensaje').value = "";
+    document.getElementById('sp-adjunto').value = "";
+    actualizarLabelSoporte({files:[]});
+    
   } catch (err) {
     mostrarToast("Falla de conexión al enviar la solicitud.");
+  } finally {
     document.getElementById('btn-envio-soporte').disabled = false;
-    document.getElementById('btn-envio-soporte').innerText = "ENVIAR SOLICITUD";
+    document.getElementById('btn-envio-soporte').innerHTML = '<i class="fas fa-paper-plane"></i> ENVIAR AL MANDO CENTRAL';
   }
 }
-
+    
 async function renderRadar(productos) {
   const wrapper = document.getElementById('wrapper-sugerencias');
   if (!wrapper) return;

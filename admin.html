@@ -1666,20 +1666,23 @@ to { transform: translateX(0); opacity: 1; }
                     <option value="ninguna">7. Ninguna (Fondo estático)</option>
                 </select>
             </div>
+            
 
             <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
                 <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-map-marked-alt"></i> UBICACIÓN Y VIDEO NAVE</h3>
                 
-                <label style="font-size:0.7rem; color:#ccc;">DIRECCIÓN ESCRITA (Texto para el cliente):</label>
-                <input type="text" id="est-direccion-txt" class="nave-input" placeholder="Ej: Av. Nueva Providencia 123, Santiago">
+                <label style="font-size:0.7rem; color:#ccc;">DIRECCIÓN EXACTA (Calle, Número, Ciudad):</label>
+                <div style="display:flex; gap:10px; margin-bottom: 10px;">
+                    <input type="text" id="est-direccion-txt" class="nave-input" placeholder="Ej: Providencia 123, Santiago" style="margin-bottom:0;">
+                    <button class="tool-btn" style="border-color:var(--cian); color:var(--cian); margin:0; padding:0 15px;" onclick="actualizarMapaPreview()"><i class="fas fa-search"></i> VER MAPA</button>
+                </div>
                 
-                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">IFRAME MAPA DE GOOGLE (Link completo de incrustar):</label>
-                <input type="text" id="est-mapa-url" class="nave-input" placeholder="https://www.google.com/maps/embed?pb=...">
-                <small style="color:#666; font-size:0.6rem; display:block; margin-top:-8px; margin-bottom:10px;">*En Google Maps dale a Compartir -> Incorporar mapa y copia solo el link dentro de src.</small>
+                <div style="width: 100%; height: 200px; background: rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden; margin-bottom: 15px; border: 1px solid #333;">
+                    <iframe id="mapa-preview" src="" width="100%" height="100%" style="border:0;"></iframe>
+                </div>
 
                 <label style="font-size:0.7rem; color:#ccc; display:block;">ID VIDEO DE PRESENTACIÓN (Google Drive):</label>
                 <input type="text" id="est-video-id" class="nave-input" placeholder="Ej: 1f_LD_zdHRSa3wYCm3_IdwoHTe2nrIr89">
-                <small style="color:#666; font-size:0.6rem; display:block; margin-top:-8px;">*Copia el código largo que sale en el enlace compartido de tu video en Drive.</small>
             </div>
             
             <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px; grid-column: 1 / -1;">
@@ -2820,11 +2823,10 @@ async function cargarEstilosPanel() {
         
         // 6. Ubicación y Video (Con seguro anti-nulos)
         const dirEl = document.getElementById('est-direccion-txt');
-        if(dirEl) dirEl.value = conf['DIRECCION_TEXTO'] || '';
-        
-        const mapEl = document.getElementById('est-mapa-url');
-        if(mapEl) mapEl.value = conf['MAPA_EMBED_URL'] || '';
-        
+        if(dirEl) {
+            dirEl.value = conf['DIRECCION_TEXTO'] || '';
+            actualizarMapaPreview(); // <--- Esto dibuja el mapa apenas entras
+        }
         const vidEl = document.getElementById('est-video-id');
         if(vidEl) vidEl.value = conf['VIDEO_DRIVE_ID'] || '';
         
@@ -2956,6 +2958,21 @@ async function guardarEstilos() {
 
 // Hack rápido para que no inicie vacío en la prueba
 renderAuspiciadoresEstilo();
+
+// ==========================================
+// PREVISUALIZACIÓN AUTOMÁTICA DEL MAPA (FOCUS)
+// ==========================================
+function actualizarMapaPreview() {
+    const direccion = document.getElementById('est-direccion-txt').value.trim();
+    const iframe = document.getElementById('mapa-preview');
+    if (direccion !== "") {
+        // Convierte el texto en coordenadas de Google Maps
+        const direccionCodificada = encodeURIComponent(direccion);
+        iframe.src = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+    } else {
+        iframe.src = "";
+    }
+}
 </script>
 
 </body>

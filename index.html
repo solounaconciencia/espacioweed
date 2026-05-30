@@ -1545,7 +1545,95 @@ input[type="file"].hidden-file { display: none; }
         });
     });
 
+// ==========================================
+// MOTOR FOCUS: APLICADOR DE ESTILOS DINÁMICOS
+// ==========================================
+function aplicarEstilosDinamicos(config) {
+    if (!config) return;
 
+    // 1. Inyección de Fuentes de Google Dinámicas (Si cambian en el admin)
+    const fontTitulos = config['FONT_TITULOS'] || "'Orbitron', sans-serif";
+    const fontMenu = config['FONT_MENU'] || "'Montserrat', sans-serif";
+    const fontCuerpo = config['FONT_CUERPO'] || "'Montserrat', sans-serif";
+
+    // Creamos un cargador de fuentes invisible para el navegador
+    const fontClean = (f) => f.split(',')[0].replace(/'/g, '').replace(/ /g, '+');
+    const linkFonts = document.createElement('link');
+    linkFonts.rel = 'stylesheet';
+    linkFonts.href = `https://fonts.googleapis.com/css2?family=${fontClean(fontTitulos)}&family=${fontClean(fontMenu)}&family=${fontClean(fontCuerpo)}&display=swap`;
+    document.head.appendChild(linkFonts);
+
+    // 2. Sobrescribir las Variables CSS (:root) en Caliente
+    const root = document.documentElement;
+    
+    if (config['COLOR_NEON']) root.style.setProperty('--neon-green', config['COLOR_NEON']);
+    if (config['COLOR_AMBER']) root.style.setProperty('--amber', config['COLOR_AMBER']);
+    if (config['COLOR_CIAN']) root.style.setProperty('--cian', config['COLOR_CIAN']);
+    if (config['COLOR_BG']) root.style.setProperty('--bg-space', config['COLOR_BG']);
+    
+    // Control inteligente del Cristal (Glassmorphism) + Su Opacidad
+    if (config['COLOR_GLASS']) {
+        const hex = config['COLOR_GLASS'];
+        const opacidad = Number(config['OPACIDAD_GLASS'] || 5) / 100;
+        // Convierte el color a formato transparente para el look tecnológico
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        root.style.setProperty('--glass', `rgba(${r}, ${g}, ${b}, ${opacidad})`);
+    }
+
+    // Aplicar las fuentes a las variables globales
+    root.style.setProperty('--font-brand', fontTitulos);
+    root.style.setProperty('--font-main', fontCuerpo);
+
+    // 3. Mutación del Logo Principal y Favicon
+    if (config['LOGO_PRINCIPAL'] && config['LOGO_PRINCIPAL'].trim() !== "") {
+        const logoImg = document.querySelector('.main-logo');
+        if (logoImg) logoImg.src = config['LOGO_PRINCIPAL'].trim();
+    }
+    
+    if (config['FAVICON'] && config['FAVICON'].trim() !== "") {
+        let fav = document.querySelector("link[rel*='icon']");
+        if (!fav) {
+            fav = document.createElement('link');
+            fav.rel = 'shortcut icon';
+            document.head.appendChild(fav);
+        }
+        fav.href = config['FAVICON'].trim();
+    }
+
+    // 4. Parche del Banner Superior (Header)
+    if (config['BANNER_BG'] && config['BANNER_BG'].trim() !== "") {
+        const header = document.querySelector('.header-wrap');
+        const topBar = document.querySelector('.top-bar');
+        if (header) {
+            if (config['BANNER_BG'].startsWith('#')) {
+                header.style.background = config['BANNER_BG'];
+                if (topBar) topBar.style.background = config['BANNER_BG'];
+            } else {
+                header.style.backgroundImage = `url('${config['BANNER_BG']}')`;
+                header.style.backgroundSize = 'cover';
+                header.style.backgroundPosition = 'center';
+            }
+        }
+    }
+
+    // 5. Cambiar Imagen de Fondo General (Si no se usa atmósfera animada)
+    if (config['BG_IMG'] && config['BG_IMG'].trim() !== "") {
+        const canvas = document.getElementById('star-canvas');
+        if (canvas) {
+            canvas.style.backgroundImage = `url('${config['BG_IMG']}')`;
+            canvas.style.backgroundSize = config['BG_MODO'] === 'cover' ? 'cover' : 'auto';
+            canvas.style.backgroundRepeat = config['BG_MODO'] === 'cover' ? 'no-repeat' : 'repeat';
+            canvas.style.animation = 'none'; // Detiene las estrellas para que luzca la imagen
+        }
+    }
+
+    // 6. Activar el Conmutador de Atmósferas
+    if (typeof encenderAtmosfera === "function") {
+        encenderAtmosfera(config['ATMOSFERA'] || 'espacial');
+    }
+}
 </script>
 
 </body>
@@ -1801,6 +1889,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // 2. PRIORIDAD 1 (0 ms): Configuración, Anuncio y Redes
     configGlobal = data.config;
+    aplicarEstilosDinamicos(configGlobal);
     renderSocialIcons(); // FOCUS: Conectamos la función evolucionada correcta
     if (typeof verificarAnuncio === "function") verificarAnuncio();
 
@@ -3283,6 +3372,53 @@ async function enviarLeadAgencia() {
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> ENVIAR SOLICITUD';
+    }
+}
+
+// ==========================================
+// MOTOR FOCUS: EL CONMUTADOR DE ATMÓSFERAS
+// ==========================================
+function encenderAtmosfera(tipo) {
+    const canvas = document.getElementById('star-canvas');
+    if (!canvas) return;
+
+    // Reiniciamos estilos previos del fondo
+    canvas.className = ''; 
+    canvas.style.background = 'var(--bg-space)';
+    
+    // Si el usuario subió una imagen fija de fondo, no la pisamos con animaciones
+    if (configGlobal['BG_IMG'] && configGlobal['BG_IMG'].trim() !== "") return;
+
+    if (tipo === 'espacial') {
+        // Tu hermoso fondo actual de estrellas aceleradas por tarjeta gráfica
+        canvas.style.background = 'radial-gradient(circle at center, #1B2735 0%, #020204 100%)';
+        canvas.classList.add('scrolling'); // Usa tu regla CSS existente para mover las estrellas
+    } 
+    else if (tipo === 'matrix') {
+        // Atmósfera Cyberpunk / Verde hacker
+        canvas.style.background = '#000';
+        canvas.style.backgroundImage = 'radial-gradient(rgba(0, 40, 0, 0.4), #000)';
+    } 
+    else if (tipo === 'bokeh') {
+        // Brisa Dorada / Elegante
+        canvas.style.background = 'radial-gradient(circle at bottom, #2c1a04 0%, #020204 100%)';
+    } 
+    else if (tipo === 'vaporwave') {
+        // Estética ochentera de Neón
+        canvas.style.background = 'linear-gradient(to bottom, #140526, #020204)';
+    } 
+    else if (tipo === 'naturaleza') {
+        // Verde orgánico / CBD relajante
+        canvas.style.background = 'radial-gradient(circle at top, #061f10 0%, #020204 100%)';
+    } 
+    else if (tipo === 'ondas') {
+        // Minimalismo institucional corporativo
+        canvas.style.background = 'linear-gradient(135s, #0f172a, #020204)';
+    } 
+    else {
+        // Ninguno (Fondo limpio de alto rendimiento)
+        canvas.style.background = 'var(--bg-space)';
+        canvas.style.backgroundImage = 'none';
     }
 }
 </script>

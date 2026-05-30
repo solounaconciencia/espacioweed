@@ -1615,7 +1615,7 @@ to { transform: translateX(0); opacity: 1; }
                         </div>
                         <div style="flex:1;">
                             <label style="font-size:0.65rem; color:#ccc;">MONTO DESC. O SKU REGALO:</label>
-                            <input type="text" id="np-detalle-promo" class="nave-input" placeholder="Ej: EW-001">
+                            <input type="text" id="np-detalle-promo" class="nave-input" placeholder="Ej: EW-001" autocomplete="off" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly');">
                         </div>
                     </div>
                 </div>
@@ -1717,7 +1717,7 @@ to { transform: translateX(0); opacity: 1; }
                         </div>
                         <div style="flex:1;">
                             <label style="font-size:0.65rem; color:#ccc;">MONTO DESC. O SKU REGALO:</label>
-                            <input type="text" id="ed-detalle-promo" class="nave-input" placeholder="Ej: EW-001">
+                            <input type="text" id="ed-detalle-promo" class="nave-input" placeholder="Ej: EW-001"autocomplete="off" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly');">
                         </div>
                     </div>
                 </div>
@@ -2304,9 +2304,9 @@ async function procesarNuevoProducto() {
         tipo_promo: document.getElementById('np-tipo-promo').value,
         precio_promo: document.getElementById('np-precio-promo').value,
         detalle_promo: document.getElementById('np-detalle-promo').value,
-        sabor: document.getElementById('np-sabor').value.trim(),
-        color: document.getElementById('np-color').value.trim(),
-        tamano: document.getElementById('np-tamano').value.trim(),
+        sabor: limpiarEtiquetas(document.getElementById('np-sabor').value),
+        color: limpiarEtiquetas(document.getElementById('np-color').value),
+        tamano: limpiarEtiquetas(document.getElementById('np-tamano').value),
         descripcion: document.getElementById('np-descripcion').value.trim(),
         fotosUrlArr: fotosNuevo 
     };
@@ -2520,9 +2520,9 @@ async function guardarEdicionProducto() {
         precio_promo: document.getElementById('ed-precio-promo').value,
         detalle_promo: document.getElementById('ed-detalle-promo').value,
         
-        sabor: document.getElementById('ed-sabor').value.trim(),
-        color: document.getElementById('ed-color').value.trim(),
-        tamano: document.getElementById('ed-tamano').value.trim(),
+        sabor: limpiarEtiquetas(document.getElementById('ed-sabor').value),
+        color: limpiarEtiquetas(document.getElementById('ed-color').value),
+        tamano: limpiarEtiquetas(document.getElementById('ed-tamano').value),
         descripcion: document.getElementById('ed-descripcion').value.trim(),
         
         // Enviamos el array con todas las fotos (las que ya estaban y las nuevas en Base64)
@@ -2565,6 +2565,15 @@ function actualizarLabelArchivo(input, labelId) {
         label.style.borderColor = 'var(--cian)';
         label.style.color = 'var(--cian)';
     }
+}
+
+function limpiarEtiquetas(texto) {
+    if (!texto) return "";
+    return texto.split(',') // Separa por comas
+        .map(t => t.trim()) // Quita los espacios vacíos a los lados
+        .filter(t => t.length > 0) // Borra las comas vacías (ej: "rojo,,azul")
+        .map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()) // Pone la Primera en Mayúscula y el resto en minúscula
+        .join(', '); // Los vuelve a unir con una coma y un espacio perfecto
 }
 </script>
 

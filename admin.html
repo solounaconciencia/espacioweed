@@ -1563,6 +1563,147 @@ to { transform: translateX(0); opacity: 1; }
   </button>
 </div>
 
+<div id="estilo" class="section" style="display: none;">
+        <h2 class="amber"><i class="fas fa-palette"></i> METAMORFOSIS VISUAL</h2>
+        <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Modifica el ADN gráfico de la nave. Los cambios se aplicarán al guardar.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-fingerprint"></i> IDENTIDAD</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">LOGO PRINCIPAL (URL):</label>
+                <input type="text" id="est-logo" class="nave-input" placeholder="URL de la imagen...">
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">LOGO SECUNDARIO / ERROR (Reemplazo):</label>
+                <input type="text" id="est-logo-error" class="nave-input" placeholder="URL de la imagen...">
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">FAVICON (Icono pestaña navegador):</label>
+                <input type="text" id="est-favicon" class="nave-input" placeholder="URL del icono...">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-image"></i> FONDO Y BANNER SUPERIOR</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">FONDO DE LA TIENDA (URL Imagen recomendada 1920x1080):</label>
+                <input type="text" id="est-bg-img" class="nave-input" placeholder="Dejar vacío para usar color...">
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">COMPORTAMIENTO DEL FONDO:</label>
+                <select id="est-bg-modo" class="nave-input" style="padding:8px;">
+                    <option value="cover">Estirar (Cubrir pantalla completa)</option>
+                    <option value="repeat">Mosaico (Repetir patrón)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">FONDO DEL BANNER SUPERIOR (URL o Color Hex):</label>
+                <input type="text" id="est-banner-bg" class="nave-input" placeholder="Ej: #000000 o URL imagen...">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-tint"></i> PALETA CROMÁTICA</h3>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.7rem; color:#ccc;">NEÓN (Éxito/Precios):</label>
+                    <input type="color" id="est-color-neon" value="#2ecc71" style="background:none; border:none; cursor:pointer;">
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.7rem; color:#ccc;">ÁMBAR (Destacados):</label>
+                    <input type="color" id="est-color-amber" value="#f1c40f" style="background:none; border:none; cursor:pointer;">
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.7rem; color:#ccc;">CIAN (Vínculos/Bordes):</label>
+                    <input type="color" id="est-color-cian" value="#00ffff" style="background:none; border:none; cursor:pointer;">
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.7rem; color:#ccc;">FONDO ESPACIO (Base Color):</label>
+                    <input type="color" id="est-color-bg" value="#020204" style="background:none; border:none; cursor:pointer;">
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label style="font-size:0.7rem; color:#ccc;">CRISTAL (Modales/Cajas):</label>
+                    <input type="color" id="est-color-glass" value="#ffffff" style="background:none; border:none; cursor:pointer;">
+                </div>
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:15px; display:block;">OPACIDAD CRISTAL (0% a 100%):</label>
+                <input type="range" id="est-opacidad" min="0" max="100" value="5" style="width:100%; accent-color:var(--cian);">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-font"></i> TIPOGRAFÍA</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">TÍTULOS PRINCIPALES:</label>
+                <select id="est-font-titulos" class="nave-input" style="padding:8px;">
+                    <option value="'Orbitron', sans-serif">Orbitron (Actual / Tecnológica)</option>
+                    <option value="'Bebas Neue', sans-serif">Bebas Neue (Imponente)</option>
+                    <option value="'Cinzel', serif">Cinzel (Elegante)</option>
+                    <option value="'Oswald', sans-serif">Oswald (Moderna)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">MENÚ Y BARRA SUPERIOR:</label>
+                <select id="est-font-menu" class="nave-input" style="padding:8px;">
+                    <option value="'Montserrat', sans-serif">Montserrat (Actual / Limpia)</option>
+                    <option value="'Share Tech Mono', monospace">Share Tech Mono (Cyberpunk)</option>
+                    <option value="'Rajdhani', sans-serif">Rajdhani (Gamer / Sci-Fi)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">TARJETAS DE PRODUCTO:</label>
+                <select id="est-font-cuerpo" class="nave-input" style="padding:8px;">
+                    <option value="'Montserrat', sans-serif">Montserrat (Actual)</option>
+                    <option value="'Inter', sans-serif">Inter (App Moderna)</option>
+                    <option value="'Poppins', sans-serif">Poppins (Suave y Redonda)</option>
+                </select>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-meteor"></i> EFECTOS AVANZADOS</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">TIPO DE ATMÓSFERA ANIMADA:</label>
+                <select id="est-atmosfera" class="nave-input" style="padding:8px; border-color:var(--amber);">
+                    <option value="espacial">1. Espacial (Estrellas aceleradas)</option>
+                    <option value="matrix">2. Matrix / Cyberpunk</option>
+                    <option value="bokeh">3. Brisa Elegante (Luces)</option>
+                    <option value="vaporwave">4. Retro Vaporwave 80s</option>
+                    <option value="naturaleza">5. Naturaleza Zen (Hojas)</option>
+                    <option value="ondas">6. Ondas Minimalistas</option>
+                    <option value="ninguna">7. Ninguna (Fondo estático)</option>
+                </select>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px; grid-column: 1 / -1;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-bullhorn"></i> ANUNCIO EMERGENTE (Pop-Up Inicial)</h3>
+                <p style="font-size:0.7rem; color:#888; margin-top:0;">*Al modificar esto, se actualizará directamente la celda de tu Configuración Maestra.</p>
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:250px;">
+                        <label style="font-size:0.7rem; color:#ccc;">IMAGEN (URL):</label>
+                        <input type="text" id="est-popup-img" class="nave-input" placeholder="URL de la imagen...">
+                    </div>
+                    <div style="flex:1; min-width:250px;">
+                        <label style="font-size:0.7rem; color:#ccc;">TEXTO:</label>
+                        <input type="text" id="est-popup-txt" class="nave-input" placeholder="Texto del anuncio...">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px; grid-column: 1 / -1;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-handshake"></i> PATROCINADORES / MARCAS</h3>
+                
+                <div id="est-auspiciadores-container" style="display:flex; gap:10px; overflow-x:auto; padding:15px 5px; min-height:100px; align-items:center;">
+                    <p style="color:#666; font-size:0.8rem; margin:auto;">Cargando marcas...</p>
+                </div>
+                
+                <div style="margin-top:15px;">
+                    <label for="est-nuevo-auspiciador" class="custom-file-upload" id="lbl-est-ausp">
+                        <i class="fas fa-upload"></i> SUBIR NUEVA MARCA (Imagen Base64)
+                    </label>
+                    <input type="file" id="est-nuevo-auspiciador" accept="image/*" class="hidden-file">
+                </div>
+            </div>
+
+        </div>
+
+        <button class="btn-nave-main" style="margin-top:30px; font-size:1.1rem; padding:15px;" onclick="guardarEstilos()">
+            <i class="fas fa-save"></i> GUARDAR Y MUTAR NAVE
+        </button>
+    </div>
+      
   </div> <div id="modal-venta-manual" class="modal" style="display:none; align-items:center; justify-content:center;">
     <div class="modal-content" style="max-width:450px; padding:20px !important;">
       <h2 class="cian">REGISTRAR VENTA FÍSICA</h2>
@@ -2586,6 +2727,117 @@ function limpiarEtiquetas(texto) {
         .map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()) // Pone la Primera en Mayúscula y el resto en minúscula
         .join(', '); // Los vuelve a unir con una coma y un espacio perfecto
 }
+
+// ==========================================
+// MOTOR FOCUS: CMS ESTILOS Y AUSPICIADORES
+// ==========================================
+let auspiciadoresActivos = []; 
+
+function renderAuspiciadoresEstilo() {
+    const container = document.getElementById('est-auspiciadores-container');
+    if (!container) return;
+    
+    if (auspiciadoresActivos.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; margin:auto;">Sin marcas patrocinadoras.</p>';
+        return;
+    }
+    
+    container.innerHTML = auspiciadoresActivos.map((foto, index) => `
+        <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:5px; border-radius:8px; text-align:center; min-width:110px;">
+            <img src="${foto}" style="width:80px; height:40px; object-fit:contain; border-radius:5px; margin-bottom:5px; background:rgba(255,255,255,0.1);">
+            <div style="display:flex; justify-content:space-between; gap:2px;">
+                <button class="tool-btn" onclick="moverAuspiciador(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
+                <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarAuspiciador(${index})"><i class="fas fa-trash"></i></button>
+                <button class="tool-btn" onclick="moverAuspiciador(${index}, 1)" ${index === auspiciadoresActivos.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function moverAuspiciador(index, direccion) {
+    const nuevaPos = index + direccion;
+    if(nuevaPos < 0 || nuevaPos >= auspiciadoresActivos.length) return;
+    const temp = auspiciadoresActivos[index];
+    auspiciadoresActivos[index] = auspiciadoresActivos[nuevaPos];
+    auspiciadoresActivos[nuevaPos] = temp;
+    renderAuspiciadoresEstilo();
+}
+
+function borrarAuspiciador(index) {
+    auspiciadoresActivos.splice(index, 1);
+    renderAuspiciadoresEstilo();
+}
+
+// Absorber imagen del patrocinador a Base64
+const inputAuspiciador = document.getElementById('est-nuevo-auspiciador');
+if(inputAuspiciador) {
+    inputAuspiciador.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            auspiciadoresActivos.push(evt.target.result);
+            renderAuspiciadoresEstilo();
+            
+            const lbl = document.getElementById('lbl-est-ausp');
+            lbl.innerHTML = '<i class="fas fa-check"></i> MARCA AÑADIDA';
+            lbl.style.color = 'var(--neon-green)';
+            setTimeout(() => {
+                lbl.innerHTML = '<i class="fas fa-upload"></i> SUBIR NUEVA MARCA (Imagen Base64)';
+                lbl.style.color = 'var(--cian)';
+            }, 2000);
+            
+            inputAuspiciador.value = ''; 
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+async function guardarEstilos() {
+    const btn = document.querySelector('#estilo .btn-nave-main');
+    const txtOriginal = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECOPILANDO ADN GRÁFICO...';
+    btn.disabled = true;
+
+    const payload = {
+        logo: document.getElementById('est-logo').value.trim(),
+        logoError: document.getElementById('est-logo-error').value.trim(),
+        favicon: document.getElementById('est-favicon').value.trim(),
+        bgImg: document.getElementById('est-bg-img').value.trim(),
+        bgModo: document.getElementById('est-bg-modo').value,
+        bannerBg: document.getElementById('est-banner-bg').value.trim(),
+        colorNeon: document.getElementById('est-color-neon').value,
+        colorAmber: document.getElementById('est-color-amber').value,
+        colorCian: document.getElementById('est-color-cian').value,
+        colorBg: document.getElementById('est-color-bg').value,
+        colorGlass: document.getElementById('est-color-glass').value,
+        opacidadGlass: document.getElementById('est-opacidad').value,
+        fontTitulos: document.getElementById('est-font-titulos').value,
+        fontMenu: document.getElementById('est-font-menu').value,
+        fontCuerpo: document.getElementById('est-font-cuerpo').value,
+        atmosfera: document.getElementById('est-atmosfera').value,
+        popupImg: document.getElementById('est-popup-img').value.trim(),
+        popupTxt: document.getElementById('est-popup-txt').value.trim(),
+        auspiciadoresArr: auspiciadoresActivos
+    };
+
+    try {
+        const res = await ejecutarEnServidor("actualizarEstilosGlobales", payload);
+        if(res.success) {
+            alert("¡ÉXITO! La matriz de estilos se ha inyectado en el servidor. La nave ha mutado.");
+        } else {
+            alert("Error en el servidor: " + res.msg);
+        }
+    } catch(e) {
+        alert("Falla de conexión al enviar los datos.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR Y MUTAR NAVE';
+        btn.disabled = false;
+    }
+}
+
+// Hack rápido para que no inicie vacío en la prueba
+renderAuspiciadoresEstilo();
 </script>
 
 </body>

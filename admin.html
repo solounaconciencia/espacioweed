@@ -1703,13 +1703,33 @@ to { transform: translateX(0); opacity: 1; }
             <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px; grid-column: 1 / -1;">
                 <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-handshake"></i> PATROCINADORES / MARCAS</h3>
                 
-                <div id="est-auspiciadores-container" style="display:flex; gap:10px; overflow-x:auto; padding:15px 5px; min-height:100px; align-items:center;">
+                <div id="est-auspiciadores-container" style="display:flex; gap:10px; overflow-x:auto; padding:15px 5px; min-height:100px; align-items:center; border-bottom: 1px dashed rgba(0,255,255,0.2); margin-bottom: 15px;">
                     <p style="color:#666; font-size:0.8rem; margin:auto;">Cargando marcas...</p>
                 </div>
                 
-                <div style="margin-top:15px;">
+                <h4 style="color:var(--amber); font-size:0.75rem; margin-bottom:10px;"><i class="fas fa-plus"></i> AÑADIR NUEVA MARCA</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label style="font-size:0.65rem; color:#ccc;">NOMBRE DE LA MARCA:</label>
+                        <input type="text" id="ausp-nombre" class="nave-input" placeholder="Ej: Royal Queen Seeds...">
+                    </div>
+                    <div>
+                        <label style="font-size:0.65rem; color:#ccc;">TEXTO DEL BOTÓN:</label>
+                        <input type="text" id="ausp-btn" class="nave-input" placeholder="Ej: Ver catálogo...">
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label style="font-size:0.65rem; color:#ccc;">URL RECOMENDADA (Link):</label>
+                        <input type="text" id="ausp-url" class="nave-input" placeholder="https://...">
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label style="font-size:0.65rem; color:#ccc;">DESCRIPCIÓN:</label>
+                        <textarea id="ausp-desc" class="nave-input" placeholder="Breve descripción de la marca..." style="height: 60px; resize:vertical;"></textarea>
+                    </div>
+                </div>
+
+                <div style="margin-top:10px;">
                     <label for="est-nuevo-auspiciador" class="custom-file-upload" id="lbl-est-ausp">
-                        <i class="fas fa-upload"></i> SUBIR NUEVA MARCA (Imagen Base64)
+                        <i class="fas fa-upload"></i> SUBIR LOGO Y AÑADIR A LA LISTA
                     </label>
                     <input type="file" id="est-nuevo-auspiciador" accept="image/*" class="hidden-file">
                 </div>
@@ -2865,7 +2885,9 @@ function borrarAuspiciador(index) {
     renderAuspiciadoresEstilo();
 }
 
-// Absorber imagen del patrocinador a Base64 y recolectar textos
+// ==========================================
+// MOTOR FOCUS: RECOLECTOR DE MARCAS
+// ==========================================
 const inputAuspiciador = document.getElementById('est-nuevo-auspiciador');
 if(inputAuspiciador) {
     inputAuspiciador.addEventListener('change', function(e) {
@@ -2873,16 +2895,16 @@ if(inputAuspiciador) {
         if(!file) return;
 
         // Recolectamos los textos de las casillas nuevas
-        const nombre = document.getElementById('ausp-nombre').value.trim() || 'Sin Nombre';
-        const desc = document.getElementById('ausp-desc').value.trim();
-        const url = document.getElementById('ausp-url').value.trim();
-        const btn = document.getElementById('ausp-btn').value.trim();
+        const nombre = document.getElementById('ausp-nombre') ? document.getElementById('ausp-nombre').value.trim() : 'Marca';
+        const desc = document.getElementById('ausp-desc') ? document.getElementById('ausp-desc').value.trim() : '';
+        const url = document.getElementById('ausp-url') ? document.getElementById('ausp-url').value.trim() : '';
+        const btn = document.getElementById('ausp-btn') ? document.getElementById('ausp-btn').value.trim() : '';
 
         const reader = new FileReader();
         reader.onload = function(evt) {
             // Guardamos el paquete completo en la memoria
             auspiciadoresActivos.push({
-                nombre: nombre,
+                nombre: nombre || 'Marca',
                 desc: desc,
                 url: url,
                 btn: btn,
@@ -2892,19 +2914,21 @@ if(inputAuspiciador) {
             
             // Feedback Visual
             const lbl = document.getElementById('lbl-est-ausp');
-            lbl.innerHTML = '<i class="fas fa-check"></i> MARCA AÑADIDA';
-            lbl.style.color = 'var(--neon-green)';
-            setTimeout(() => {
-                lbl.innerHTML = '<i class="fas fa-upload"></i> SUBIR LOGO Y GUARDAR MARCA';
-                lbl.style.color = 'var(--cian)';
-            }, 2000);
+            if(lbl) {
+                lbl.innerHTML = '<i class="fas fa-check"></i> MARCA AÑADIDA A LA LISTA';
+                lbl.style.color = 'var(--neon-green)';
+                setTimeout(() => {
+                    lbl.innerHTML = '<i class="fas fa-upload"></i> SUBIR LOGO Y AÑADIR OTRA';
+                    lbl.style.color = 'var(--cian)';
+                }, 2000);
+            }
             
             // Limpiar formulario para la siguiente marca
             inputAuspiciador.value = ''; 
-            document.getElementById('ausp-nombre').value = '';
-            document.getElementById('ausp-desc').value = '';
-            document.getElementById('ausp-url').value = '';
-            document.getElementById('ausp-btn').value = '';
+            if(document.getElementById('ausp-nombre')) document.getElementById('ausp-nombre').value = '';
+            if(document.getElementById('ausp-desc')) document.getElementById('ausp-desc').value = '';
+            if(document.getElementById('ausp-url')) document.getElementById('ausp-url').value = '';
+            if(document.getElementById('ausp-btn')) document.getElementById('ausp-btn').value = '';
         };
         reader.readAsDataURL(file);
     });

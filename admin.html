@@ -1173,6 +1173,39 @@ select.nave-input {
   box-shadow: 0 0 20px var(--neon-green);
   transform: rotate(90deg) scale(1.1); /* Efecto visual dinámico */
 }
+/* ==========================================
+   ESTÉTICA FOCUS: SUBIDA DE ARCHIVOS
+   ========================================== */
+.custom-file-upload {
+    border: 1px dashed var(--cian);
+    background: rgba(0, 255, 255, 0.05);
+    color: var(--cian);
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-brand);
+    font-size: 0.75rem;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.custom-file-upload:hover {
+    background: rgba(0, 255, 255, 0.2);
+    color: white;
+    border-style: solid;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+/* Ocultamos el botón horrible de Windows 98 */
+input[type="file"].hidden-file {
+    display: none;
+}
 </style>    
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1524,7 +1557,10 @@ to { transform: translateX(0); opacity: 1; }
         </div>
 
         <label style="font-size:0.7rem; color:var(--amber); margin-top:10px; display:block;"><i class="fas fa-camera"></i> FOTO DEL PRODUCTO:</label>
-        <input type="file" id="np-imagen" class="nave-input" accept="image/*" style="padding: 8px; background:rgba(0,0,0,0.8);">
+        <label for="np-imagen" class="custom-file-upload" id="lbl-np-foto">
+            <i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...
+        </label>
+        <input type="file" id="np-imagen" accept="image/*" class="hidden-file" onchange="actualizarLabelArchivo(this, 'lbl-np-foto')">
         
         <div id="np-preview-box" style="display:none; text-align:center; margin-top:10px; margin-bottom:15px;">
             <img id="np-preview-img" src="" style="max-height:120px; border-radius:8px; border:1px solid var(--cian);">
@@ -1619,12 +1655,14 @@ to { transform: translateX(0); opacity: 1; }
             <i class="fas fa-images"></i> GESTIÓN DE FOTOS
         </h4>
         
-        <div id="ed-fotos-container" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0; min-height:120px;">
+        <div id="ed-fotos-container" style="display:flex; gap:10px; overflow-x:auto; overflow-y:hidden; padding:15px 5px; min-height:165px; align-items:center;">
             </div>
 
-        <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
-            <input type="file" id="ed-nueva-foto" accept="image/*" class="nave-input" style="flex:1; padding:8px;">
-            <button class="btn-nave-main" style="width:auto; margin:0;" onclick="agregarFotoEdicion()">+ AGREGAR</button>
+        <div style="margin-top:15px;">
+            <label for="ed-nueva-foto" class="custom-file-upload" id="lbl-ed-foto">
+                <i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...
+            </label>
+            <input type="file" id="ed-nueva-foto" accept="image/*" class="hidden-file" onchange="actualizarLabelArchivo(this, 'lbl-ed-foto')">
         </div>
 
         <div style="display:flex; gap:10px; margin-top:25px;">
@@ -2381,6 +2419,24 @@ async function guardarEdicionProducto() {
         alert("Error de red. Intenta de nuevo.");
         btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR CAMBIOS';
         btn.disabled = false;
+    }
+}
+
+// ==========================================
+// ESTÉTICA: ACTUALIZADOR DE BOTONES DE ARCHIVO
+// ==========================================
+function actualizarLabelArchivo(input, labelId) {
+    const label = document.getElementById(labelId);
+    if (input.files && input.files.length > 0) {
+        // Cuando seleccionas una foto, se pone verde
+        label.innerHTML = '<i class="fas fa-check"></i> FOTO LISTA: ' + input.files[0].name;
+        label.style.borderColor = 'var(--neon-green)';
+        label.style.color = 'var(--neon-green)';
+    } else {
+        // Vuelve al estado original si cancelas
+        label.innerHTML = '<i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...';
+        label.style.borderColor = 'var(--cian)';
+        label.style.color = 'var(--cian)';
     }
 }
 </script>

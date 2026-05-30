@@ -2113,7 +2113,8 @@ function showSection(id, btn) {
 
   if (id === 'buzon') cargarBuzon();
   if (id === 'config') cargarAjustesPanel();
-  if (id === 'estilo') cargarEstilosPanel(); // <--- INYECCIÓN FOCUS
+  if (id === 'estilo') cargarEstilosPanel();
+  if (id === 'estilo') cargarEstilosPanel();
 }
 
 function renderizarGrafico(listaData) {
@@ -2774,9 +2775,7 @@ function renderAuspiciadoresEstilo() {
     `).join('');
 }
 
-// ==========================================
-// CARGAR DATOS DESDE EL EXCEL AL ABRIR PESTAÑA
-// ==========================================
+
 // =======================================================
 // LECTURA DE ESTILOS + AUTO-RELLENO POR DEFECTO FOCUS
 // =======================================================
@@ -2784,17 +2783,19 @@ async function cargarEstilosPanel() {
     try {
         const res = await ejecutarEnServidor("getEstilosPanelData");
         if(res.success) {
-            const conf = res.config;
+            const conf = res.config || {};
             
-            // 1. Cargar Identidad (Si están vacíos, muestra tus valores espaciales actuales)
+            // 1. Identidad (Si está vacío, muestra tu Logo actual)
             document.getElementById('est-logo').value = conf['LOGO_PRINCIPAL'] || 'https://i.postimg.cc/9FL0gGth/Espacio-Weed.gif';
             document.getElementById('est-logo-error').value = conf['LOGO_ERROR'] || 'https://i.postimg.cc/hj6mws46/Logoew.png';
             document.getElementById('est-favicon').value = conf['FAVICON'] || '';
+            
+            // 2. Fondo y Banner
             document.getElementById('est-bg-img').value = conf['BG_IMG'] || '';
             document.getElementById('est-bg-modo').value = conf['BG_MODO'] || 'cover';
             document.getElementById('est-banner-bg').value = conf['BANNER_BG'] || '#000000';
             
-            // 2. Cargar Paleta Cromática (Con selectores gráficos sincronizados con el presente)
+            // 3. Paleta Cromática (Con tus colores actuales por defecto)
             document.getElementById('est-color-neon').value = conf['COLOR_NEON'] || '#2ecc71';
             document.getElementById('est-color-amber').value = conf['COLOR_AMBER'] || '#f1c40f';
             document.getElementById('est-color-cian').value = conf['COLOR_CIAN'] || '#00ffff';
@@ -2802,26 +2803,29 @@ async function cargarEstilosPanel() {
             document.getElementById('est-color-glass').value = conf['COLOR_GLASS'] || '#ffffff';
             document.getElementById('est-opacidad').value = conf['OPACIDAD_GLASS'] || '5';
             
-            // 3. Cargar Tipografías y Atmósfera
+            // 4. Tipografía
             document.getElementById('est-font-titulos').value = conf['FONT_TITULOS'] || "'Orbitron', sans-serif";
             document.getElementById('est-font-menu').value = conf['FONT_MENU'] || "'Montserrat', sans-serif";
             document.getElementById('est-font-cuerpo').value = conf['FONT_CUERPO'] || "'Montserrat', sans-serif";
+            
+            // 5. Atmósfera
             document.getElementById('est-atmosfera').value = conf['ATMOSFERA'] || 'espacial';
             
-            // 4. Cargar Pop-Up Inicial
+            // 6. Ubicación y Video (Las cajas que agregaste)
+            document.getElementById('est-direccion-txt').value = conf['DIRECCION_TEXTO'] || '';
+            document.getElementById('est-mapa-url').value = conf['MAPA_EMBED_URL'] || '';
+            document.getElementById('est-video-id').value = conf['VIDEO_DRIVE_ID'] || '';
+            
+            // 7. Pop-Up Emergente
             document.getElementById('est-popup-img').value = conf['ANUNCIO_IMAGEN'] || '';
             document.getElementById('est-popup-txt').value = conf['ANUNCIO_TEXTO'] || '';
 
-            if(conf['DIRECCION_TEXTO']) document.getElementById('est-direccion-txt').value = conf['DIRECCION_TEXTO'];
-            if(conf['MAPA_EMBED_URL']) document.getElementById('est-mapa-url').value = conf['MAPA_EMBED_URL'];
-            if(conf['VIDEO_DRIVE_ID']) document.getElementById('est-video-id').value = conf['VIDEO_DRIVE_ID'];
-
-            // 5. Cargar Patrocinadores
+            // 8. Patrocinadores
             auspiciadoresActivos = res.auspiciadores || [];
             renderAuspiciadoresEstilo();
         }
     } catch(e) {
-        console.error("Error en sensor de carga estética:", e);
+        console.error("Error al cargar la matriz de estilos:", e);
     }
 }
 

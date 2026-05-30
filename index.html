@@ -1633,6 +1633,18 @@ function aplicarEstilosDinamicos(config) {
     if (typeof encenderAtmosfera === "function") {
         encenderAtmosfera(config['ATMOSFERA'] || 'espacial');
     }
+    // 7. Inyectar Mapa Dinámico
+    if (config['MAPA_EMBED_URL'] && config['MAPA_EMBED_URL'].trim() !== "") {
+        const iframeMapa = document.querySelector('.caja-mapa iframe');
+        if (iframeMapa) iframeMapa.src = config['MAPA_EMBED_URL'].trim();
+    }
+
+    // 8. Inyectar Video Dinámico de Drive
+    if (config['VIDEO_DRIVE_ID'] && config['VIDEO_DRIVE_ID'].trim() !== "") {
+        const iframeVideo = document.querySelector('.caja-video iframe');
+        // Usamos el ID del administrador para construir el enlace de Drive nativo
+        if (iframeVideo) iframeVideo.src = `https://drive.google.com/file/d/${config['VIDEO_DRIVE_ID'].trim()}/preview`;
+    }
 }
 </script>
 

@@ -1206,6 +1206,36 @@ select.nave-input {
 input[type="file"].hidden-file {
     display: none;
 }
+/* ==========================================
+   ESTÉTICA FOCUS: SUBIDA DE ARCHIVOS
+   ========================================== */
+.custom-file-upload {
+    border: 1px dashed var(--cian);
+    background: rgba(0, 255, 255, 0.05);
+    color: var(--cian);
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-brand);
+    font-size: 0.75rem;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.custom-file-upload:hover {
+    background: rgba(0, 255, 255, 0.2);
+    color: white;
+    border-style: solid;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+input[type="file"].hidden-file { display: none; }    
 </style>    
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1535,43 +1565,105 @@ to { transform: translateX(0); opacity: 1; }
     </div>
   </div>
 
-<div id="modal-nuevo-producto" class="modal" style="display:none; align-items:center; justify-content:center;">
-    <div class="modal-content" style="max-width:500px; padding:20px !important;">
-        <h2 class="cian"><i class="fas fa-upload"></i> ALTA DE PRODUCTO</h2>
+<div id="modal-nuevo-producto" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 100000;">
+    <div class="modal-content" style="max-width:650px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
+        <h2 class="neon-green"><i class="fas fa-rocket"></i> ALTA DE PRODUCTO</h2>
         
-        <label style="font-size:0.7rem; color:var(--cian);">NOMBRE DEL PRODUCTO:</label>
-        <input type="text" id="np-nombre" class="nave-input" placeholder="Ej: Vaporizador Smok Ultra">
-        
-        <label style="font-size:0.7rem; color:var(--cian); margin-top:10px; display:block;">CATEGORÍA:</label>
-        <input type="text" id="np-categoria" class="nave-input" placeholder="Ej: Vaporizadores">
-        
-        <div style="display:flex; gap:10px; margin-top:10px;">
-            <div style="flex:1;">
-                <label style="font-size:0.7rem; color:var(--cian);">PRECIO ($):</label>
-                <input type="number" id="np-precio" class="nave-input" placeholder="0">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <label style="font-size:0.7rem; color:var(--cian);">NOMBRE:</label>
+                <input type="text" id="np-nombre" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">CATEGORÍA:</label>
+                <input type="text" id="np-categoria" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">MARCA:</label>
+                <input type="text" id="np-marca" class="nave-input" value="EW">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">ESTADO INICIAL:</label>
+                <select id="np-estado" class="nave-input">
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="PAUSA">PAUSADO / OCULTO</option>
+                </select>
             </div>
-            <div style="flex:1;">
-                <label style="font-size:0.7rem; color:var(--cian);">STOCK INICIAL:</label>
-                <input type="number" id="np-stock" class="nave-input" placeholder="0">
+            
+            <div>
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.7rem; color:var(--cian);">PRECIO ($):</label>
+                        <input type="number" id="np-precio" class="nave-input">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:0.7rem; color:var(--cian);">STOCK:</label>
+                        <input type="number" id="np-stock" class="nave-input">
+                    </div>
+                </div>
+
+                <div style="background: rgba(241, 196, 15, 0.1); border: 1px solid var(--amber); padding: 10px; border-radius: 8px; margin-top: 10px;">
+                    <h4 style="margin:0 0 10px 0; color:var(--amber); font-size:0.8rem;"><i class="fas fa-star"></i> PROMOCIÓN INICIAL</h4>
+                    <label style="font-size:0.65rem; color:#ccc;">TIPO DE PROMO:</label>
+                    <select id="np-tipo-promo" class="nave-input" style="padding: 8px;">
+                        <option value="Ninguna">SIN PROMO / NORMAL</option>
+                        <option value="Descuento">DESCUENTO DIRECTO ($)</option>
+                        <option value="Regalo">REGALO POR COMPRA (SKU)</option>
+                    </select>
+                    
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <div style="flex:1;">
+                            <label style="font-size:0.65rem; color:#ccc;">PRECIO PROMO:</label>
+                            <input type="number" id="np-precio-promo" class="nave-input" placeholder="$0">
+                        </div>
+                        <div style="flex:1;">
+                            <label style="font-size:0.65rem; color:#ccc;">MONTO DESC. O SKU REGALO:</label>
+                            <input type="text" id="np-detalle-promo" class="nave-input" placeholder="Ej: EW-001">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <label style="font-size:0.7rem; color:var(--amber); margin-top:10px; display:block;"><i class="fas fa-camera"></i> FOTO DEL PRODUCTO:</label>
-        <label for="np-imagen" class="custom-file-upload" id="lbl-np-foto">
-            <i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...
-        </label>
-        <input type="file" id="np-imagen" accept="image/*" class="hidden-file" onchange="actualizarLabelArchivo(this, 'lbl-np-foto')">
-        
-        <div id="np-preview-box" style="display:none; text-align:center; margin-top:10px; margin-bottom:15px;">
-            <img id="np-preview-img" src="" style="max-height:120px; border-radius:8px; border:1px solid var(--cian);">
+        <h4 style="color:var(--cian); border-bottom: 1px solid var(--cian); padding-bottom:5px; margin-top:20px;">VARIANTES (Separar con comas)</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div>
+                <label style="font-size:0.65rem; color:#888;">SABORES:</label>
+                <input type="text" id="np-sabor" class="nave-input" placeholder="Menta, Fresa...">
+            </div>
+            <div>
+                <label style="font-size:0.65rem; color:#888;">COLORES:</label>
+                <input type="text" id="np-color" class="nave-input" placeholder="Rojo, Azul...">
+            </div>
+            <div>
+                <label style="font-size:0.65rem; color:#888;">TAMAÑOS:</label>
+                <input type="text" id="np-tamano" class="nave-input" placeholder="10ml, 50ml...">
+            </div>
         </div>
 
-        <button id="btn-crear-producto" class="btn-nave-main" onclick="procesarNuevoProducto()" style="margin-top:20px;">
-            <i class="fas fa-rocket"></i> SUBIR A LA NAVE
-        </button>
-        <button class="btn-save" onclick="cerrarModalProductoNuevo()" style="background:transparent; border:1px solid #444; color:#888; margin-top:10px; width:100%;">
-            CANCELAR
-        </button>
+        <label style="font-size:0.7rem; color:var(--cian); margin-top:10px; display:block;">DESCRIPCIÓN:</label>
+        <textarea id="np-descripcion" class="nave-input" style="min-height: 110px; resize:vertical; padding:15px; font-family:var(--font-main);"></textarea>
+
+        <h4 style="color:var(--neon-green); border-bottom: 1px solid var(--neon-green); padding-bottom:5px; margin-top:15px;">
+            <i class="fas fa-images"></i> GESTIÓN DE FOTOS
+        </h4>
+        
+        <div id="np-fotos-container" style="display:flex; gap:10px; overflow-x:auto; overflow-y:hidden; padding:15px 5px; min-height:165px; align-items:center;">
+            <p style="color:#666; font-size:0.8rem; margin:auto;">Sin fotos. Agrega una nueva.</p>
+        </div>
+
+        <div style="margin-top:15px;">
+            <label for="np-nueva-foto" class="custom-file-upload" id="lbl-np-foto">
+                <i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...
+            </label>
+            <input type="file" id="np-nueva-foto" accept="image/*" class="hidden-file">
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:25px;">
+            <button id="btn-crear-producto" class="btn-nave-main" onclick="procesarNuevoProducto()" style="flex:2;">
+                <i class="fas fa-rocket"></i> SUBIR A LA NAVE
+            </button>
+            <button class="btn-save" onclick="cerrarModalProductoNuevo()" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CANCELAR
+            </button>
+        </div>
     </div>
 </div>
 
@@ -2116,83 +2208,118 @@ async function guardarAjustesPanel(btn) {
 }
 
 // ==========================================
-// MOTOR FOCUS: GESTOR DE PRODUCTOS Y BASE64
+// MOTOR FOCUS: CREACIÓN AVANZADA Y FOTOS
 // ==========================================
+let fotosNuevo = []; // Array táctico para el Nuevo Producto
 
 function abrirModalProductoNuevo() {
+    fotosNuevo = [];
+    renderFotosNuevo();
+    document.getElementById('lbl-np-foto').innerHTML = '<i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...';
+    document.getElementById('lbl-np-foto').style.borderColor = 'var(--cian)';
+    document.getElementById('lbl-np-foto').style.color = 'var(--cian)';
     document.getElementById('modal-nuevo-producto').style.display = 'flex';
 }
 
 function cerrarModalProductoNuevo() {
     document.getElementById('modal-nuevo-producto').style.display = 'none';
-    document.getElementById('np-nombre').value = '';
-    document.getElementById('np-precio').value = '';
-    document.getElementById('np-stock').value = '';
-    document.getElementById('np-imagen').value = '';
-    document.getElementById('np-preview-box').style.display = 'none';
+    const inputs = ['np-nombre', 'np-categoria', 'np-precio', 'np-stock', 'np-tipo-promo', 'np-precio-promo', 'np-detalle-promo', 'np-sabor', 'np-color', 'np-tamano', 'np-descripcion'];
+    inputs.forEach(id => document.getElementById(id).value = '');
+    document.getElementById('np-marca').value = 'EW';
+    document.getElementById('np-estado').value = 'ACTIVO';
+    fotosNuevo = [];
 }
 
-// 1. Escáner de la Imagen (Base64)
-document.getElementById('np-imagen').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if(file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-            // evt.target.result contiene la imagen transformada a Base64
-            document.getElementById('np-preview-img').src = evt.target.result;
-            document.getElementById('np-preview-box').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+// LÓGICA DE FOTOS (Idéntica a Editar)
+function renderFotosNuevo() {
+    const container = document.getElementById('np-fotos-container');
+    container.innerHTML = '';
+    if(fotosNuevo.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; margin:auto;">Sin fotos. Agrega una nueva.</p>';
+        return;
     }
+    fotosNuevo.forEach((foto, index) => {
+        container.innerHTML += `
+        <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:5px; border-radius:8px; text-align:center; min-width:110px;">
+            <img src="${foto}" style="width:80px; height:80px; object-fit:cover; border-radius:5px; margin-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; gap:2px;">
+                <button class="tool-btn" onclick="moverFotoNuevo(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
+                <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarFotoNuevo(${index})"><i class="fas fa-trash"></i></button>
+                <button class="tool-btn" onclick="moverFotoNuevo(${index}, 1)" ${index === fotosNuevo.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
+            </div>
+            ${index === 0 ? '<span style="font-size:0.5rem; color:var(--amber); display:block; margin-top:3px;">PORTADA</span>' : ''}
+        </div>`;
+    });
+}
+
+function moverFotoNuevo(index, direccion) {
+    const nuevaPos = index + direccion;
+    if(nuevaPos < 0 || nuevaPos >= fotosNuevo.length) return;
+    const temp = fotosNuevo[index];
+    fotosNuevo[index] = fotosNuevo[nuevaPos];
+    fotosNuevo[nuevaPos] = temp;
+    renderFotosNuevo();
+}
+
+function borrarFotoNuevo(index) {
+    fotosNuevo.splice(index, 1);
+    renderFotosNuevo();
+}
+
+document.getElementById('np-nueva-foto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        fotosNuevo.push(evt.target.result);
+        renderFotosNuevo();
+        const lbl = document.getElementById('lbl-np-foto');
+        lbl.innerHTML = '<i class="fas fa-check"></i> FOTO AGREGADA';
+        lbl.style.color = 'var(--neon-green)';
+        lbl.style.borderColor = 'var(--neon-green)';
+        document.getElementById('np-nueva-foto').value = ''; 
+    };
+    reader.readAsDataURL(file);
 });
 
-// 2. Disparo al Backend (Google Apps Script)
+// DISPARO AL SERVIDOR
 async function procesarNuevoProducto() {
-    const nombre = document.getElementById('np-nombre').value.trim();
-    const categoria = document.getElementById('np-categoria').value.trim();
-    const precio = document.getElementById('np-precio').value;
-    const stock = document.getElementById('np-stock').value;
     const btn = document.getElementById('btn-crear-producto');
-
-    if(!nombre || !precio) {
+    const nombre = document.getElementById('np-nombre').value.trim();
+    if(!nombre || !document.getElementById('np-precio').value) {
         alert("El Nombre y el Precio son vitales para la nave.");
         return;
     }
 
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESANDO IMAGEN...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO PRODUCTO...';
     btn.disabled = true;
 
-    // Extraemos el Base64 que generamos en el preview
-    let base64String = "";
-    if (document.getElementById('np-preview-box').style.display === 'block') {
-        base64String = document.getElementById('np-preview-img').src; 
-    }
-
-    // Armamos el Paquete de Datos
     const payload = {
         nombre: nombre,
-        categoria: categoria,
-        precio: precio,
-        stock: stock,
-        imagenBase64: base64String
+        categoria: document.getElementById('np-categoria').value.trim(),
+        marca: document.getElementById('np-marca').value.trim(),
+        estado: document.getElementById('np-estado').value,
+        precio: document.getElementById('np-precio').value,
+        stock: document.getElementById('np-stock').value,
+        tipo_promo: document.getElementById('np-tipo-promo').value,
+        precio_promo: document.getElementById('np-precio-promo').value,
+        detalle_promo: document.getElementById('np-detalle-promo').value,
+        sabor: document.getElementById('np-sabor').value.trim(),
+        color: document.getElementById('np-color').value.trim(),
+        tamano: document.getElementById('np-tamano').value.trim(),
+        descripcion: document.getElementById('np-descripcion').value.trim(),
+        fotosUrlArr: fotosNuevo 
     };
 
     try {
-        // Hacemos la llamada al backend usando la API que ya tienes configurada
-        const res = await ejecutarEnServidor("crearProductoAdmin", payload);
-        
-        alert("¡ÉXITO! Producto inyectado en el Excel.");
+        await ejecutarEnServidor("crearProductoAdmin", payload);
+        alert("¡ÉXITO! Producto creado e inyectado en el catálogo.");
         cerrarModalProductoNuevo();
-        
-        // Recargar el dashboard para ver el producto en la lista
         btn.innerHTML = '<i class="fas fa-rocket"></i> SUBIR A LA NAVE';
         btn.disabled = false;
-        
         const refresh = await ejecutarEnServidor("getAdminDashboardData");
         inicializarAdmin(refresh);
-        
     } catch(e) {
-        console.error("Falla:", e);
         alert("Error de transmisión al servidor.");
         btn.innerHTML = '<i class="fas fa-rocket"></i> SUBIR A LA NAVE';
         btn.disabled = false;

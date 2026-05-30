@@ -1398,11 +1398,12 @@ to { transform: translateX(0); opacity: 1; }
 <body>
 
 <div class="admin-nav">
-    <button class="tab-btn active" onclick="showSection('dash', this)"><i class="fas fa-chart-line"></i> MÉTRICAS</button>
-    <button class="tab-btn" onclick="showSection('buzon', this)"><i class="fas fa-envelope"></i> BUZÓN</button>
-    <button class="tab-btn" onclick="showSection('productos_manager', this)"><i class="fas fa-box-open"></i> PRODUCTOS</button>
-    <button class="tab-btn" onclick="showSection('config', this)"><i class="fas fa-cog"></i> AJUSTES</button>
-  </div>
+        <button class="tab-btn active" onclick="showSection('dashboard', this)"><i class="fas fa-chart-line"></i> MÉTRICAS</button>
+        <button class="tab-btn" onclick="showSection('productos_manager', this)"><i class="fas fa-box-open"></i> PRODUCTOS</button>
+        <button class="tab-btn" onclick="showSection('buzon', this)"><i class="fas fa-envelope"></i> BUZÓN</button>
+        <button class="tab-btn" onclick="showSection('ajustes', this)"><i class="fas fa-cog"></i> AJUSTES</button>
+        <button class="tab-btn" onclick="showSection('estilo', this)" style="border-color:var(--amber); color:var(--amber);"><i class="fas fa-palette"></i> ESTILO</button>
+    </div>
 
   <div class="admin-container">
     <div id="dash" class="section active">

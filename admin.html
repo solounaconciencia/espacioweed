@@ -1461,9 +1461,17 @@ to { transform: translateX(0); opacity: 1; }
 <div id="productos_manager" class="section">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
         <h2 class="cian"><i class="fas fa-box-open"></i> GESTIÓN DE CATÁLOGO</h2>
-        <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0;" onclick="abrirModalProductoNuevo()">
-            <i class="fas fa-plus"></i> NUEVO PRODUCTO
-        </button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalDestacados()">
+                <i class="fas fa-star"></i> DESTACADOS
+            </button>
+            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: var(--amber); color: black;" onclick="abrirModalCupones()">
+                <i class="fas fa-ticket-alt"></i> CREAR DESCUENTO
+            </button>
+            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0;" onclick="abrirModalProductoNuevo()">
+                <i class="fas fa-plus"></i> NUEVO PRODUCTO
+            </button>
+        </div>
     </div>
     
     <div style="margin-top: 20px;">
@@ -1958,6 +1966,44 @@ to { transform: translateX(0); opacity: 1; }
     </div>
 </div>
 
+<div id="modal-destacados" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">
+    <div class="modal-content" style="max-width:600px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
+        <h2 class="amber"><i class="fas fa-star"></i> GESTOR DE DESTACADOS</h2>
+        <p style="font-size:0.75rem; color:#888;">Elige hasta 5 productos para mostrar en el Slider de inicio de la tienda.</p>
+        
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(241, 196, 15, 0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <label style="font-size:0.7rem; color:var(--amber);">AÑADIR PRODUCTO AL SLIDER:</label>
+            <select id="dest-prod-select" class="nave-input" style="margin-bottom:10px;"><option value="">Cargando catálogo...</option></select>
+            
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1;">
+                    <label style="font-size:0.6rem; color:#ccc;">TÍTULO COMERCIAL CORTITO:</label>
+                    <input type="text" id="dest-titulo" class="nave-input" placeholder="Ej: ¡NUEVO INGRESO!">
+                </div>
+                <div style="flex:2;">
+                    <label style="font-size:0.6rem; color:#ccc;">DESCRIPCIÓN DEL SLIDER:</label>
+                    <input type="text" id="dest-desc" class="nave-input" placeholder="Lleva tu experiencia a otro nivel con...">
+                </div>
+            </div>
+            <button class="btn-nave-main" style="background:var(--amber); color:black; padding:10px;" onclick="agregarDestacado()">+ AÑADIR A LA LISTA</button>
+        </div>
+
+        <h4 class="cian" style="border-bottom: 1px solid var(--cian); padding-bottom:5px; font-size:0.8rem;">PRODUCTOS EN EL SLIDER ACTUAL</h4>
+        <div id="destacados-lista-container" style="display:flex; flex-direction:column; gap:10px; min-height:100px;">
+            <p style="color:#666; font-size:0.8rem; text-align:center;">Cargando destacados...</p>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button id="btn-guardar-destacados" class="btn-nave-main" onclick="guardarDestacadosBase()" style="flex:2;">
+                <i class="fas fa-save"></i> GUARDAR DESTACADOS
+            </button>
+            <button class="btn-save" onclick="document.getElementById('modal-destacados').style.display='none'" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CERRAR
+            </button>
+        </div>
+    </div>
+</div>    
+    
 <script>
 // ==========================================
 // MOTOR API GITHUB -> GOOGLE (FOCUS)
@@ -2021,6 +2067,7 @@ function inicializarAdmin(res) {
     selector.value = "0";
     actualizarGrafico(); // Esto dispara la carga de los 30 días
   }
+  if(res.destacados) destacadosActivos = res.destacados;
 }
 
 // --- SECCIÓN INVENTARIO ---
@@ -2995,6 +3042,172 @@ function actualizarMapaPreview() {
         iframe.src = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
     } else {
         iframe.src = "";
+    }
+}
+
+// ==========================================
+// MOTOR FOCUS: GESTOR DE DESTACADOS (SLIDER)
+// ==========================================
+let destacadosActivos = [];
+
+function abrirModalDestacados() {
+    // 1. Llenar el selector con el catálogo en vivo
+    const select = document.getElementById('dest-prod-select');
+    select.innerHTML = '<option value="">Selecciona un producto del catálogo...</option>' + 
+        globalStock.map(p => `<option value="${p.SKU}">${p.NOMBRE}</option>`).join('');
+    
+    // 2. Extraer los destacados actuales si ya están cargados (el servidor los trae ahora)
+    renderDestacadosAdmin();
+    document.getElementById('modal-destacados').style.display = 'flex';
+}
+
+function renderDestacadosAdmin() {
+    const container = document.getElementById('destacados-lista-container');
+    if (destacadosActivos.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; text-align:center; padding:20px;">No hay destacados. Añade hasta 5 productos.</p>';
+        return;
+    }
+    
+    container.innerHTML = destacadosActivos.map((d, index) => `
+        <div style="background:rgba(0,0,0,0.4); border:1px solid #333; padding:10px; border-radius:8px; display:flex; align-items:center; gap:12px;">
+            <img src="${d.img}" style="width:50px; height:50px; object-fit:cover; border-radius:5px; border:1px solid var(--cian);">
+            <div style="flex:1; overflow:hidden;">
+                <div style="font-size:0.65rem; color:var(--amber); font-weight:bold; letter-spacing:1px;">${d.titulo || 'PRODUCTO ESTRELLA'}</div>
+                <div style="font-size:0.85rem; font-weight:bold; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.nombre}</div>
+                <div style="font-size:0.65rem; color:#888; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.desc || ''}</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:5px;">
+                <button class="tool-btn" style="padding:5px 8px;" onclick="moverDestacado(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-up"></i></button>
+                <button class="tool-btn" style="padding:5px 8px;" onclick="moverDestacado(${index}, 1)" ${index === destacadosActivos.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <button class="tool-btn" style="color:#ff4444; border-color:#ff4444; padding:10px;" onclick="borrarDestacado(${index})"><i class="fas fa-trash"></i></button>
+        </div>
+    `).join('');
+}
+
+function agregarDestacado() {
+    if(destacadosActivos.length >= 5) return alert("Máximo 5 productos permitidos en el Slider para optimizar el rendimiento.");
+    
+    const sku = document.getElementById('dest-prod-select').value;
+    if(!sku) return alert("Selecciona un producto primero.");
+    
+    const prod = globalStock.find(p => p.SKU === sku);
+    if(!prod) return;
+
+    // Si el producto tiene múltiples imágenes, tomamos la primera
+    const imgReal = Array.isArray(prod.IMAGEN_URL) ? prod.IMAGEN_URL[0] : (prod.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
+
+    const titulo = document.getElementById('dest-titulo').value.trim() || 'DESTACADO';
+    const desc = document.getElementById('dest-desc').value.trim() || (prod.DESCRIPCION ? prod.DESCRIPCION.substring(0, 60) + '...' : '');
+    
+    destacadosActivos.push({
+        sku: prod.SKU,
+        nombre: prod.NOMBRE,
+        titulo: titulo,
+        desc: desc,
+        img: imgReal
+    });
+    
+    document.getElementById('dest-prod-select').value = '';
+    document.getElementById('dest-titulo').value = '';
+    document.getElementById('dest-desc').value = '';
+    renderDestacadosAdmin();
+}
+
+function moverDestacado(index, direccion) {
+    const nuevaPos = index + direccion;
+    if(nuevaPos < 0 || nuevaPos >= destacadosActivos.length) return;
+    const temp = destacadosActivos[index];
+    destacadosActivos[index] = destacadosActivos[nuevaPos];
+    destacadosActivos[nuevaPos] = temp;
+    renderDestacadosAdmin();
+}
+
+function borrarDestacado(index) {
+    destacadosActivos.splice(index, 1);
+    renderDestacadosAdmin();
+}
+
+async function guardarDestacadosBase() {
+    const btn = document.getElementById('btn-guardar-destacados');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO EN NAVE...';
+    btn.disabled = true;
+
+    try {
+        await ejecutarEnServidor("guardarDestacados", { destacados: destacadosActivos });
+        alert("¡Éxito! El Slider principal ha sido actualizado.");
+        document.getElementById('modal-destacados').style.display = 'none';
+    } catch(e) {
+        alert("Error de transmisión al guardar destacados.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR DESTACADOS';
+        btn.disabled = false;
+    }
+}
+
+<div id="modal-cupones" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">
+    <div class="modal-content" style="max-width:500px; padding:20px !important;">
+        <h2 class="amber"><i class="fas fa-ticket-alt"></i> MOTOR DE DESCUENTOS</h2>
+        <p style="font-size:0.75rem; color:#888;">Crea códigos promocionales porcentuales para tus clientes.</p>
+        
+        <label style="font-size:0.7rem; color:var(--cian);">CÓDIGO SECRETO (Ej: WEED20):</label>
+        <input type="text" id="cup-codigo" class="nave-input" placeholder="Escribe el código..." style="text-transform: uppercase;">
+        
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label style="font-size:0.7rem; color:var(--cian);">DESCUENTO (%):</label>
+                <input type="number" id="cup-pct" class="nave-input" placeholder="Ej: 15" min="1" max="99">
+            </div>
+            <div style="flex:2;">
+                <label style="font-size:0.7rem; color:var(--cian);">APLICA A:</label>
+                <select id="cup-sku" class="nave-input" style="padding:8px;">
+                    <option value="TODOS">Toda la Tienda</option>
+                    </select>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button id="btn-guardar-cupon" class="btn-nave-main" onclick="guardarCuponBase()" style="flex:2;">
+                <i class="fas fa-save"></i> ACTIVAR CUPÓN
+            </button>
+            <button class="btn-save" onclick="document.getElementById('modal-cupones').style.display='none'" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CERRAR
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Elimina la etiqueta <script> de arriba si ya estás dentro de tu zona de scripts
+function abrirModalCupones() {
+    const select = document.getElementById('cup-sku');
+    select.innerHTML = '<option value="TODOS">Toda la Tienda</option>' + 
+        globalStock.map(p => `<option value="${p.SKU}">${p.NOMBRE}</option>`).join('');
+    document.getElementById('modal-cupones').style.display = 'flex';
+}
+
+async function guardarCuponBase() {
+    const codigo = document.getElementById('cup-codigo').value.trim().toUpperCase();
+    const pct = document.getElementById('cup-pct').value;
+    const aplicaSku = document.getElementById('cup-sku').value;
+
+    if(!codigo || !pct) return alert("Falta el código o el porcentaje.");
+
+    const btn = document.getElementById('btn-guardar-cupon');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO...';
+    btn.disabled = true;
+
+    try {
+        await ejecutarEnServidor("crearCuponAdmin", { codigo: codigo, porcentaje: pct, aplicaSku: aplicaSku });
+        alert("¡Cupón Activado Exitosamente!");
+        document.getElementById('modal-cupones').style.display = 'none';
+        document.getElementById('cup-codigo').value = '';
+        document.getElementById('cup-pct').value = '';
+    } catch(e) {
+        alert("Error al crear el cupón.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> ACTIVAR CUPÓN';
+        btn.disabled = false;
     }
 }
 </script>

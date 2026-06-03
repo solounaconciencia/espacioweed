@@ -6,7 +6,7 @@
     <title>Espacio Weed | Prepara el viaje a otro mundo</title>
     <link rel="preconnect" href="https://script.google.com">
     <link rel="preconnect" href="https://script.googleusercontent.com">
-    
+    generarPreferenciaPago(pedido)
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@300;400;600;700&display=swap');
@@ -1407,6 +1407,12 @@ input[type="file"].hidden-file { display: none; }
                 <input type="text" id="direccion-envio" placeholder="Calle, Número, Ciudad..." style="display:none;">
             </div>
 
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="text" id="input-cupon" class="nave-input" placeholder="¿Tienes un código?" style="margin:0; padding:8px; font-size:0.8rem; text-transform:uppercase;">
+            <button class="tool-btn" style="border-color:var(--amber); color:var(--amber); padding:0 15px;" onclick="aplicarCuponCarrito()"><i class="fas fa-check"></i></button>
+        </div>
+        <div id="msj-cupon" style="font-size:0.65rem; color:var(--neon-green); margin-bottom:15px; text-align:right;"></div>
+            
             <div class="cart-total-box">
                 <span class="total-label">TOTAL FINAL:</span>
                 <span id="cart-total-value" class="total-amount">$0</span>
@@ -1649,6 +1655,34 @@ function aplicarEstilosDinamicos(config) {
             iframeVideo.src = `https://drive.google.com/file/d/${config['VIDEO_DRIVE_ID'].trim()}/preview`;
         }
     }
+
+    let miCuponValidado = null;
+
+async function aplicarCuponCarrito() {
+    const cod = document.getElementById('input-cupon').value.trim();
+    const msj = document.getElementById('msj-cupon');
+    if(!cod) return;
+    
+    msj.style.color = "var(--amber)";
+    msj.innerText = "Validando...";
+
+    try {
+        const res = await ejecutarEnServidor("validarCuponCliente", {codigo: cod});
+        if(res.success) {
+            miCuponValidado = { codigo: cod, pct: res.porcentaje, sku: res.aplicaSku };
+            msj.style.color = "var(--neon-green)";
+            msj.innerText = `¡Cupón ${res.porcentaje}% aplicado con éxito!`;
+            actualizarCarrito(); // Recalcula totales visualmente
+        } else {
+            miCuponValidado = null;
+            msj.style.color = "#ff4444";
+            msj.innerText = res.msg;
+            actualizarCarrito();
+        }
+    } catch(e) {
+        msj.innerText = "Falla de red al validar.";
+    }
+}
 </script>
 
 </body>
@@ -2359,7 +2393,8 @@ async function procesarCompra() {
     necesitaEnvio: necesitaEnvio,
     totalFinal: subtotal + envioVal,
     direccion: necesitaEnvio ? direccion : "Retiro en Local",
-    metodoPago: metodo
+    metodoPago: metodo,
+    cuponActivo: miCuponValidado ? miCuponValidado.codigo : null // <--- CONECTOR DE DESCUENTO FOCUS
   };
 
   // 3. RAMIFICACIÓN DE LÓGICA (EVOLUCIONADA PARA GITHUB)

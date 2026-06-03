@@ -3190,11 +3190,7 @@ function prepararRespuesta(clienteEmail) {
     document.getElementById('msg-input').focus();
 }
 
-/**
- * FUNCIÓN: renderSugerenciasDinamicas
- * Propósito: Dibujar las sugerencias generales cuando el Radar no tiene datos.
- * Ubicación: Fallback de cargarDashboard()
- */
+
 function renderSugerenciasDinamicas(res) {
     const wrapper = document.getElementById('wrapper-sugerencias');
     const dots = document.getElementById('dots-sugerencias');
@@ -3228,31 +3224,6 @@ function renderSugerenciasDinamicas(res) {
     // 3. Iniciar el movimiento automático (Si tienes la función definida)
     if (typeof iniciarAutoSugerencias === "function") {
         iniciarAutoSugerencias(res.sugerencias.length);
-    }
-}
-
-function renderSugerenciasDinamicas(res) {
-    const wrapper = document.getElementById('wrapper-sugerencias');
-    const dots = document.getElementById('dots-sugerencias');
-    if (!wrapper || !res || !res.sugerencias) return;
-
-    wrapper.innerHTML = res.sugerencias.map((s, i) => `
-        <div class="sugerencia-item ${i === 0 ? 'active' : ''}" id="sug-${i}">
-            <img src="${s.img}" class="img-sug">
-            <div class="info-sug">
-                <span class="badge-desc">${s.descuentoEtiqueta || 'DESTACADO'}</span>
-                <div style="font-size:0.8rem; font-weight:bold; color:white; margin:5px 0;">${s.nombre}</div>
-                <div class="cian" style="font-weight:bold; margin-top:5px;">$${Number(s.precioEspecial).toLocaleString('es-CL')}</div>
-                <button class="btn-buy-now" style="font-size:0.5rem; padding:5px 10px; margin-top:5px;" 
-                        onclick="agregarAlCarrito('${s.sku}')">AÑADIR</button>
-            </div>
-        </div>
-    `).join('');
-
-    if (dots) {
-        dots.innerHTML = res.sugerencias.map((_, i) => `
-            <div class="dot ${i === 0 ? 'active' : ''}" onclick="irASugerencia(${i})"></div>
-        `).join('');
     }
 }
 

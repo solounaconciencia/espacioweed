@@ -3039,7 +3039,7 @@ function actualizarMapaPreview() {
     if (direccion !== "") {
         // Convierte el texto en coordenadas de Google Maps
         const direccionCodificada = encodeURIComponent(direccion);
-        iframe.src = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+        iframe.src = `https://maps.google.com/maps?q=$${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
     } else {
         iframe.src = "";
     }
@@ -3144,6 +3144,7 @@ async function guardarDestacadosBase() {
         btn.disabled = false;
     }
 }
+</script>
 
 <div id="modal-cupones" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">
     <div class="modal-content" style="max-width:500px; padding:20px !important;">

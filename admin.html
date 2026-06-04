@@ -1575,6 +1575,31 @@ to { transform: translateX(0); opacity: 1; }
         <h2 class="amber"><i class="fas fa-palette"></i> METAMORFOSIS VISUAL</h2>
         <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Modifica el ADN gráfico de la nave. Los cambios se aplicarán al guardar.</p>
 
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(241,196,15,0.5); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 class="amber" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(241,196,15,0.2); padding-bottom:10px;"><i class="fas fa-magic"></i> ESTILOS PREDEFINIDOS (PLANTILLAS)</h3>
+            <select id="est-preset" class="nave-input" style="padding:10px; margin-bottom: 10px;" onchange="aplicarPreset(this.value)">
+                <option value="">Selecciona un estilo base...</option>
+                <option value="clean_slate">1. Quiero comenzar desde cero</option>
+                <option value="cyberpunk">2. Cyberpunk Neon (El original)</option>
+                <option value="matrix">3. Matrix Hacker (Verde/Oscuro)</option>
+                <option value="luxury">4. Luxury Gold (Premium/Elegante)</option>
+                <option value="nature">5. Organic Nature (CBD/Salud)</option>
+                <option value="ocean">6. Deep Ocean (Azules/Limpios)</option>
+                <option value="retro">7. Retro Vaporwave (80s Neon)</option>
+                <option value="blood">8. Blood Moon (Rojo/Agresivo)</option>
+                <option value="ice">9. Arctic Ice (Celeste/Gélido)</option>
+                <option value="minimalist">10. Minimalist White (Limpio/Clínico)</option>
+                <option value="corporate">11. Corporate Blue (Profesional/B2B)</option>
+                <option value="pastel">12. Soft Pastel (Boutique/Suave)</option>
+                <option value="sunset">13. Warm Sunset (Acogedor/Cálido)</option>
+                <option value="industrial">14. Industrial Grunge (Urbano/Gris)</option>
+            </select>
+            
+            <div id="preset-preview-box" style="width: 100%; height: 100px; background: #111; border-radius: 8px; border: 1px dashed var(--amber); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <span style="font-size: 0.7rem; color: #666;">Selecciona un estilo para previsualizar</span>
+            </div>
+        </div>
+
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
             
             <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
@@ -2981,6 +3006,65 @@ if(inputAuspiciador) {
     });
 }
 
+// ==========================================
+// MOTOR FOCUS: PRESETS DE DISEÑO + PREVIEW
+// ==========================================
+function aplicarPreset(val) {
+    const previewBox = document.getElementById('preset-preview-box');
+    if(!val) {
+        previewBox.innerHTML = '<span style="font-size: 0.7rem; color: #666;">Selecciona un estilo para previsualizar</span>';
+        previewBox.style.borderColor = 'var(--amber)';
+        return;
+    }
+    
+    // Matriz de los 13 Estilos
+    const presets = {
+        'clean_slate': { neon: '#121212', amber: '#008060', cian: '#6a6a6a', bg: '#ffffff', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'ninguna' },
+        'cyberpunk': { neon: '#ff00ff', amber: '#00ffff', cian: '#ff00ff', bg: '#090014', fontT: "'Orbitron', sans-serif", fontM: "'Rajdhani', sans-serif", atm: 'matrix' },
+        'matrix': { neon: '#00ff00', amber: '#00ff00', cian: '#00cc00', bg: '#000000', fontT: "'Share Tech Mono', monospace", fontM: "'Share Tech Mono', monospace", atm: 'matrix' },
+        'luxury': { neon: '#d4af37', amber: '#ffffff', cian: '#d4af37', bg: '#1a1a1a', fontT: "'Cinzel', serif", fontM: "'Montserrat', sans-serif", atm: 'bokeh' },
+        'nature': { neon: '#2ecc71', amber: '#f1c40f', cian: '#27ae60', bg: '#021206', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'naturaleza' },
+        'ocean': { neon: '#00d2ff', amber: '#3a7bd5', cian: '#00d2ff', bg: '#000c18', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'espacial' },
+        'retro': { neon: '#ff00ff', amber: '#00ffff', cian: '#ffff00', bg: '#2b00ff', fontT: "'Oswald', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'vaporwave' },
+        'blood': { neon: '#ff0000', amber: '#ff6600', cian: '#cc0000', bg: '#1a0000', fontT: "'Bebas Neue', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'espacial' },
+        'ice': { neon: '#00ffff', amber: '#ffffff', cian: '#aaddff', bg: '#001122', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'espacial' },
+        'minimalist': { neon: '#333333', amber: '#555555', cian: '#888888', bg: '#ffffff', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'ninguna' },
+        'corporate': { neon: '#0056b3', amber: '#004085', cian: '#cce5ff', bg: '#f8f9fa', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'ondas' },
+        'pastel': { neon: '#ffb3ba', amber: '#ffdfba', cian: '#baffc9', bg: '#fdfdff', fontT: "'Montserrat', sans-serif", fontM: "'Poppins', sans-serif", atm: 'ninguna' },
+        'sunset': { neon: '#ff7e67', amber: '#f9d276', cian: '#c25975', bg: '#2c1e31', fontT: "'Oswald', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'bokeh' },
+        'industrial': { neon: '#d9534f', amber: '#f0ad4e', cian: '#5bc0de', bg: '#292b2c', fontT: "'Bebas Neue', sans-serif", fontM: "'Rajdhani', sans-serif", atm: 'ninguna' }
+    };
+    
+    const p = presets[val];
+    if(p) {
+        // Auto-rellenar todos los selectores
+        const mapIds = {
+            'est-color-neon': p.neon, 'est-color-amber': p.amber, 'est-color-cian': p.cian, 'est-color-bg': p.bg,
+            'est-font-titulos': p.fontT, 'est-font-menu': p.fontM, 'est-font-cuerpo': p.fontM, 'est-atmosfera': p.atm
+        };
+        for (let id in mapIds) {
+            let el = document.getElementById(id);
+            if(el) el.value = mapIds[id];
+        }
+        
+        // Dibujar miniatura
+        if(previewBox) {
+            previewBox.innerHTML = `
+                <div style="width: 100%; height: 100%; background: ${p.bg}; display: flex; flex-direction: column; padding: 10px; box-sizing: border-box; font-family: ${p.fontM};">
+                    <div style="width: 100%; height: 25px; background: ${p.neon}; border-radius: 4px; margin-bottom: 8px; display:flex; align-items:center; justify-content:center;">
+                        <span style="color: ${['minimalist', 'corporate', 'pastel'].includes(val) ? '#fff' : '#000'}; font-size: 0.6rem; font-family: ${p.fontT}; font-weight:bold; letter-spacing:1px;">${val.toUpperCase()}</span>
+                    </div>
+                    <div style="display: flex; gap: 5px; flex: 1;">
+                        <div style="flex: 1; background: ${p.amber}; border-radius: 4px; opacity: 0.8;"></div>
+                        <div style="flex: 1; background: ${p.cian}; border-radius: 4px; opacity: 0.8;"></div>
+                    </div>
+                </div>
+            `;
+            previewBox.style.borderColor = p.neon; 
+        }
+    }
+}
+    
 async function guardarEstilos() {
     const btn = document.querySelector('#estilo .btn-nave-main');
     const txtOriginal = btn.innerHTML;

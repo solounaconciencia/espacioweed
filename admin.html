@@ -1640,30 +1640,78 @@ to { transform: translateX(0); opacity: 1; }
             </div>
 
             <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
-                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-tint"></i> PALETA CROMÁTICA</h3>
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-tint"></i> PALETA CROMÁTICA PRO</h3>
+                <p style="font-size:0.65rem; color:#888; margin-bottom:15px;">Puedes usar el selector visual o escribir el código HEX directamente.</p>
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <label style="font-size:0.7rem; color:#ccc;">NEÓN (Éxito/Precios):</label>
-                    <input type="color" id="est-color-neon" value="#2ecc71" style="background:none; border:none; cursor:pointer;">
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <label style="font-size:0.7rem; color:#ccc;">ÁMBAR (Destacados):</label>
-                    <input type="color" id="est-color-amber" value="#f1c40f" style="background:none; border:none; cursor:pointer;">
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <label style="font-size:0.7rem; color:#ccc;">CIAN (Vínculos/Bordes):</label>
-                    <input type="color" id="est-color-cian" value="#00ffff" style="background:none; border:none; cursor:pointer;">
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <label style="font-size:0.7rem; color:#ccc;">FONDO ESPACIO (Base Color):</label>
-                    <input type="color" id="est-color-bg" value="#020204" style="background:none; border:none; cursor:pointer;">
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <label style="font-size:0.7rem; color:#ccc;">CRISTAL (Modales/Cajas):</label>
-                    <input type="color" id="est-color-glass" value="#ffffff" style="background:none; border:none; cursor:pointer;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">FONDO PRINCIPAL (Tienda):</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-bg-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-bg').value = this.value">
+                        <input type="color" id="est-color-bg" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-bg-txt').value = this.value">
+                    </div>
                 </div>
                 
-                <label style="font-size:0.7rem; color:#ccc; margin-top:15px; display:block;">OPACIDAD CRISTAL (0% a 100%):</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">FONDO TARJETAS Y CAJAS:</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-glass-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-glass').value = this.value">
+                        <input type="color" id="est-color-glass" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-glass-txt').value = this.value">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">FONDO BARRA SUPERIOR (Menú):</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-topbar-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-topbar').value = this.value">
+                        <input type="color" id="est-color-topbar" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-topbar-txt').value = this.value">
+                    </div>
+                </div>
+
+                <hr style="border:0; border-top:1px dashed rgba(0,255,255,0.2); margin:15px 0;">
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">TÍTULOS Y TEXTO PRINCIPAL:</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-text-main-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-text-main').value = this.value">
+                        <input type="color" id="est-color-text-main" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-text-main-txt').value = this.value">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">PÁRRAFOS Y TEXTO SECUNDARIO:</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-text-sec-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-text-sec').value = this.value">
+                        <input type="color" id="est-color-text-sec" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-text-sec-txt').value = this.value">
+                    </div>
+                </div>
+
+                <hr style="border:0; border-top:1px dashed rgba(0,255,255,0.2); margin:15px 0;">
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">ACCIÓN PRINCIPAL (Botón Comprar):</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-neon-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-neon').value = this.value">
+                        <input type="color" id="est-color-neon" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-neon-txt').value = this.value">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">ACCIÓN SECUNDARIA (Destacados):</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-amber-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-amber').value = this.value">
+                        <input type="color" id="est-color-amber" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-amber-txt').value = this.value">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">BORDES Y ENLACES:</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-cian-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-cian').value = this.value">
+                        <input type="color" id="est-color-cian" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-cian-txt').value = this.value">
+                    </div>
+                </div>
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:15px; display:block;">OPACIDAD DE CAJAS (0% a 100%):</label>
                 <input type="range" id="est-opacidad" min="0" max="100" value="5" style="width:100%; accent-color:var(--cian);">
             </div>
 
@@ -1775,15 +1823,27 @@ to { transform: translateX(0); opacity: 1; }
                 <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-meteor"></i> EFECTOS AVANZADOS</h3>
                 
                 <label style="font-size:0.7rem; color:#ccc;">TIPO DE ATMÓSFERA ANIMADA:</label>
-                <select id="est-atmosfera" class="nave-input" style="padding:8px; border-color:var(--amber);">
-                    <option value="espacial">1. Espacial (Estrellas aceleradas)</option>
-                    <option value="matrix">2. Matrix / Cyberpunk</option>
-                    <option value="bokeh">3. Brisa Elegante (Luces)</option>
-                    <option value="vaporwave">4. Retro Vaporwave 80s</option>
-                    <option value="naturaleza">5. Naturaleza Zen (Hojas)</option>
-                    <option value="ondas">6. Ondas Minimalistas</option>
-                    <option value="ninguna">7. Ninguna (Fondo estático)</option>
+                <select id="est-atmosfera" class="nave-input" style="padding:8px; border-color:var(--amber);" onchange="previsualizarAtmosfera(this.value)">
+                    <option value="espacial">1. Vuelo Espacial (Estrellas hipervelocidad)</option>
+                    <option value="matrix">2. Matrix Hacker (Lluvia de datos verde)</option>
+                    <option value="bokeh">3. Brisa Elegante (Luces doradas desenfocadas)</option>
+                    <option value="vaporwave">4. Retro Vaporwave (Ocaso neón 80s)</option>
+                    <option value="naturaleza">5. Naturaleza Zen (Partículas orgánicas/Hojas)</option>
+                    <option value="ondas">6. Ondas Minimalistas (Olas suaves corporativas)</option>
+                    <option value="nieve">7. Tormenta Gélida (Copos cayendo lentamente)</option>
+                    <option value="sangre">8. Luna de Sangre (Partículas rojas y oscuras)</option>
+                    <option value="fuego">9. Ascuas Ardientes (Chispas de fuego subiendo)</option>
+                    <option value="oceano">10. Abismo Oceánico (Burbujas subacuáticas)</option>
+                    <option value="confeti">11. Modo Festivo (Confeti de celebración)</option>
+                    <option value="lujo">12. Lluvia de Oro (Destellos dorados premium)</option>
+                    <option value="tv">13. Estática TV Vieja (Ruido visual Grunge)</option>
+                    <option value="ninguna">14. Apagado (Fondo 100% estático y limpio)</option>
                 </select>
+
+                <div id="atmosfera-preview-box" style="width: 100%; height: 130px; background: var(--bg-space); border-radius: 8px; border: 1px dashed var(--cian); margin-top: 15px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <span style="position:relative; z-index:10; font-size: 0.7rem; color: white; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px; font-family: var(--font-brand);">VISTA PREVIA DE FONDO</span>
+                    <div id="atmosfera-preview-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;"></div>
+                </div>
             </div>
             
 
@@ -2973,6 +3033,11 @@ function blindarFontSelect(idSelect, valorGuardado, valorPorDefecto) {
     }
     el.value = valorPorDefecto;
 }
+
+function syncColor(idBase, valor) {
+    if(document.getElementById(idBase)) document.getElementById(idBase).value = valor;
+    if(document.getElementById(idBase + '-txt')) document.getElementById(idBase + '-txt').value = valor;
+}
     
 async function cargarEstilosPanel() {
     try {
@@ -2994,13 +3059,16 @@ async function cargarEstilosPanel() {
         document.getElementById('est-bg-modo').value = conf['BG_MODO'] || 'cover';
         document.getElementById('est-banner-bg').value = conf['BANNER_BG'] || '#000000';
         
-        // 3. Paleta Cromática
-        document.getElementById('est-color-neon').value = conf['COLOR_NEON'] || '#2ecc71';
-        document.getElementById('est-color-amber').value = conf['COLOR_AMBER'] || '#f1c40f';
-        document.getElementById('est-color-cian').value = conf['COLOR_CIAN'] || '#00ffff';
-        document.getElementById('est-color-bg').value = conf['COLOR_BG'] || '#020204';
-        document.getElementById('est-color-glass').value = conf['COLOR_GLASS'] || '#ffffff';
-        document.getElementById('est-opacidad').value = conf['OPACIDAD_GLASS'] || '5';
+        // 3. Paleta Cromática Sincronizada
+        syncColor('est-color-bg', conf['COLOR_BG'] || '#020204');
+        syncColor('est-color-glass', conf['COLOR_GLASS'] || '#ffffff');
+        syncColor('est-color-topbar', conf['COLOR_TOPBAR'] || '#000000');
+        syncColor('est-color-text-main', conf['COLOR_TEXT_MAIN'] || '#ffffff');
+        syncColor('est-color-text-sec', conf['COLOR_TEXT_SEC'] || '#cccccc');
+        syncColor('est-color-neon', conf['COLOR_NEON'] || '#2ecc71');
+        syncColor('est-color-amber', conf['COLOR_AMBER'] || '#f1c40f');
+        syncColor('est-color-cian', conf['COLOR_CIAN'] || '#00ffff');
+        if(document.getElementById('est-opacidad')) document.getElementById('est-opacidad').value = conf['OPACIDAD_GLASS'] || '5';
         
         // 4. Tipografía
         blindarFontSelect('est-font-titulos', conf['FONT_TITULOS'], "'Orbitron', sans-serif");
@@ -3025,6 +3093,7 @@ async function cargarEstilosPanel() {
         
         // 5. Atmósfera
         document.getElementById('est-atmosfera').value = conf['ATMOSFERA'] || 'espacial';
+        previsualizarAtmosfera(document.getElementById('est-atmosfera').value);
         
         // 6. Ubicación y Video (Con seguro anti-nulos)
         const dirEl = document.getElementById('est-direccion-txt');
@@ -3120,8 +3189,43 @@ if(inputAuspiciador) {
 }
 
 // ==========================================
-// MOTOR FOCUS: PRESETS DE DISEÑO + PREVIEW
+// MOTOR FOCUS: PREVIEW DE ATMÓSFERAS
 // ==========================================
+function previsualizarAtmosfera(tipo) {
+    const canvas = document.getElementById('atmosfera-preview-canvas');
+    if(!canvas) return;
+    
+    // Reset visual
+    canvas.style.background = 'transparent';
+    canvas.style.backgroundImage = 'none';
+    
+    // Previsualizaciones de color base representativo
+    if (tipo === 'espacial') {
+        canvas.style.background = 'radial-gradient(circle at center, #1B2735 0%, #020204 100%)';
+        canvas.style.backgroundImage = "url(\"data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1' fill='white' opacity='0.8'/%3E%3Ccircle cx='70' cy='60' r='1.5' fill='white' opacity='0.6'/%3E%3C/svg%3E\")";
+    } else if (tipo === 'matrix') {
+        canvas.style.background = '#000';
+        canvas.style.backgroundImage = 'radial-gradient(rgba(0, 40, 0, 0.6), #000)';
+    } else if (tipo === 'bokeh' || tipo === 'lujo') {
+        canvas.style.background = 'radial-gradient(circle at bottom, #2c1a04 0%, #020204 100%)';
+    } else if (tipo === 'vaporwave') {
+        canvas.style.background = 'linear-gradient(to bottom, #140526, #020204)';
+    } else if (tipo === 'naturaleza') {
+        canvas.style.background = 'radial-gradient(circle at top, #061f10 0%, #020204 100%)';
+    } else if (tipo === 'ondas') {
+        canvas.style.background = 'linear-gradient(135deg, #0f172a, #020204)';
+    } else if (tipo === 'nieve') {
+        canvas.style.background = 'linear-gradient(to bottom, #001122, #020204)';
+    } else if (tipo === 'sangre' || tipo === 'fuego') {
+        canvas.style.background = 'linear-gradient(to top, #1a0000, #000000)';
+    } else if (tipo === 'oceano') {
+        canvas.style.background = 'linear-gradient(to bottom, #001f3f, #000000)';
+    } else {
+        canvas.style.background = 'var(--bg-space)';
+    }
+}
+
+    
 function aplicarPreset(val) {
     const previewBox = document.getElementById('preset-preview-box');
     if(!val) {
@@ -3202,11 +3306,15 @@ async function guardarEstilos() {
         bgImg: document.getElementById('est-bg-img').value.trim(),
         bgModo: document.getElementById('est-bg-modo').value,
         bannerBg: document.getElementById('est-banner-bg').value.trim(),
+        colorBg: document.getElementById('est-color-bg').value,
+        colorGlass: document.getElementById('est-color-glass').value,
+        colorTopbar: document.getElementById('est-color-topbar').value,
+        colorTextMain: document.getElementById('est-color-text-main').value,
+        colorTextSec: document.getElementById('est-color-text-sec').value,
         colorNeon: document.getElementById('est-color-neon').value,
         colorAmber: document.getElementById('est-color-amber').value,
         colorCian: document.getElementById('est-color-cian').value,
-        colorBg: document.getElementById('est-color-bg').value,
-        colorGlass: document.getElementById('est-color-glass').value,
+        opacidadGlass: document.getElementById('est-opacidad').value,
         opacidadGlass: document.getElementById('est-opacidad').value,
         fontTitulos: document.getElementById('est-font-titulos').value,
         fontMenu: document.getElementById('est-font-menu').value,

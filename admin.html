@@ -1473,6 +1473,9 @@ to { transform: translateX(0); opacity: 1; }
             <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalDestacados()">
                 <i class="fas fa-star"></i> DESTACADOS
             </button>
+            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalPatrocinadores()">
+                <i class="fas fa-handshake"></i> PATROCINADORES
+            </button>
             <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: var(--amber); color: black;" onclick="abrirModalCupones()">
                 <i class="fas fa-ticket-alt"></i> CREAR DESCUENTO
             </button>
@@ -1874,34 +1877,7 @@ to { transform: translateX(0); opacity: 1; }
                 <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px; margin-top:10px;">TEXTO DEL ANUNCIO:</label>
                 <input type="text" id="est-popup-txt" class="nave-input" placeholder="Ej: ¡Envíos gratis este finde!">
             </div>
-
-            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px; grid-column: 1 / -1;">
-                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-handshake"></i> PATROCINADORES / MARCAS</h3>
-                
-                <div id="est-auspiciadores-container" style="display:flex; gap:10px; overflow-x:auto; padding:15px 5px; min-height:100px; align-items:center; border-bottom: 1px dashed rgba(0,255,255,0.2); margin-bottom: 15px;">
-                    <p style="color:#666; font-size:0.8rem; margin:auto;">Cargando marcas...</p>
-                </div>
-                
-                <h4 style="color:var(--amber); font-size:0.75rem; margin-bottom:10px;"><i class="fas fa-plus"></i> AÑADIR NUEVA MARCA</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>
-                        <label style="font-size:0.65rem; color:#ccc;">NOMBRE DE LA MARCA:</label>
-                        <input type="text" id="ausp-nombre" class="nave-input" placeholder="Ej: Royal Queen Seeds...">
-                    </div>
-                    <div>
-                        <label style="font-size:0.65rem; color:#ccc;">TEXTO DEL BOTÓN:</label>
-                        <input type="text" id="ausp-btn" class="nave-input" placeholder="Ej: Ver catálogo...">
-                    </div>
-                    <div style="grid-column: 1 / -1;">
-                        <label style="font-size:0.65rem; color:#ccc;">URL RECOMENDADA (Link):</label>
-                        <input type="text" id="ausp-url" class="nave-input" placeholder="https://...">
-                    </div>
-                    <div style="grid-column: 1 / -1;">
-                        <label style="font-size:0.65rem; color:#ccc;">DESCRIPCIÓN:</label>
-                        <textarea id="ausp-desc" class="nave-input" placeholder="Breve descripción de la marca..." style="height: 60px; resize:vertical;"></textarea>
-                    </div>
-                </div>
-
+            
                 <div style="margin-top:10px;">
                     <label for="est-nuevo-auspiciador" class="custom-file-upload" id="lbl-est-ausp">
                         <i class="fas fa-upload"></i> SUBIR LOGO Y AÑADIR A LA LISTA
@@ -2987,31 +2963,6 @@ function limpiarEtiquetas(texto) {
 // ==========================================
 let auspiciadoresActivos = []; 
 
-// ==========================================
-// DIBUJAR MINIATURAS DE MARCAS
-// ==========================================
-function renderAuspiciadoresEstilo() {
-    const container = document.getElementById('est-auspiciadores-container');
-    if (!container) return;
-    
-    if (auspiciadoresActivos.length === 0) {
-        container.innerHTML = '<p style="color:#666; font-size:0.8rem; margin:auto;">Sin marcas patrocinadoras.</p>';
-        return;
-    }
-    
-    container.innerHTML = auspiciadoresActivos.map((marca, index) => `
-        <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:5px; border-radius:8px; text-align:center; min-width:110px;">
-            <img src="${marca.logo || marca}" style="width:80px; height:40px; object-fit:contain; border-radius:5px; margin-bottom:2px; background:rgba(255,255,255,0.1);">
-            <p style="font-size:0.6rem; color:var(--amber); margin:2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80px; font-weight:bold;">${marca.nombre || 'Marca'}</p>
-            <div style="display:flex; justify-content:space-between; gap:2px; margin-top:5px;">
-                <button class="tool-btn" onclick="moverAuspiciador(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
-                <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarAuspiciador(${index})"><i class="fas fa-trash"></i></button>
-                <button class="tool-btn" onclick="moverAuspiciador(${index}, 1)" ${index === auspiciadoresActivos.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
-            </div>
-        </div>
-    `).join('');
-}
-
 function blindarFontSelect(idSelect, valorGuardado, valorPorDefecto) {
     const el = document.getElementById(idSelect);
     if (!el) return;
@@ -3118,7 +3069,28 @@ async function cargarEstilosPanel() {
         document.getElementById('est-color-neon').value = '#2ecc71';
         document.getElementById('est-color-amber').value = '#f1c40f';
         document.getElementById('est-color-cian').value = '#00ffff';
+    }// ==========================================
+// DIBUJAR MINIATURAS DE MARCAS (SIMPLIFICADO)
+// ==========================================
+function renderAuspiciadoresEstilo() {
+    const container = document.getElementById('est-auspiciadores-container');
+    if (!container) return;
+    
+    if (auspiciadoresActivos.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; margin:auto;">Sin marcas patrocinadoras.</p>';
+        return;
     }
+    
+    container.innerHTML = auspiciadoresActivos.map((marca, index) => `
+        <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:10px; border-radius:8px; text-align:center; min-width:100px;">
+            <img src="${marca.logo || marca}" style="width:80px; height:40px; object-fit:contain; border-radius:5px; margin-bottom:5px; background:rgba(255,255,255,0.1);">
+            <div style="display:flex; justify-content:space-between; gap:2px; margin-top:5px;">
+                <button class="tool-btn" onclick="moverAuspiciador(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
+                <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarAuspiciador(${index})"><i class="fas fa-trash"></i></button>
+                <button class="tool-btn" onclick="moverAuspiciador(${index}, 1)" ${index === auspiciadoresActivos.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    `).join('');
 }
 
 function moverAuspiciador(index, direccion) {
@@ -3136,7 +3108,7 @@ function borrarAuspiciador(index) {
 }
 
 // ==========================================
-// MOTOR FOCUS: RECOLECTOR DE MARCAS
+// MOTOR FOCUS: RECOLECTOR DE MARCAS (SOLO LOGO - LÍMITE 7)
 // ==========================================
 const inputAuspiciador = document.getElementById('est-nuevo-auspiciador');
 if(inputAuspiciador) {
@@ -3144,45 +3116,58 @@ if(inputAuspiciador) {
         const file = e.target.files[0];
         if(!file) return;
 
-        // Recolectamos los textos de las casillas nuevas
-        const nombre = document.getElementById('ausp-nombre') ? document.getElementById('ausp-nombre').value.trim() : 'Marca';
-        const desc = document.getElementById('ausp-desc') ? document.getElementById('ausp-desc').value.trim() : '';
-        const url = document.getElementById('ausp-url') ? document.getElementById('ausp-url').value.trim() : '';
-        const btn = document.getElementById('ausp-btn') ? document.getElementById('ausp-btn').value.trim() : '';
+        if(auspiciadoresActivos.length >= 7) {
+            alert("Has alcanzado el límite máximo de 7 patrocinadores permitidos.");
+            inputAuspiciador.value = '';
+            return;
+        }
 
         const reader = new FileReader();
         reader.onload = function(evt) {
-            // Guardamos el paquete completo en la memoria
+            // Guardamos SOLO el logo en base64
             auspiciadoresActivos.push({
-                nombre: nombre || 'Marca',
-                desc: desc,
-                url: url,
-                btn: btn,
-                logo: evt.target.result // La foto en Base64
+                logo: evt.target.result
             });
             renderAuspiciadoresEstilo();
             
-            // Feedback Visual
             const lbl = document.getElementById('lbl-est-ausp');
             if(lbl) {
                 lbl.innerHTML = '<i class="fas fa-check"></i> MARCA AÑADIDA A LA LISTA';
                 lbl.style.color = 'var(--neon-green)';
                 setTimeout(() => {
-                    lbl.innerHTML = '<i class="fas fa-upload"></i> SUBIR LOGO Y AÑADIR OTRA';
+                    lbl.innerHTML = '<i class="fas fa-upload"></i> SUBIR LOGO (PNG/JPG)';
                     lbl.style.color = 'var(--cian)';
                 }, 2000);
             }
-            
-            // Limpiar formulario para la siguiente marca
             inputAuspiciador.value = ''; 
-            if(document.getElementById('ausp-nombre')) document.getElementById('ausp-nombre').value = '';
-            if(document.getElementById('ausp-desc')) document.getElementById('ausp-desc').value = '';
-            if(document.getElementById('ausp-url')) document.getElementById('ausp-url').value = '';
-            if(document.getElementById('ausp-btn')) document.getElementById('ausp-btn').value = '';
         };
         reader.readAsDataURL(file);
     });
 }
+
+function abrirModalPatrocinadores() {
+    document.getElementById('modal-patrocinadores').style.display = 'flex';
+    renderAuspiciadoresEstilo();
+}
+
+async function guardarPatrocinadoresBase() {
+    const btn = document.getElementById('btn-guardar-patrocinadores');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO EN NAVE...';
+    btn.disabled = true;
+
+    try {
+        await ejecutarEnServidor("guardarPatrocinadores", { patrocinadores: auspiciadoresActivos });
+        alert("¡Éxito! Las marcas patrocinadoras han sido actualizadas.");
+        document.getElementById('modal-patrocinadores').style.display = 'none';
+    } catch(e) {
+        alert("Error de transmisión al guardar patrocinadores.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR MARCAS';
+        btn.disabled = false;
+    }
+}
+
+
 
 // ==========================================
 // MOTOR FOCUS: PREVIEW DE ATMÓSFERAS
@@ -3476,6 +3461,34 @@ async function guardarDestacadosBase() {
 }
 </script>
 
+<div id="modal-patrocinadores" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">
+    <div class="modal-content" style="max-width:600px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
+        <h2 class="cian"><i class="fas fa-handshake"></i> GESTOR DE PATROCINADORES</h2>
+        <p style="font-size:0.75rem; color:#888;">Sube hasta 7 logos de marcas. Aparecerán girando en el inicio de la tienda.</p>
+        
+        <div style="margin-top:15px; margin-bottom: 20px;">
+            <label for="est-nuevo-auspiciador" class="custom-file-upload" id="lbl-est-ausp">
+                <i class="fas fa-upload"></i> SUBIR LOGO (PNG / JPG)
+            </label>
+            <input type="file" id="est-nuevo-auspiciador" accept="image/*" class="hidden-file">
+        </div>
+
+        <h4 class="cian" style="border-bottom: 1px solid var(--cian); padding-bottom:5px; font-size:0.8rem;">LOGOS ACTUALES (Máx 7)</h4>
+        <div id="est-auspiciadores-container" style="display:flex; gap:10px; overflow-x:auto; padding:15px 5px; min-height:100px; align-items:center; margin-bottom: 15px;">
+            <p style="color:#666; font-size:0.8rem; margin:auto;">Cargando marcas...</p>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px; flex-shrink: 0; position: relative; z-index: 10;">
+            <button id="btn-guardar-patrocinadores" class="btn-nave-main" onclick="guardarPatrocinadoresBase()" style="flex:2;">
+                <i class="fas fa-save"></i> GUARDAR MARCAS
+            </button>
+            <button class="btn-save" onclick="document.getElementById('modal-patrocinadores').style.display='none'" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CERRAR
+            </button>
+        </div>
+    </div>
+</div>
+    
 <div id="modal-cupones" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">
     <div class="modal-content" style="max-width:500px; padding:20px !important;">
         <h2 class="amber"><i class="fas fa-ticket-alt"></i> MOTOR DE DESCUENTOS</h2>

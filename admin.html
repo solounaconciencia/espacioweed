@@ -1663,25 +1663,65 @@ to { transform: translateX(0); opacity: 1; }
                 <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-font"></i> TIPOGRAFÍA</h3>
                 
                 <label style="font-size:0.7rem; color:#ccc;">TÍTULOS PRINCIPALES:</label>
-                <select id="est-font-titulos" class="nave-input" style="padding:8px;">
-                    <option value="'Orbitron', sans-serif">Orbitron (Actual / Tecnológica)</option>
-                    <option value="'Bebas Neue', sans-serif">Bebas Neue (Imponente)</option>
-                    <option value="'Cinzel', serif">Cinzel (Elegante)</option>
-                    <option value="'Oswald', sans-serif">Oswald (Moderna)</option>
+                <select id="est-font-titulos" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
+                    <option value="'Orbitron', sans-serif" style="font-family: 'Orbitron', sans-serif;">Orbitron (Actual / Tecnológica)</option>
+                    <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Imponente)</option>
+                    <option value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel (Elegante)</option>
+                    <option value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald (Moderna)</option>
                 </select>
 
                 <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">MENÚ Y BARRA SUPERIOR:</label>
-                <select id="est-font-menu" class="nave-input" style="padding:8px;">
-                    <option value="'Montserrat', sans-serif">Montserrat (Actual / Limpia)</option>
-                    <option value="'Share Tech Mono', monospace">Share Tech Mono (Cyberpunk)</option>
-                    <option value="'Rajdhani', sans-serif">Rajdhani (Gamer / Sci-Fi)</option>
+                <select id="est-font-menu" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
+                    <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat (Actual / Limpia)</option>
+                    <option value="'Share Tech Mono', monospace" style="font-family: 'Share Tech Mono', monospace;">Share Tech Mono (Cyberpunk)</option>
+                    <option value="'Rajdhani', sans-serif" style="font-family: 'Rajdhani', sans-serif;">Rajdhani (Gamer / Sci-Fi)</option>
                 </select>
 
                 <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">TARJETAS DE PRODUCTO:</label>
-                <select id="est-font-cuerpo" class="nave-input" style="padding:8px;">
-                    <option value="'Montserrat', sans-serif">Montserrat (Actual)</option>
-                    <option value="'Inter', sans-serif">Inter (App Moderna)</option>
-                    <option value="'Poppins', sans-serif">Poppins (Suave y Redonda)</option>
+                <select id="est-font-cuerpo" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
+                    <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat (Actual)</option>
+                    <option value="'Inter', sans-serif" style="font-family: 'Inter', sans-serif;">Inter (App Moderna)</option>
+                    <option value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Poppins (Suave y Redonda)</option>
+                </select>
+
+                <div style="display:flex; gap:10px; margin-top:15px; align-items:flex-end;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.6rem; color:#ccc;">TAMAÑO BASE (%):</label>
+                        <input type="range" id="est-font-size" min="80" max="120" value="100" style="width:100%; accent-color:var(--cian);">
+                    </div>
+                    <div style="display:flex; gap:5px;">
+                        <button id="btn-f-bold" class="tool-btn" onclick="toggleStyleBtn(this, 'est-font-bold')" title="Negrita" style="font-weight:bold; font-family:serif;">B</button>
+                        <button id="btn-f-ital" class="tool-btn" onclick="toggleStyleBtn(this, 'est-font-italic')" title="Cursiva" style="font-style:italic; font-family:serif;">I</button>
+                        <button id="btn-f-unde" class="tool-btn" onclick="toggleStyleBtn(this, 'est-font-underline')" title="Subrayado" style="text-decoration:underline; font-family:serif;">U</button>
+                        <input type="hidden" id="est-font-bold" value="normal">
+                        <input type="hidden" id="est-font-italic" value="normal">
+                        <input type="hidden" id="est-font-underline" value="none">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-layer-group"></i> ESTRUCTURA PRO (Layout)</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">BORDES DE TARJETAS Y BOTONES:</label>
+                <select id="est-borde" class="nave-input" style="padding:8px;">
+                    <option value="15px">Redondeados (Amigable/Boutique)</option>
+                    <option value="4px">Ligeros (Moderno/Tech)</option>
+                    <option value="0px">Cuadrados (Industrial/Rudo)</option>
+                    <option value="30px">Píldora (Infantil/Suave)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">ALINEACIÓN DE PRODUCTOS:</label>
+                <select id="est-alineacion" class="nave-input" style="padding:8px;">
+                    <option value="center">Centrado (Elegante)</option>
+                    <option value="left">Izquierda (Shopify/Amazon)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">PROFUNDIDAD Y SOMBRAS:</label>
+                <select id="est-sombra" class="nave-input" style="padding:8px;">
+                    <option value="0 15px 35px rgba(0,0,0,0.5)">Sombra Profunda (Flotante)</option>
+                    <option value="0 4px 10px rgba(0,0,0,0.2)">Sombra Suave (Minimalista)</option>
+                    <option value="none">Sin Sombra (Diseño Flat 100%)</option>
                 </select>
             </div>
 
@@ -2909,6 +2949,22 @@ async function cargarEstilosPanel() {
         document.getElementById('est-font-titulos').value = conf['FONT_TITULOS'] || "'Orbitron', sans-serif";
         document.getElementById('est-font-menu').value = conf['FONT_MENU'] || "'Montserrat', sans-serif";
         document.getElementById('est-font-cuerpo').value = conf['FONT_CUERPO'] || "'Montserrat', sans-serif";
+        if(document.getElementById('est-font-size')) document.getElementById('est-font-size').value = conf['fontSize'] || '100';
+        if(document.getElementById('est-borde')) document.getElementById('est-borde').value = conf['borde'] || '15px';
+        if(document.getElementById('est-alineacion')) document.getElementById('est-alineacion').value = conf['alineacion'] || 'center';
+        if(document.getElementById('est-sombra')) document.getElementById('est-sombra').value = conf['sombra'] || '0 15px 35px rgba(0,0,0,0.5)';
+        
+        ['est-font-bold', 'est-font-italic', 'est-font-underline'].forEach(id => {
+            if(document.getElementById(id)) {
+                const val = conf[id] || (id === 'est-font-underline' ? 'none' : 'normal');
+                document.getElementById(id).value = val;
+                const btnId = 'btn-f-' + id.split('-')[2].substring(0,4); // bold, ital, unde
+                const btn = document.getElementById(btnId);
+                if(btn && val !== 'normal' && val !== 'none') {
+                    btn.style.borderColor = 'var(--neon-green)'; btn.style.color = 'var(--neon-green)';
+                }
+            }
+        });
         
         // 5. Atmósfera
         document.getElementById('est-atmosfera').value = conf['ATMOSFERA'] || 'espacial';
@@ -3064,7 +3120,18 @@ function aplicarPreset(val) {
         }
     }
 }
-    
+
+
+function toggleStyleBtn(btn, inputId) {
+    const input = document.getElementById(inputId);
+    if (input.value === 'normal' || input.value === 'none') {
+        input.value = (inputId === 'est-font-bold') ? 'bold' : (inputId === 'est-font-italic') ? 'italic' : 'underline';
+        btn.style.borderColor = 'var(--neon-green)'; btn.style.color = 'var(--neon-green)';
+    } else {
+        input.value = (inputId === 'est-font-underline') ? 'none' : 'normal';
+        btn.style.borderColor = 'var(--cian)'; btn.style.color = 'white';
+    }
+}    
 async function guardarEstilos() {
     const btn = document.querySelector('#estilo .btn-nave-main');
     const txtOriginal = btn.innerHTML;
@@ -3087,6 +3154,13 @@ async function guardarEstilos() {
         fontTitulos: document.getElementById('est-font-titulos').value,
         fontMenu: document.getElementById('est-font-menu').value,
         fontCuerpo: document.getElementById('est-font-cuerpo').value,
+        fontSize: document.getElementById('est-font-size').value,
+        fontBold: document.getElementById('est-font-bold').value,
+        fontItalic: document.getElementById('est-font-italic').value,
+        fontUnderline: document.getElementById('est-font-underline').value,
+        borde: document.getElementById('est-borde').value,
+        alineacion: document.getElementById('est-alineacion').value,
+        sombra: document.getElementById('est-sombra').value,
         atmosfera: document.getElementById('est-atmosfera').value,
         popupImg: document.getElementById('est-popup-img').value.trim(),
         popupTxt: document.getElementById('est-popup-txt').value.trim(),

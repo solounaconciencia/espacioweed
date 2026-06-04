@@ -2286,9 +2286,9 @@ function crearSelectorVariante(label, datos) {
     if (!datos || datos.trim() === "") return "";
     const opciones = datos.split(',');
     return `
-        <div style="margin-bottom:10px;">
-            <label style="font-size:0.6rem; color:#888; display:block; margin-bottom:4px;">${label}</label>
-            <select id="var-${label.toLowerCase()}" class="nave-input" style="margin-bottom:0; font-size:0.8rem; height:35px;">
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.65rem; color:#888; display:block; margin-bottom:6px; font-weight:bold;">${label}</label>
+            <select id="var-${label.toLowerCase()}" class="nave-input" style="margin-bottom:0; font-size:0.9rem; height:auto; padding: 12px 35px 12px 15px; cursor:pointer;">
                 ${opciones.map(opt => `<option value="${opt.trim()}">${opt.trim()}</option>`).join('')}
             </select>
         </div>

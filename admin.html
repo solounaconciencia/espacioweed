@@ -1664,11 +1664,62 @@ to { transform: translateX(0); opacity: 1; }
                 
                 <label style="font-size:0.7rem; color:#ccc;">TÍTULOS PRINCIPALES:</label>
                 <select id="est-font-titulos" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
-                    <option value="'Orbitron', sans-serif" style="font-family: 'Orbitron', sans-serif;">Orbitron (Actual / Tecnológica)</option>
-                    <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Imponente)</option>
-                    <option value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel (Elegante)</option>
-                    <option value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald (Moderna)</option>
+                    <option value="'Orbitron', sans-serif" style="font-family: 'Orbitron', sans-serif;">Orbitron (Geométrica / Tech)</option>
+                    <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat (Moderna / Limpia)</option>
+                    <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Imponente / Cartel)</option>
+                    <option value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel (Clásica / Elegante)</option>
+                    <option value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald (Condensada / Fuerza)</option>
+                    <option value="'Rajdhani', sans-serif" style="font-family: 'Rajdhani', sans-serif;">Rajdhani (Cyberpunk / Gamer)</option>
+                    <option value="'Share Tech Mono', monospace" style="font-family: 'Share Tech Mono', monospace;">Share Tech Mono (Consola)</option>
+                    <option value="'Inter', sans-serif" style="font-family: 'Inter', sans-serif;">Inter (Limpia / Minimalista)</option>
+                    <option value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Poppins (Redonda / Amigable)</option>
+                    <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto (Equilibrada / Android)</option>
+                    <option value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans (Lectura fluida)</option>
+                    <option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato (Estilizada / Corp)</option>
+                    <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display (Boutique / Editorial)</option>
+                    <option value="'Nunito', sans-serif" style="font-family: 'Nunito', sans-serif;">Nunito (Suave / Orgánica)</option>
+                    <option value="'Raleway', sans-serif" style="font-family: 'Raleway', sans-serif;">Raleway (Delgada / Fina)</option>
+                    <option value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (Clásica Universal / Shopify)</option>
                 </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">MENÚ Y BARRA SUPERIOR:</label>
+                <select id="est-font-menu" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
+                    <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat (Moderna / Limpia)</option>
+                    <option value="'Orbitron', sans-serif" style="font-family: 'Orbitron', sans-serif;">Orbitron (Geométrica / Tech)</option>
+                    <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Imponente / Cartel)</option>
+                    <option value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel (Clásica / Elegante)</option>
+                    <option value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald (Condensada / Fuerza)</option>
+                    <option value="'Rajdhani', sans-serif" style="font-family: 'Rajdhani', sans-serif;">Rajdhani (Cyberpunk / Gamer)</option>
+                    <option value="'Share Tech Mono', monospace" style="font-family: 'Share Tech Mono', monospace;">Share Tech Mono (Consola)</option>
+                    <option value="'Inter', sans-serif" style="font-family: 'Inter', sans-serif;">Inter (Limpia / Minimalista)</option>
+                    <option value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Poppins (Redonda / Amigable)</option>
+                    <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto (Equilibrada / Android)</option>
+                    <option value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans (Lectura fluida)</option>
+                    <option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato (Estilizada / Corp)</option>
+                    <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display (Boutique / Editorial)</option>
+                    <option value="'Nunito', sans-serif" style="font-family: 'Nunito', sans-serif;">Nunito (Suave / Orgánica)</option>
+                    <option value="'Raleway', sans-serif" style="font-family: 'Raleway', sans-serif;">Raleway (Delgada / Fina)</option>
+                    <option value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (Clásica Universal / Shopify)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">TARJETAS DE PRODUCTO:</label>
+                <select id="est-font-cuerpo" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
+                    <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat (Moderna / Limpia)</option>
+                    <option value="'Orbitron', sans-serif" style="font-family: 'Orbitron', sans-serif;">Orbitron (Geométrica / Tech)</option>
+                    <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Imponente / Cartel)</option>
+                    <option value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel (Clásica / Elegante)</option>
+                    <option value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald (Condensada / Fuerza)</option>
+                    <option value="'Rajdhani', sans-serif" style="font-family: 'Rajdhani', sans-serif;">Rajdhani (Cyberpunk / Gamer)</option>
+                    <option value="'Share Tech Mono', monospace" style="font-family: 'Share Tech Mono', monospace;">Share Tech Mono (Consola)</option>
+                    <option value="'Inter', sans-serif" style="font-family: 'Inter', sans-serif;">Inter (Limpia / Minimalista)</option>
+                    <option value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Poppins (Redonda / Amigable)</option>
+                    <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto (Equilibrada / Android)</option>
+                    <option value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans (Lectura fluida)</option>
+                    <option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato (Estilizada / Corp)</option>
+                    <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display (Boutique / Editorial)</option>
+                    <option value="'Nunito', sans-serif" style="font-family: 'Nunito', sans-serif;">Nunito (Suave / Orgánica)</option>
+                    <option value="'Raleway', sans-serif" style="font-family: 'Raleway', sans-serif;">Raleway (Delgada / Fina)</option>
+                    <option value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (Clásica Universal / Shopify)</option>
 
                 <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">MENÚ Y BARRA SUPERIOR:</label>
                 <select id="est-font-menu" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
@@ -2910,13 +2961,24 @@ function renderAuspiciadoresEstilo() {
     `).join('');
 }
 
-
-// =======================================================
-// LECTURA DE ESTILOS + AUTO-RELLENO POR DEFECTO FOCUS
-// =======================================================
-// =======================================================
-// LECTURA DE ESTILOS + AUTO-RELLENO POR DEFECTO FOCUS
-// =======================================================
+function blindarFontSelect(idSelect, valorGuardado, valorPorDefecto) {
+    const el = document.getElementById(idSelect);
+    if (!el) return;
+    
+    // Extrae el nombre puro (ej: "orbitron") para no fallar por comillas o espacios
+    const nombrePuroGuardado = (valorGuardado || valorPorDefecto).replace(/['"\s]/g, '').toLowerCase().split(',')[0];
+    
+    for (let i = 0; i < el.options.length; i++) {
+        const nombrePuroOpcion = el.options[i].value.replace(/['"\s]/g, '').toLowerCase().split(',')[0];
+        if (nombrePuroOpcion === nombrePuroGuardado) {
+            el.selectedIndex = i;
+            el.style.fontFamily = el.options[i].value.split(',')[0]; // Cambia el look del select en caliente
+            return;
+        }
+    }
+    el.value = valorPorDefecto;
+}
+    
 async function cargarEstilosPanel() {
     try {
         // Indicador visual de carga
@@ -2946,9 +3008,9 @@ async function cargarEstilosPanel() {
         document.getElementById('est-opacidad').value = conf['OPACIDAD_GLASS'] || '5';
         
         // 4. Tipografía
-        document.getElementById('est-font-titulos').value = conf['FONT_TITULOS'] || "'Orbitron', sans-serif";
-        document.getElementById('est-font-menu').value = conf['FONT_MENU'] || "'Montserrat', sans-serif";
-        document.getElementById('est-font-cuerpo').value = conf['FONT_CUERPO'] || "'Montserrat', sans-serif";
+        blindarFontSelect('est-font-titulos', conf['FONT_TITULOS'], "'Orbitron', sans-serif");
+        blindarFontSelect('est-font-menu', conf['FONT_MENU'], "'Montserrat', sans-serif");
+        blindarFontSelect('est-font-cuerpo', conf['FONT_CUERPO'], "'Montserrat', sans-serif");
         if(document.getElementById('est-font-size')) document.getElementById('est-font-size').value = conf['fontSize'] || '100';
         if(document.getElementById('est-borde')) document.getElementById('est-borde').value = conf['borde'] || '15px';
         if(document.getElementById('est-alineacion')) document.getElementById('est-alineacion').value = conf['alineacion'] || 'center';

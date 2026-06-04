@@ -1278,20 +1278,9 @@ input[type="file"].hidden-file { display: none; }
     text-shadow: 0 0 10px var(--neon-green);
     opacity: 1;
 }
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </style>    
-</head>
-<body>
-
-    <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <base target="_top">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
-    
 </head>
 <body>
 
@@ -1682,6 +1671,106 @@ function aplicarEstilosDinamicos(config) {
         .more-info-btn { border-radius: ${borde} !important; }
     `;
     let miCuponValidado = null;
+    // Disparar el motor de atmósferas
+    renderizarAtmosfera(config['ATMOSFERA'] || 'espacial', config['COLOR_BG'] || '#020204', config['COLOR_NEON'] || '#2ecc71');
+    }
+
+// ==========================================
+// MOTOR FOCUS: RENDERIZADO DE ATMÓSFERAS 
+// ==========================================
+function renderizarAtmosfera(tipo, colorBg, colorNeon) {
+    const canvas = document.getElementById('star-canvas');
+    if(!canvas) return;
+    
+    // 1. Limpiamos cualquier efecto anterior
+    canvas.innerHTML = '';
+    canvas.className = '';
+    let styleId = 'focus-atmosfera-style';
+    let oldStyle = document.getElementById(styleId);
+    if(oldStyle) oldStyle.remove();
+
+    // 2. Si es "ninguna", solo pintamos el fondo sólido y apagamos el motor
+    if (tipo === 'ninguna') {
+        canvas.style.background = colorBg;
+        return;
+    }
+
+    // 3. Inyector de CSS Dinámico para la animación elegida
+    const style = document.createElement('style');
+    style.id = styleId;
+    let css = `
+        #star-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; pointer-events: none; }
+        .particula { position: absolute; border-radius: 50%; }
+    `;
+
+    // 4. Lógica de dibujo según el tipo
+    if (tipo === 'espacial') {
+        canvas.style.background = `radial-gradient(circle at center, #1B2735 0%, ${colorBg} 100%)`;
+        css += `
+            #star-canvas::before { content: ""; position: absolute; width: 2px; height: 2px; background: transparent;
+            box-shadow: 15vw 10vh #fff, 35vw 45vh #fff, 65vw 15vh #fff, 85vw 85vh #fff, 45vw 95vh #fff, 25vw 75vh #fff, 55vw 35vh #fff, 10vw 80vh #fff, 90vw 10vh #fff, 40vw 30vh #fff, 70vw 60vh #fff;
+            animation: moveStars 50s linear infinite; }
+            @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-100vh); } }
+        `;
+    } 
+    else if (tipo === 'matrix') {
+        canvas.style.background = '#000';
+        for(let i=0; i<30; i++) {
+            let p = document.createElement('div');
+            p.style.cssText = `position:absolute; width:2px; height:${Math.random()*50 + 50}px; background:linear-gradient(transparent, ${colorNeon}); left:${Math.random()*100}vw; top:-100px; opacity:${Math.random()}; animation: rain ${Math.random()*2 + 1}s linear infinite;`;
+            canvas.appendChild(p);
+        }
+        css += `@keyframes rain { to { transform: translateY(120vh); } }`;
+    }
+    else if (tipo === 'nieve') {
+        canvas.style.background = `linear-gradient(to bottom, #001122, ${colorBg})`;
+        for(let i=0; i<50; i++) {
+            let p = document.createElement('div');
+            p.style.cssText = `position:absolute; width:${Math.random()*4+2}px; height:${Math.random()*4+2}px; background:#fff; border-radius:50%; left:${Math.random()*100}vw; top:-10px; opacity:${Math.random()*0.8+0.2}; animation: snow ${Math.random()*3 + 3}s linear infinite;`;
+            canvas.appendChild(p);
+        }
+        css += `@keyframes snow { to { transform: translate(-20px, 120vh); } }`;
+    }
+    else if (tipo === 'fuego' || tipo === 'sangre') {
+        const colorChispa = tipo === 'fuego' ? '#ffaa00' : '#ff0000';
+        canvas.style.background = `linear-gradient(to top, #1a0000, ${colorBg})`;
+        for(let i=0; i<40; i++) {
+            let p = document.createElement('div');
+            p.style.cssText = `position:absolute; width:${Math.random()*3+1}px; height:${Math.random()*3+1}px; background:${colorChispa}; border-radius:50%; left:${Math.random()*100}vw; bottom:-10px; opacity:${Math.random()}; box-shadow: 0 0 10px ${colorChispa}; animation: rise ${Math.random()*3 + 2}s ease-in infinite;`;
+            canvas.appendChild(p);
+        }
+        css += `@keyframes rise { 50% { transform: translate(${Math.random()*20-10}px, -50vh); opacity: 1; } 100% { transform: translate(${Math.random()*40-20}px, -100vh); opacity: 0; } }`;
+    }
+    else if (tipo === 'bokeh' || tipo === 'lujo') {
+        const colorLuz = tipo === 'lujo' ? '#d4af37' : colorNeon;
+        canvas.style.background = `radial-gradient(circle at bottom, #111, ${colorBg})`;
+        for(let i=0; i<15; i++) {
+            let p = document.createElement('div');
+            p.style.cssText = `position:absolute; width:${Math.random()*100+50}px; height:${Math.random()*100+50}px; background:${colorLuz}; border-radius:50%; left:${Math.random()*100}vw; top:${Math.random()*100}vh; opacity:0.05; filter:blur(20px); animation: float ${Math.random()*10 + 10}s ease-in-out infinite alternate;`;
+            canvas.appendChild(p);
+        }
+        css += `@keyframes float { to { transform: translate(${Math.random()*100-50}px, ${Math.random()*100-50}px); } }`;
+    }
+    else if (tipo === 'tv') {
+        canvas.style.background = colorBg;
+        css += `
+            #star-canvas::after { content:""; position:absolute; top:0; left:0; width:100%; height:100%; 
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+            pointer-events: none; z-index: 10; }
+        `;
+    }
+    else {
+        // Fallback genérico para Océano, Naturaleza, Vaporwave, etc. (Puro Gradiente CSS)
+        if(tipo === 'vaporwave') canvas.style.background = `linear-gradient(to bottom, #140526, ${colorBg})`;
+        else if(tipo === 'naturaleza') canvas.style.background = `radial-gradient(circle at top, #061f10 0%, ${colorBg} 100%)`;
+        else if(tipo === 'oceano') canvas.style.background = `linear-gradient(to bottom, #001f3f, ${colorBg})`;
+        else if(tipo === 'ondas') canvas.style.background = `linear-gradient(135deg, #0f172a, ${colorBg})`;
+        else canvas.style.background = colorBg;
+    }
+
+    style.innerHTML = css;
+    document.head.appendChild(style);
+}
 
 async function aplicarCuponCarrito() {
     const cod = document.getElementById('input-cupon').value.trim();

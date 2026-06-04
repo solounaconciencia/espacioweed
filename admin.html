@@ -2592,7 +2592,7 @@ function renderCatalogo(lista) {
       </td>
       <td>
         <div style="display:flex; flex-direction:column; gap:5px;">
-            <button class="tool-btn" style="border-color:var(--neon-green); color:var(--neon-green);" onclick="guardarRapido('${p.SKU}')"><i class="fas fa-bolt"></i> RÁPIDO</button>
+            <button class="tool-btn" style="border-color:var(--neon-green); color:var(--neon-green);" onclick="guardarRapido('${p.SKU}')"><i class="fas fa-bolt"></i> GUARDAR</button>
             <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="abrirModalEdicion('${p.SKU}')"><i class="fas fa-edit"></i> DETALLES</button>
         </div>
       </td>
@@ -3050,15 +3050,26 @@ function actualizarMapaPreview() {
 // ==========================================
 let destacadosActivos = [];
 
-function abrirModalDestacados() {
-    // 1. Llenar el selector con el catálogo en vivo
+async function abrirModalDestacados() {
+    // Muestra el modal al instante con mensaje de carga
+    document.getElementById('modal-destacados').style.display = 'flex';
+    document.getElementById('destacados-lista-container').innerHTML = '<p style="color:#666; font-size:0.8rem; text-align:center; padding:20px;">Sincronizando con el satélite...</p>';
+    
+    // Llena el selector
     const select = document.getElementById('dest-prod-select');
     select.innerHTML = '<option value="">Selecciona un producto del catálogo...</option>' + 
         globalStock.map(p => `<option value="${p.SKU}">${p.NOMBRE}</option>`).join('');
     
-    // 2. Extraer los destacados actuales si ya están cargados (el servidor los trae ahora)
+    // Fuerza la lectura en tiempo real del servidor
+    try {
+        const res = await ejecutarEnServidor("getAdminDashboardData");
+        if(res.destacados) destacadosActivos = res.destacados;
+    } catch(e) {
+        console.error("Falla de red al buscar destacados");
+    }
+    
+    // Dibuja el resultado final
     renderDestacadosAdmin();
-    document.getElementById('modal-destacados').style.display = 'flex';
 }
 
 function renderDestacadosAdmin() {

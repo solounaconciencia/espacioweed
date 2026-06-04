@@ -1639,13 +1639,12 @@ function aplicarEstilosDinamicos(config) {
 
     // 8. Inyectar Video Dinámico (Drive)
     if (config['VIDEO_DRIVE_ID'] && config['VIDEO_DRIVE_ID'].trim() !== "") {
-        const iframeVideo = document.querySelector('.caja-video iframe'); // Asegúrate que tu caja de video tenga esta clase
+        const iframeVideo = document.querySelector('.caja-video iframe');
         if (iframeVideo) {
             iframeVideo.src = `https://drive.google.com/file/d/${config['VIDEO_DRIVE_ID'].trim()}/preview`;
         }
     }
 
-    }
     // 9. INYECCIÓN PRO ESTILOS (Bordes, Sombras, Tipografía Avanzada)
     let styleTag = document.getElementById('focus-pro-styles');
     if (!styleTag) {
@@ -1670,10 +1669,12 @@ function aplicarEstilosDinamicos(config) {
         .product-card > div { text-align: ${alineacion} !important; }
         .more-info-btn { border-radius: ${borde} !important; }
     `;
-    let miCuponValidado = null;
+    
     // Disparar el motor de atmósferas
     renderizarAtmosfera(config['ATMOSFERA'] || 'espacial', config['COLOR_BG'] || '#020204', config['COLOR_NEON'] || '#2ecc71');
-    }
+}
+
+let miCuponValidado = null;
 
 // ==========================================
 // MOTOR FOCUS: RENDERIZADO DE ATMÓSFERAS 

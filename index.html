@@ -972,6 +972,7 @@ select.nave-input {
 }
 
 .cart-float-bubble:hover {
+  color: #000000 !important;
   transform: scale(1.1);
   background: white;
 }
@@ -1118,7 +1119,7 @@ select.nave-input {
 /* ==========================================
    ESTÉTICA UNIVERSAL: BOTONES DE CIERRE (X) 
    ========================================== */
-.close, .close-nave, .close-cart, .modal-close {
+.close, .close-nave, .close-cart, .modal-close, .close-modal {
     position: absolute;
     top: 15px;
     right: 15px;
@@ -1129,10 +1130,10 @@ select.nave-input {
     justify-content: center;
     font-size: 28px;
     font-family: var(--font-brand);
-    color: var(--neon-green);
-    background: rgba(2, 2, 4, 0.95); /* Fondo espacial oscuro */
-    border: 1px solid rgba(46, 204, 113, 0.4);
-    border-radius: 8px; /* Look tecnológico (cuadrado con bordes suaves) */
+    color: var(--cian);
+    background: rgba(2, 2, 4, 0.95);
+    border: 1px solid var(--cian);
+    border-radius: 8px;
     cursor: pointer;
     transition: 0.3s all cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 100000;
@@ -1141,16 +1142,16 @@ select.nave-input {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-.close:hover, .close-nave:hover, .close-cart:hover, .modal-close:hover {
-    background: var(--neon-green);
+.close:hover, .close-nave:hover, .close-cart:hover, .modal-close:hover, .close-modal:hover {
+    background: var(--cian);
     color: black !important;
-    box-shadow: 0 0 15px var(--neon-green);
-    transform: rotate(90deg) scale(1.1); /* Giro mecánico al pasar el dedo/mouse */
-    border-color: var(--neon-green);
+    box-shadow: 0 0 15px var(--cian);
+    transform: rotate(90deg) scale(1.1);
+    border-color: var(--cian);
 }
 
-.close:active, .close-nave:active, .close-cart:active, .modal-close:active {
-    transform: scale(0.95); /* Hundimiento al hacer clic */
+.close:active, .close-nave:active, .close-cart:active, .modal-close:active, .close-modal:active {
+    transform: scale(0.95);
     box-shadow: none;
 }
 /* --- MODAL DE UBICACIÓN (INTEGRADO AL TEMA) --- */

@@ -3178,6 +3178,19 @@ async function guardarDestacadosBase() {
             </div>
         </div>
 
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <div style="flex:1;">
+                <label style="font-size:0.65rem; color:var(--cian);">INICIO (Fecha y Hora):</label>
+                <input type="datetime-local" id="cup-inicio" class="nave-input">
+            </div>
+            <div style="flex:1;">
+                <label style="font-size:0.65rem; color:var(--cian);">FIN (Fecha y Hora):</label>
+                <input type="datetime-local" id="cup-fin" class="nave-input">
+            </div>
+        </div>
+
+
+        
         <div style="display:flex; gap:10px; margin-top:20px;">
             <button id="btn-guardar-cupon" class="btn-nave-main" onclick="guardarCuponBase()" style="flex:2;">
                 <i class="fas fa-save"></i> ACTIVAR CUPÓN
@@ -3202,15 +3215,17 @@ async function guardarCuponBase() {
     const codigo = document.getElementById('cup-codigo').value.trim().toUpperCase();
     const pct = document.getElementById('cup-pct').value;
     const aplicaSku = document.getElementById('cup-sku').value;
+    const inicio = document.getElementById('cup-inicio').value;
+    const fin = document.getElementById('cup-fin').value;
 
-    if(!codigo || !pct) return alert("Falta el código o el porcentaje.");
+    if(!codigo || !pct || !inicio || !fin) return alert("Falta información o fechas del cupón.");
 
     const btn = document.getElementById('btn-guardar-cupon');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO...';
     btn.disabled = true;
 
     try {
-        await ejecutarEnServidor("crearCuponAdmin", { codigo: codigo, porcentaje: pct, aplicaSku: aplicaSku });
+        await ejecutarEnServidor("crearCuponAdmin", { codigo: codigo, porcentaje: pct, aplicaSku: aplicaSku, inicio: inicio, fin: fin });
         alert("¡Cupón Activado Exitosamente!");
         document.getElementById('modal-cupones').style.display = 'none';
         document.getElementById('cup-codigo').value = '';

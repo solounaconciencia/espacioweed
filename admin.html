@@ -1989,11 +1989,11 @@ to { transform: translateX(0); opacity: 1; }
         </div>
 
         <h4 class="cian" style="border-bottom: 1px solid var(--cian); padding-bottom:5px; font-size:0.8rem;">PRODUCTOS EN EL SLIDER ACTUAL</h4>
-        <div id="destacados-lista-container" style="display:flex; flex-direction:column; gap:10px; min-height:100px;">
+        <div id="destacados-lista-container" style="display:flex; flex-direction:column; gap:10px; min-height:100px; max-height: 300px; overflow-y: auto; padding-right: 10px;">
             <p style="color:#666; font-size:0.8rem; text-align:center;">Cargando destacados...</p>
         </div>
 
-        <div style="display:flex; gap:10px; margin-top:20px;">
+        <div style="display:flex; gap:10px; margin-top:20px; flex-shrink: 0; position: relative; z-index: 10;">
             <button id="btn-guardar-destacados" class="btn-nave-main" onclick="guardarDestacadosBase()" style="flex:2;">
                 <i class="fas fa-save"></i> GUARDAR DESTACADOS
             </button>

@@ -1791,12 +1791,12 @@ async function aplicarCuponCarrito() {
             miCuponValidado = { codigo: cod, pct: res.porcentaje, sku: res.aplicaSku };
             msj.style.color = "var(--neon-green)";
             msj.innerText = `¡Cupón ${res.porcentaje}% aplicado con éxito!`;
-            actualizarCarrito(); // Recalcula totales visualmente
+            actualizarUI(); // FOCUS: Función corregida
         } else {
             miCuponValidado = null;
             msj.style.color = "#ff4444";
             msj.innerText = res.msg;
-            actualizarCarrito();
+            actualizarUI(); // FOCUS: Función corregida
         }
     } catch(e) {
         msj.innerText = "Falla de red al validar.";
@@ -2446,7 +2446,25 @@ function eliminarDelCarrito(index) {
 }
 
 function actualizarTotalCarrito() {
-  const subtotal = carrito.reduce(function(sum, item) { return sum + (item.precio * item.cantidad); }, 0);
+  let subtotal = carrito.reduce(function(sum, item) { return sum + (item.precio * item.cantidad); }, 0);
+  
+  // FOCUS: MOTOR DE DESCUENTO
+  if (miCuponValidado && miCuponValidado.pct > 0) {
+      let descuento = 0;
+      if (miCuponValidado.sku === "TODOS" || !miCuponValidado.sku) {
+          // Descuento a todo el carro
+          descuento = subtotal * (miCuponValidado.pct / 100);
+      } else {
+          // Descuento solo a productos de un SKU específico
+          carrito.forEach(item => {
+              if (item.sku.startsWith(miCuponValidado.sku)) {
+                  descuento += (item.precio * item.cantidad) * (miCuponValidado.pct / 100);
+              }
+          });
+      }
+      subtotal = subtotal - Math.round(descuento);
+  }
+
   const necesitaEnvio = document.getElementById('chk-envio').checked;
   const costoEnvio = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
   

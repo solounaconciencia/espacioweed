@@ -1657,6 +1657,30 @@ function aplicarEstilosDinamicos(config) {
     }
 
     }
+    // 9. INYECCIÓN PRO ESTILOS (Bordes, Sombras, Tipografía Avanzada)
+    let styleTag = document.getElementById('focus-pro-styles');
+    if (!styleTag) {
+        styleTag = document.createElement('style');
+        styleTag.id = 'focus-pro-styles';
+        document.head.appendChild(styleTag);
+    }
+    
+    const borde = config['borde'] || '15px';
+    const alineacion = config['alineacion'] || 'center';
+    const sombra = config['sombra'] || '0 15px 35px rgba(0,0,0,0.5)';
+    const size = config['fontSize'] || '100';
+    const weight = config['fontBold'] || 'normal';
+    const italic = config['fontItalic'] || 'normal';
+    const decor = config['fontUnderline'] || 'none';
+
+    styleTag.innerHTML = `
+        body { font-size: ${size}%; font-weight: ${weight}; font-style: ${italic}; }
+        a, h1, h2, h3, p { text-decoration: ${decor} !important; }
+        .product-card, .btn-nave-main, .btn-checkout, .login-card, .modal-content { border-radius: ${borde} !important; }
+        .product-card:hover { box-shadow: ${sombra} !important; }
+        .product-card > div { text-align: ${alineacion} !important; }
+        .more-info-btn { border-radius: ${borde} !important; }
+    `;
     let miCuponValidado = null;
 
 async function aplicarCuponCarrito() {

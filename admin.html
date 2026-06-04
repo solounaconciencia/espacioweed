@@ -1869,7 +1869,7 @@ to { transform: translateX(0); opacity: 1; }
             
             <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
                 <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-bullhorn"></i> ANUNCIO EMERGENTE</h3>
-                <p style="font-size:0.65rem; color:#888; margin-top:0; margin-bottom:15px;">*Al modificar esto, se actualizará tu Configuración Maestra.</p>
+                <p style="font-size:0.65rem; color:#888; margin-top:0; margin-bottom:10px;">*Controla el Pop-Up de bienvenida.</p>
                 
                 <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px;">IMAGEN (URL):</label>
                 <input type="text" id="est-popup-img" class="nave-input" placeholder="URL de la imagen...">
@@ -3051,9 +3051,12 @@ async function cargarEstilosPanel() {
         const vidEl = document.getElementById('est-video-id');
         if(vidEl) vidEl.value = conf['VIDEO_DRIVE_ID'] || '';
         
-        // 7. Pop-Up Emergente (Blindaje Focus: Busca en 3 fuentes para no fallar)
-        document.getElementById('est-popup-img').value = conf['popupImg'] || conf['ANUNCIO_IMAGEN'] || document.getElementById('aj_anuncio_imagen').value || '';
-        document.getElementById('est-popup-txt').value = conf['popupTxt'] || conf['ANUNCIO_TEXTO'] || document.getElementById('aj_anuncio_texto').value || '';
+        // Pop-Up Emergente (Conexión directa a Configuración Maestra)
+        const configMaestra = await ejecutarEnServidor("getConfig");
+        if(configMaestra) {
+            document.getElementById('est-popup-img').value = configMaestra['ANUNCIO_IMAGEN'] || '';
+            document.getElementById('est-popup-txt').value = configMaestra['ANUNCIO_TEXTO'] || '';
+        }
 
         // 8. Patrocinadores
         auspiciadoresActivos = (res && res.success && res.auspiciadores) ? res.auspiciadores : [];

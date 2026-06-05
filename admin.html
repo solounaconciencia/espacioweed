@@ -1876,24 +1876,12 @@ to { transform: translateX(0); opacity: 1; }
                 
                 <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px; margin-top:10px;">TEXTO DEL ANUNCIO:</label>
                 <input type="text" id="est-popup-txt" class="nave-input" placeholder="Ej: ¡Envíos gratis este finde!">
-            </div>
-            
-                <div style="margin-top:10px;">
-                    <label for="est-nuevo-auspiciador" class="custom-file-upload" id="lbl-est-ausp">
-                        <i class="fas fa-upload"></i> SUBIR LOGO Y AÑADIR A LA LISTA
-                    </label>
-                    <input type="file" id="est-nuevo-auspiciador" accept="image/*" class="hidden-file">
-                </div>
-            </div>
+                    </div>
 
-        </div>
-
-        <button class="btn-nave-main" style="margin-top:30px; font-size:1.1rem; padding:15px;" onclick="guardarEstilos()">
-            <i class="fas fa-save"></i> GUARDAR Y MUTAR NAVE
-        </button>
-    </div>
-      
-  </div> <div id="modal-venta-manual" class="modal" style="display:none; align-items:center; justify-content:center;">
+                </div> <button class="btn-nave-main" style="margin-top:30px; font-size:1rem; padding:12px;" onclick="guardarEstilos()">
+                    <i class="fas fa-save"></i> GUARDAR ESTILOS
+                </button>
+            </div> </div> <div id="modal-venta-manual" class="modal" style="display:none; align-items:center; justify-content:center;">
     <div class="modal-content" style="max-width:450px; padding:20px !important;">
       <h2 class="cian">REGISTRAR VENTA FÍSICA</h2>
       <select id="manual-prod-select" class="nave-input"><option value="">Cargando...</option></select>
@@ -3281,7 +3269,7 @@ function toggleStyleBtn(btn, inputId) {
 async function guardarEstilos() {
     const btn = document.querySelector('#estilo .btn-nave-main');
     const txtOriginal = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECOPILANDO ADN GRÁFICO...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RGUARDANDO NUEVO ESTILO GRÁFICO...';
     btn.disabled = true;
 
     const payload = {

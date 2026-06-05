@@ -1814,6 +1814,7 @@ async function aplicarCuponCarrito() {
             
             <input type="email" id="login-email" class="nave-input" placeholder="EMAIL">
             <input type="password" id="login-pass" class="nave-input" placeholder="CONTRASEÑA">
+            <input type="text" id="trampa-bot-login" style="display:none !important;" tabindex="-1" autocomplete="off">
             
             <button class="btn-nave-main" onclick="ejecutarLogin()">INGRESAR</button>
             
@@ -1831,6 +1832,7 @@ async function aplicarCuponCarrito() {
             <input type="email" id="reg-email" class="nave-input" placeholder="EMAIL">
             <input type="password" id="reg-pass" class="nave-input" placeholder="CONTRASEÑA">
             <input type="password" id="reg-pass-conf" class="nave-input" placeholder="CONFIRMAR">
+            <input type="text" id="trampa-bot-registro" style="display:none !important;" tabindex="-1" autocomplete="off">
             
             <select id="reg-pregunta" class="nave-input">
                 <option value="" disabled selected>Pregunta de Seguridad</option>
@@ -2704,6 +2706,9 @@ function volverInicio(e) {
 }
 
 async function ejecutarLogin() {
+  // FOCUS: Escudo Anti-Bot
+  if (document.getElementById('trampa-bot-login').value !== "") return;
+
   const email = document.getElementById('login-email').value;
   const pass = document.getElementById('login-pass').value;
 
@@ -2726,6 +2731,9 @@ async function ejecutarLogin() {
 }
 
 async function ejecutarRegistro() {
+  // FOCUS: Escudo Anti-Bot
+  if (document.getElementById('trampa-bot-registro').value !== "") return;
+
   const datos = {
     nombre: document.getElementById('reg-nombre').value,
     email: document.getElementById('reg-email').value,

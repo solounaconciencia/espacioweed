@@ -1485,14 +1485,21 @@ to { transform: translateX(0); opacity: 1; }
         </div>
     </div>
     
-    <div style="margin-top: 20px;">
-        <input type="text" id="search-catalogo" class="nave-input" placeholder="Buscar por Nombre o SKU..." onkeyup="filtrarCatalogo()" style="width: 100%; max-width: 400px;">
+    <div style="margin-top: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+        <input type="text" id="search-catalogo" class="nave-input" placeholder="Buscar por Nombre o SKU..." onkeyup="filtrarCatalogo()" style="width: 100%; max-width: 400px; margin-bottom: 0;">
+        <button id="btn-eliminar-masa" class="btn-save" style="background: #e74c3c; color: white; display: none; padding: 12px 20px;" onclick="confirmarEliminacionMasa()">
+            <i class="fas fa-trash-alt"></i> Eliminar (0)
+        </button>
+        <button id="btn-cancelar-masa" class="btn-save" style="background: transparent; border: 1px solid #444; color: #888; display: none; padding: 12px 20px;" onclick="cancelarSeleccionMasa()">
+            Cancelar
+        </button>
     </div>
     
     <div style="overflow-x: auto; margin-top: 15px;">
         <table class="admin-table">
             <thead>
                 <tr>
+                    <th style="width: 40px; text-align: center;"><input type="checkbox" id="chk-master-masa" onchange="seleccionarTodosMasa(this)"></th>
                     <th>FOTO</th>
                     <th>PRODUCTO / SKU</th>
                     <th>CATEGORÍA</th>
@@ -2699,17 +2706,27 @@ async function procesarNuevoProducto() {
 // ==========================================
 // MOTOR FOCUS: RENDERIZADO DEL CATÁLOGO HÍBRIDO (CORREGIDO)
 // ==========================================
+let skusSeleccionadosMasa = [];
+
 function renderCatalogo(lista) {
   const tbody = document.getElementById('tbody-catalogo');
   if(!tbody) return;
-  
+
+  // Resetear selectores maestros al re-dibujar
+  const chkMaster = document.getElementById('chk-master-masa');
+  if(chkMaster) chkMaster.checked = false;
+
   tbody.innerHTML = lista.map(p => {
-    // CORRECCIÓN: Leer correctamente la primera foto del Array
     let imgPortada = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : p.IMAGEN_URL;
     if (!imgPortada || imgPortada.trim() === "") imgPortada = 'https://i.postimg.cc/1RF0H6Ff/Logoew.png';
 
+    const estaChequeado = skusSeleccionadosMasa.includes(p.SKU.toString()) ? "checked" : "";
+
     return `
     <tr>
+      <td style="text-align: center; vertical-align: middle;">
+        <input type="checkbox" class="chk-item-masa" value="${p.SKU}" ${estaChequeado} onchange="actualizarSeleccionFilaMasa(this)">
+      </td>
       <td>
         <img src="${imgPortada}" style="width:50px; height:50px; object-fit:cover; border-radius:5px; border:1px solid rgba(0,255,255,0.3);">
       </td>
@@ -2730,7 +2747,7 @@ function renderCatalogo(lista) {
     </tr>
     `;
   }).join('');
-}    
+}
 
 async function guardarRapido(sku) {
   const precio = document.getElementById('q-pr-' + sku).value;
@@ -3450,6 +3467,86 @@ async function guardarDestacadosBase() {
         btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR DESTACADOS';
         btn.disabled = false;
     }
+}
+
+function actualizarSeleccionFilaMasa(chk) {
+  const sku = chk.value.toString();
+  if (chk.checked) {
+    if (!skusSeleccionadosMasa.includes(sku)) skusSeleccionadosMasa.push(sku);
+  } else {
+    skusSeleccionadosMasa = skusSeleccionadosMasa.filter(id => id !== sku);
+  }
+  refrescarBotonesMasa();
+}
+
+function seleccionarTodosMasa(master) {
+  const checkboxes = document.querySelectorAll('.chk-item-masa');
+  skusSeleccionadosMasa = [];
+  
+  checkboxes.forEach(chk => {
+    chk.checked = master.checked;
+    if (master.checked) {
+      skusSeleccionadosMasa.push(chk.value.toString());
+    }
+  });
+  refrescarBotonesMasa();
+}
+
+function refrescarBotonesMasa() {
+  const btnEliminar = document.getElementById('btn-eliminar-masa');
+  const btnCancelar = document.getElementById('btn-cancelar-masa');
+  const cant = skusSeleccionadosMasa.length;
+  
+  if (cant > 0) {
+    btnEliminar.style.display = "inline-block";
+    btnCancelar.style.display = "inline-block";
+    btnEliminar.innerHTML = `<i class="fas fa-trash-alt"></i> Eliminar (${cant})`;
+  } else {
+    btnEliminar.style.display = "none";
+    btnCancelar.style.display = "none";
+  }
+}
+
+function cancelarSeleccionMasa() {
+  skusSeleccionadosMasa = [];
+  const checkboxes = document.querySelectorAll('.chk-item-masa');
+  checkboxes.forEach(chk => chk.checked = false);
+  const chkMaster = document.getElementById('chk-master-masa');
+  if(chkMaster) chkMaster.checked = false;
+  refrescarBotonesMasa();
+}
+
+async function confirmarEliminacionMasa() {
+  const cant = skusSeleccionadosMasa.length;
+  if (cant === 0) return;
+  
+  const operacionConfirmada = confirm(`¿ALERTAS DE ACCESO?: ¿Seguro que deseas eliminar permanentemente estos ${cant} productos del catálogo central? Esta acción no se puede deshacer.`);
+  
+  if (operacionConfirmada) {
+    const btnEliminar = document.getElementById('btn-eliminar-masa');
+    btnEliminar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+    btnEliminar.disabled = true;
+    
+    try {
+      const res = await ejecutarEnServidor("eliminarProductosMasa", { skus: skusSeleccionadosMasa });
+      if (res.success) {
+        alert("¡ÉXITO! Los elementos seleccionados han sido purgados.");
+        skusSeleccionadosMasa = [];
+        refrescarBotonesMasa();
+        // Recargar datos
+        const refresh = await ejecutarEnServidor("getAdminDashboardData");
+        inicializarAdmin(refresh);
+      } else {
+        alert("Error del servidor: " + res.msg);
+        btnEliminar.disabled = false;
+        refrescarBotonesMasa();
+      }
+    } catch (e) {
+      alert("Error de comunicación de red al purgar elementos.");
+      btnEliminar.disabled = false;
+      refrescarBotonesMasa();
+    }
+  }
 }
     </script>
 

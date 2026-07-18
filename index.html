@@ -1978,43 +1978,28 @@ async function aplicarCuponCarrito() {
 </div>
 
 <footer class="footer-watermark">
-    <p>&copy; 2026 Espacio Weed. Todos los derechos reservados.</p>
+    <div style="margin-bottom: 15px; display: flex; justify-content: center; gap: 20px; font-size: 0.75rem;">
+        <a href="#" onclick="dispararComponenteLegal('obtenerPoliticasPrivacidadDinamicas', event)" style="color: var(--cian); text-decoration: none;">Políticas de Privacidad</a>
+        <span style="opacity:0.3;">|</span>
+        <a href="#" onclick="dispararComponenteLegal('obtenerTerminosCondicionesDinamicos', event)" style="color: var(--cian); text-decoration: none;">Términos y Condiciones</a>
+    </div>
+    <p>© 2026 Espacio Weed. Todos los derechos reservados.</p>
     <p class="developer-tag">
-        Desarrollador Digital: <a href="#" onclick="abrirModalAgencia(event)">COACH 3D LATINOÁMERICA. ÁREA SOLUCIONES TECNOLÓGICAS</a>
+        Desarrollador Digital: <a href="https://coach3dlatam.app/asesoriadigital" target="_blank" rel="noopener noreferrer">COACH 3D LATINOÁMERICA. ÁREA SOLUCIONES TECNOLÓGICAS</a>
     </p>
 </footer>
+        
 
-<div id="modal-agencia" class="modal">
-  <div class="modal-content" style="max-width: 500px; padding:25px; border-color:var(--cian); box-shadow: 0 0 20px rgba(0,255,255,0.2);">
-    <span class="close-modal" onclick="cerrarModalAgencia()">×</span>
-    <h2 style="font-family:var(--font-brand); color:var(--cian); margin-bottom:5px; font-size:1.4rem;">
-      <i class="fas fa-rocket"></i> COACH3D LATAM
-    </h2>
-    <p style="font-size:0.75rem; color:#888; margin-bottom:20px;">Evolucionamos tu negocio. Cuéntanos qué necesitas.</p>
-    
-    <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px;">TU NOMBRE:</label>
-    <input type="text" id="ag-nombre" class="nave-input" placeholder="Ej: Carlos Mendoza">
-    
-    <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px; margin-top:10px;">TU CORREO:</label>
-    <input type="email" id="ag-correo" class="nave-input" placeholder="Para contactarte...">
-
-    <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px; margin-top:10px;">¿CÓMO PODEMOS AYUDARTE?:</label>
-    <select id="ag-servicio" class="nave-input" style="padding:10px;">
-        <option value="" disabled selected>Selecciona una opción...</option>
-        <option value="Quiero mi propia pagina web o ecommerce.">Quiero mi propia página web o ecommerce.</option>
-        <option value="Cotizar solución tecnológica y/o automatización.">Quisiera cotizar otro tipo de solución tecnológica y/o automatización.</option>
-        <option value="Curso/taller de uso de IA.">Quisiera curso/taller de uso de IA personalizado o grupal.</option>
-    </select>
-
-    <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px; margin-top:10px;">DETALLES (OPCIONAL):</label>
-    <textarea id="ag-mensaje" class="nave-input" maxlength="500" placeholder="Escribe aquí un poco más sobre tu idea (máx 500 caracteres)..." style="height:90px; resize:vertical;"></textarea>
-    <div id="ag-char-count" style="text-align:right; font-size:0.6rem; color:var(--cian); margin-top:-10px; margin-bottom:15px; opacity:0.7;">0/500</div>
-
-    <button class="btn-checkout" onclick="enviarLeadAgencia()" id="btn-envio-agencia" style="width:100%; background:var(--cian); color:black;">
-      <i class="fas fa-paper-plane"></i> ENVIAR SOLICITUD
-    </button>
+<div id="modal-legal-dinamico" class="modal" style="display:none; z-index: 160000; align-items:center; justify-content:center;">
+  <div class="modal-content login-card" style="max-width: 500px; padding: 25px; border-color: var(--cian); box-shadow: 0 0 20px rgba(0,255,255,0.2);">
+    <span class="close-modal" onclick="document.getElementById('modal-legal-dinamico').style.display='none'">×</span>
+    <div id="cuerpo-legal-contenido" style="max-height: 60vh; overflow-y: auto; margin-top: 15px; margin-bottom: 20px; padding-right: 5px;">
+      <p style="text-align:center; opacity:0.5; font-size:0.8rem;">Conectando con el satélite legal...</p>
+    </div>
+    <button class="btn-nave-main" style="background: var(--cian); color: black; margin-top: 0;" onclick="document.getElementById('modal-legal-dinamico').style.display='none'">ENTENDIDO Y ACEPTO</button>
   </div>
 </div>
+<script>
 <script>
 // Variables Globales de Estado
 var configGlobal = {};
@@ -3484,60 +3469,6 @@ function verificarAnuncio() {
         modal.style.display = 'flex';
     }
 }
-// ==========================================
-// MOTOR FOCUS: EMBUDO AGENCIA COACH3D
-// ==========================================
-function abrirModalAgencia(e) {
-    if (e) e.preventDefault();
-    document.getElementById('modal-agencia').style.display = 'flex';
-}
-
-function cerrarModalAgencia() {
-    document.getElementById('modal-agencia').style.display = 'none';
-}
-
-// Contador de caracteres en vivo
-document.getElementById('ag-mensaje').addEventListener('input', function() {
-    document.getElementById('ag-char-count').innerText = this.value.length + "/500";
-});
-
-async function enviarLeadAgencia() {
-    const nombre = document.getElementById('ag-nombre').value.trim();
-    const correo = document.getElementById('ag-correo').value.trim();
-    const servicio = document.getElementById('ag-servicio').value;
-    const mensaje = document.getElementById('ag-mensaje').value.trim();
-    const btn = document.getElementById('btn-envio-agencia');
-
-    if (!nombre || !correo || !servicio) {
-        return mostrarToast("Por favor, rellena tu nombre, correo y el servicio que buscas.");
-    }
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ENVIANDO DATOS...';
-
-    const payload = { nombre, correo, servicio, mensaje };
-
-    try {
-        const res = await ejecutarEnServidor("registrarLeadAgencia", payload);
-        
-        // Mensaje de éxito final
-        mostrarToast("🚀 ¡Gracias! Hemos recibido tu solicitud. Te contactaremos pronto.");
-        cerrarModalAgencia();
-        
-        // Limpieza de datos
-        document.getElementById('ag-nombre').value = "";
-        document.getElementById('ag-correo').value = "";
-        document.getElementById('ag-servicio').selectedIndex = 0;
-        document.getElementById('ag-mensaje').value = "";
-        document.getElementById('ag-char-count').innerText = "0/500";
-        
-    } catch (err) {
-        mostrarToast("Error de transmisión. Intenta de nuevo.");
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane"></i> ENVIAR SOLICITUD';
-    }
-}
 
 // ==========================================
 // MOTOR FOCUS: EL CONMUTADOR DE ATMÓSFERAS
@@ -3584,6 +3515,28 @@ function encenderAtmosfera(tipo) {
         canvas.style.background = 'var(--bg-space)';
         canvas.style.backgroundImage = 'none';
     }
+}
+
+async function dispararComponenteLegal(accionServidor, e) {
+  if (e) e.preventDefault();
+  const modal = document.getElementById('modal-legal-dinamico');
+  const contenedor = document.getElementById('cuerpo-legal-contenido');
+  
+  if(!modal || !contenedor) return;
+  
+  contenedor.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin cian" style="font-size:1.5rem;"></i><p style="font-size:0.75rem; margin-top:10px; opacity:0.5;">Verificando credenciales con el servidor...</p></div>';
+  modal.style.display = 'flex';
+  
+  try {
+    const res = await ejecutarEnServidor(accionServidor);
+    if (res.success) {
+      contenedor.innerHTML = res.html;
+    } else {
+      contenedor.innerHTML = '<p style="color:red; text-align:center; font-size:0.8rem;">Error al compilar el contrato legal.</p>';
+    }
+  } catch(err) {
+    contenedor.innerHTML = '<p style="color:var(--amber); text-align:center; font-size:0.8rem;">Falla de conexión de red.</p>';
+  }
 }
 </script>
 </body>

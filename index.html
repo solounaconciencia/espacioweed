@@ -1843,6 +1843,11 @@ async function aplicarCuponCarrito() {
             </select>
             <input type="text" id="reg-respuesta" class="nave-input" placeholder="TU RESPUESTA">
             
+            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.75rem; margin-bottom: 15px; color: #ccc; text-align: left; width: 100%; cursor: pointer;">
+                <input type="checkbox" id="reg-acepto-terminos" style="accent-color: var(--neon-green);">
+                <span>Acepto las <a href="#" onclick="dispararComponenteLegal('obtenerPoliticasPrivacidadDinamicas', event)" style="color: var(--cian);">Políticas de Privacidad</a> y los <a href="#" onclick="dispararComponenteLegal('obtenerTerminosCondicionesDinamicos', event)" style="color: var(--cian);">Términos</a>.</span>
+            </label>
+            
             <button class="btn-nave-main" onclick="ejecutarRegistro()">UNIRSE</button>
             <a href="#" class="back-link" onclick="cambiarVistaComunidad('login', event)">VOLVER AL LOGIN</a>
         </div>
@@ -2719,6 +2724,12 @@ async function ejecutarLogin() {
 async function ejecutarRegistro() {
   // FOCUS: Escudo Anti-Bot
   if (document.getElementById('trampa-bot-registro').value !== "") return;
+
+  // FOCUS: Validación de Consentimiento Expreso (Ley 21.719)
+  if (!document.getElementById('reg-acepto-terminos').checked) {
+      mostrarToast("Debes aceptar las políticas de privacidad para unirte.");
+      return;
+  }
 
   const datos = {
     nombre: document.getElementById('reg-nombre').value,

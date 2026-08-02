@@ -3,10 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; frame-src 'self' https://www.youtube.com http://googleusercontent.com;">
+
     <title>Espacio Weed | Prepara el viaje a otro mundo</title>
+    <meta name="description" content="Descubre los mejores artículos para fumadores, vaporizadores y parafernalia en Espacio Weed. Envíos seguros a todo Chile.">
+    <link rel="canonical" href="https://www.espacioweed.cl/">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="Espacio Weed | Growshop & Parafernalia">
+    <meta property="og:description" content="Prepara el viaje a otro mundo con los mejores accesorios en Chile.">
+    <meta property="og:image" content="https://i.postimg.cc/7ZHhnxmj/Logoew.png">
+    <meta property="og:url" content="https://www.espacioweed.cl/">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/7ZHhnxmj/Logoew.png">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/7ZHhnxmj/Logoew.png">
+
+    <link rel="preconnect" href="https://script.google.com" crossorigin>
+    <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://script.google.com">
-    <link rel="preconnect" href="https://script.googleusercontent.com">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Store",
+      "name": "Espacio Weed",
+      "image": "https://i.postimg.cc/7ZHhnxmj/Logoew.png",
+      "url": "https://www.espacioweed.cl/",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Santiago",
+        "addressRegion": "Región Metropolitana",
+        "addressCountry": "CL"
+      }
+    }
+    </script>
     
 <style>
 
@@ -1365,7 +1398,7 @@ input[type="file"].hidden-file { display: none; }
     <div id="category-bar" class="category-filter-bar" style="display:none;"></div>
 
     <main class="content-wrapper" id="catalogo">
-    <h2 class="section-title">EXPEDICIÓN ESPACIO WEED</h2>
+    <h1 class="section-title">EXPEDICIÓN ESPACIO WEED</h1>
     <div id="grid-productos" class="product-grid">
         <p id="loading-msg" style="grid-column: 1/-1; text-align:center; padding:50px; font-family:var(--font-brand); color:var(--amber); letter-spacing:2px;">
             PREPARANDO IMPLEMENTOS DE DESPEGUE...
@@ -2067,8 +2100,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           <div class="slide ${i === 0 ? 'active' : ''}">
             <img src="${s.img}" class="img-slide" alt="${s.nombre}" onerror="this.src='https://i.postimg.cc/hj6mws46/Logoew.png'">
             <div class="slide-content">
-              <h2 class="amber">${s.titulo}</h2>
-              <h1>${s.nombre}</h1>
+              <h3 class="amber" style="margin: 0; font-size: 0.9rem; letter-spacing: 2px;">${s.titulo}</h3>
+              <h2 style="font-family: var(--font-brand); font-size: 1.8rem; color: white; margin: 5px 0 15px 0; text-shadow: 0 0 10px rgba(255,255,255,0.3);">${s.nombre}</h2>
               <p>${s.desc}</p>
               <div class="price-display" style="color:var(--cian); font-weight:bold; font-size:1.3rem; margin-bottom:15px;">
                 $${Number(s.precio).toLocaleString('es-CL')}
@@ -3548,6 +3581,46 @@ async function dispararComponenteLegal(accionServidor, e) {
     contenedor.innerHTML = '<p style="color:var(--amber); text-align:center; font-size:0.8rem;">Falla de conexión de red.</p>';
   }
 }
+</script>
+
+    <div id="cookie-shield" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(2, 2, 4, 0.98); border-top: 2px solid var(--cian); z-index: 999999; padding: 25px; box-sizing: border-box; backdrop-filter: blur(15px); flex-direction: column; align-items: center; text-align: center; box-shadow: 0 -10px 30px rgba(0, 255, 255, 0.1);">
+    <h3 style="color: var(--amber); font-family: var(--font-brand); font-size: 1.1rem; margin: 0 0 10px 0;"><i class="fas fa-cookie-bite"></i> PROTOCOLO DE PRIVACIDAD</h3>
+    <p style="color: #ccc; font-size: 0.8rem; max-width: 800px; margin: 0 0 15px 0; line-height: 1.5;">
+        Para cumplir con la Ley 21.719 de Chile, te informamos que usamos cookies esenciales para el funcionamiento de la nave. Las cookies analíticas y de marketing están desactivadas por defecto. Tú tienes el control de tu información.
+    </p>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
+        <label style="color: var(--neon-green); font-size: 0.8rem; font-weight: bold;"><input type="checkbox" checked disabled style="accent-color: var(--neon-green);"> Esenciales (Requeridas)</label>
+        <label style="color: #888; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" id="chk-cookies-analytics" style="accent-color: var(--cian);"> Analíticas</label>
+        <label style="color: #888; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" id="chk-cookies-marketing" style="accent-color: var(--cian);"> Marketing</label>
+    </div>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+        <button class="btn-nave-main" style="width: auto; padding: 10px 25px; margin: 0;" onclick="aceptarCookiesFocus(true)">ACEPTAR TODAS</button>
+        <button class="btn-save" style="background: transparent; border: 1px solid var(--cian); color: var(--cian); padding: 10px 25px; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'" onclick="aceptarCookiesFocus(false)">GUARDAR PREFERENCIAS</button>
+    </div>
+</div>
+
+<script>
+    // Motor de detección del Banner
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!localStorage.getItem('weed_cookies_consent')) {
+            document.getElementById('cookie-shield').style.display = 'flex';
+        }
+    });
+
+    // Función de guardado de preferencias
+    function aceptarCookiesFocus(todas) {
+        const consent = {
+            esenciales: true,
+            analiticas: todas || document.getElementById('chk-cookies-analytics').checked,
+            marketing: todas || document.getElementById('chk-cookies-marketing').checked
+        };
+        localStorage.setItem('weed_cookies_consent', JSON.stringify(consent));
+        document.getElementById('cookie-shield').style.display = 'none';
+        
+        if(typeof mostrarToast === "function") {
+            mostrarToast("Preferencias de privacidad guardadas.");
+        }
+    }
 </script>
 </body>
 </html>

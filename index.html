@@ -2123,6 +2123,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       if(loadingMsg) loadingMsg.remove();
       if (typeof renderProductos === "function") renderProductos(productosGlobal);
       if (typeof generarMenuCategorias === "function") generarMenuCategorias(productosGlobal);
+
+    // FOCUS: Sensor de enlaces desde la Link Page
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('cat')) { filtrarPorCat(params.get('cat')); }
+      if (params.get('modal') === 'ubicacion') {
+          const modUbic = document.getElementById("modal-ubicacion");
+          if (modUbic) modUbic.style.display = "flex";
+      }
       
       console.log("Nave 100% Desplegada y Operativa.");
     }, 800);

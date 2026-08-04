@@ -1200,10 +1200,12 @@ select.nave-input {
 }
 
 .modal-box-ubic {
-    background-color: var(--bg-space); padding: 25px; border-radius: 15px;
+    background-color: var(--bg-space); padding: 20px; border-radius: 15px;
     width: 90%; max-width: 900px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--cian); position: relative;
     animation: aparecer 0.3s ease-out;
+    max-height: 85vh;
+    overflow-y: auto;
 }
 
 .modal-header-ubic { 
@@ -1528,7 +1530,7 @@ input[type="file"].hidden-file { display: none; }
         </div>
         <div class="modal-body-ubic">
             <div class="media-container-ubic caja-mapa">
-                <iframe src="https://maps.google.com/maps?q=Cauquenes,Chile&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <iframe src="https://maps.google.com/maps?q=Cauquenes,+Chile&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
             <div class="media-container-ubic caja-video" style="position: relative;">
                 <div class="parche-drive"></div>
@@ -1670,7 +1672,7 @@ function aplicarEstilosDinamicos(config) {
         const iframeMapa = document.querySelector('.caja-mapa iframe');
         if (iframeMapa) {
             const direccionCodificada = encodeURIComponent(config['DIRECCION_TEXTO'].trim());
-            iframeMapa.src = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+            iframeMapa.src = "https://maps.google.com/maps?q=" + direccionCodificada + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
         }
     }
 

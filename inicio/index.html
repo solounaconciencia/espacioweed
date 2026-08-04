@@ -158,12 +158,9 @@
       <div id="redes-sociales"></div>
     </div>
 
-    <div id="chatbot-bubble" style="position: fixed; top: 20px; left: 20px; width: 65px; height: 65px; border-radius: 50%; box-shadow: 0 0 15px rgba(46, 204, 113, 0.5); cursor: pointer; z-index: 9999; transition: transform 0.3s; background-image: url('https://i.postimg.cc/7ZHhnxmj/Logoew.png'); background-size: contain; background-color: #000; background-position: center; background-repeat: no-repeat; border: 2px solid var(--neon-green);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-    </div>
-
     <div id="chatbot-window">
       <div id="chat-header">
-        <span><i class="fa-solid fa-satellite-dish"></i> Asesor Espacial</span>
+        <span><i class="fa-solid fa-robot"></i> Mars</span>
         <i class="fa-solid fa-xmark" id="close-chat"></i>
       </div>
       <div id="chat-messages"></div>
@@ -204,12 +201,13 @@
       youtube: "",
       tiktok: "",
       botones: [
-        ["Tienda Oficial", "Entra a nuestra nave principal y compra online", "https://espacioweed.cl/", "#2ecc71", "fa-solid fa-rocket"],
-        ["Vaporizadores", "Descubre la última tecnología de extracción", "https://espacioweed.cl/", "#f1c40f", "fa-solid fa-fire"],
-        ["Soporte y Envíos", "Habla directo con el centro de mando", "https://wa.me/56900000000?text=Hola,%20necesito%20ayuda.", "#00ffff", "fa-brands fa-whatsapp"],
-        ["Ubicación", "Visítanos en nuestra base física", "https://espacioweed.cl/", "#e74c3c", "fa-solid fa-map-marker-alt"]
-      ],
-      chatbot: [
+      ["Tienda Oficial", "Entra a nuestra nave principal y compra online", "https://espacioweed.cl/", "#2ecc71", "fa-solid fa-rocket"],
+      ["Vaporizadores", "Descubre la última tecnología de extracción", "https://espacioweed.cl/?cat=Vaporizadores", "#f1c40f", "fa-solid fa-fire"],
+      ["Ubicación", "Visítanos en nuestra base física", "https://espacioweed.cl/?modal=ubicacion", "#e74c3c", "fa-solid fa-map-marker-alt"],
+      ["Habla con Mars", "Conoce la nave y resuelve tus dudas", "CHATBOT", "#00ffff", "fa-solid fa-robot"]
+    ],
+    chatbot: [
+      ["inicio", "Hola explorador, soy Mars. ¿En qué te ayudo a preparar tu viaje?", "¡Bienvenido a Espacio Weed! ¿Qué buscas hoy?", "Quiero ver la Tienda, Dudas con mi Envío, Hablar con el Mando Central"],
         ["inicio", "Hola explorador, soy tu Asesor Espacial. ¿En qué te ayudo a preparar tu viaje?", "¡Bienvenido a Espacio Weed! ¿Qué buscas hoy?", "Quiero ver la Tienda, Dudas con mi Envío, Hablar con el Mando Central"],
         ["Quiero ver la Tienda", "¡Perfecto! Abro la compuerta a nuestra tienda online.", "Entra aquí para ver el catálogo:", "Ir a la Tienda"],
         ["Ir a la Tienda", "Redirigiendo...", "Abriendo enlace...", "[REDIRECCION_TIENDA]"],
@@ -245,9 +243,22 @@
         if (!nombre) return; 
 
         let btn = document.createElement('a');
-        btn.href = link;
-        btn.className = 'btn';
-        btn.style.borderLeft = `4px solid ${color}`; // Acento lateral estético
+
+      // FOCUS: Lógica para abrir el chatbot desde el botón
+      if(link === "CHATBOT") {
+          btn.href = "#";
+          btn.onclick = function(e) {
+              e.preventDefault();
+              let win = document.getElementById('chatbot-window');
+              win.style.display = 'flex';
+              if(document.getElementById('chat-messages').innerHTML === '') renderChatNode('inicio');
+          };
+      } else {
+          btn.href = link;
+      }
+
+      btn.className = 'btn';
+      btn.style.borderLeft = `4px solid ${color}`; // Acento lateral estético
         
         // Destacar el primer botón
         if(index === 0) {
@@ -271,16 +282,6 @@
           chatBotMap[id] = { msg: msg, resp: resp, opts: opts ? opts.toString().split(',').map(o => o.trim()) : [] };
         }
       });
-
-      document.getElementById('chatbot-bubble').onclick = function() {
-        let win = document.getElementById('chatbot-window');
-        if(win.style.display === 'none' || win.style.display === '') {
-          win.style.display = 'flex';
-          if(document.getElementById('chat-messages').innerHTML === '') renderChatNode('inicio');
-        } else {
-          win.style.display = 'none';
-        }
-      };
 
       document.getElementById('close-chat').onclick = function() {
         document.getElementById('chatbot-window').style.display = 'none';

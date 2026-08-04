@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <title>Espacio Weed | Enlaces Oficiales</title>
+  <meta name="description" content="Prepara el viaje a otro mundo. Accede a nuestra tienda oficial, soporte, envíos y comunidad de Espacio Weed.">
+  
+  <link rel="icon" href="https://i.postimg.cc/7ZHhnxmj/Logoew.png" type="image/png">
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/7ZHhnxmj/Logoew.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.espacioweed.cl/links">
+  <meta property="og:title" content="Espacio Weed | Enlaces Oficiales">
+  <meta property="og:description" content="Encuentra todo lo que necesitas para tu viaje espacial: Vaporizadores, Parafernalia y Soporte.">
+  <meta property="og:image" content="https://i.postimg.cc/7ZHhnxmj/Logoew.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Espacio Weed",
+    "url": "https://www.espacioweed.cl",
+    "logo": "https://i.postimg.cc/7ZHhnxmj/Logoew.png"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --neon-green: #2ecc71;
+      --amber: #f1c40f;
+      --cian: #00ffff;
+      --bg-space: #020204;
+      --glass: rgba(255, 255, 255, 0.05);
+      --border-glass: rgba(0, 255, 255, 0.2);
+      --font-main: 'Montserrat', sans-serif;
+      --font-brand: 'Orbitron', sans-serif;
+      --text-muted: #94a3b8;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body { 
+      font-family: var(--font-main);
+      text-align: center; 
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg-space);
+      color: white;
+      position: relative;
+    }
+
+    /* ESTRELLAS DINÁMICAS (FONDO PREMIUM) */
+    #star-canvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+      background: radial-gradient(circle at center, #1B2735 0%, #020204 100%);
+      overflow: hidden;
+    }
+    #star-canvas::before {
+      content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1' fill='white' opacity='0.8'/%3E%3Ccircle cx='150' cy='80' r='1.5' fill='white' opacity='0.6'/%3E%3Ccircle cx='90' cy='160' r='1' fill='white' opacity='0.9'/%3E%3Ccircle cx='180' cy='180' r='0.5' fill='white' opacity='0.5'/%3E%3C/svg%3E");
+      background-size: 200px 200px; opacity: 0.5;
+      animation: moveStarsGPU 60s linear infinite;
+    }
+    @keyframes moveStarsGPU { from { transform: translateY(0); } to { transform: translateY(50%); } }
+
+    #app-container {
+      width: 100%; max-width: 480px; min-height: 100dvh;
+      padding: 30px 20px 15px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; z-index: 10;
+    }
+    
+    #contenedorBotones {
+      display: flex; flex-direction: column; justify-content: center; align-items: stretch;
+      width: 100%; margin: 20px 0; flex-grow: 1; gap: 16px;
+    }
+
+    #encabezado img { max-width: 160px; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.4)); }
+    #encabezado h1 { font-family: var(--font-brand); font-size: 1.5em; letter-spacing: 2px; color: var(--neon-green); text-shadow: 0 0 10px rgba(46, 204, 113, 0.5); margin-top: 5px; }
+
+    #redes-sociales { margin-top: 15px; display: flex; justify-content: center; gap: 25px; }
+    .btn-red { color: white; font-size: 1.5em; transition: 0.3s; opacity: 0.7; }
+    .btn-red:hover { color: var(--cian); opacity: 1; transform: scale(1.2); text-shadow: 0 0 10px var(--cian); }
+
+    /* BOTONES PREMIUM GLASSMORPHISM */
+    .btn { 
+      display: flex; flex-direction: column; justify-content: center; width: 100%;
+      padding: 16px 20px; border-radius: 15px; text-decoration: none; 
+      background: var(--glass); color: white; cursor: pointer; 
+      border: 1px solid var(--border-glass); text-align: center; 
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .btn:hover {
+      transform: translateY(-4px); border-color: var(--neon-green);
+      box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3); background: rgba(46, 204, 113, 0.05);
+    }
+    .btn h3 { margin: 0; font-family: var(--font-brand); font-size: 1em; display: flex; align-items: center; justify-content: center; gap: 12px; letter-spacing: 1px; }
+    .btn span { display: block; font-size: 0.8em; color: var(--text-muted); margin-top: 6px; font-weight: 400; font-family: var(--font-main); }
+
+    #footer { width: 100%; padding: 20px 10px; font-size: 0.75em; color: var(--text-muted); margin-top: auto; }
+    #footer a { color: var(--cian); text-decoration: none; transition: 0.3s; cursor: pointer; }
+    #footer a:hover { color: var(--neon-green); text-decoration: underline; }
+
+    /* CHATBOT ESPACIAL */
+    #chatbot-window { 
+      position: fixed; top: 90px; left: 20px; width: 320px; max-height: 70dvh; 
+      background: rgba(2, 2, 4, 0.95); border-radius: 16px; box-shadow: 0 15px 35px rgba(0,255,255,0.2);
+      border: 1px solid var(--cian); display: none; flex-direction: column; z-index: 9998; 
+      overflow: hidden; backdrop-filter: blur(20px);
+    }
+    #chat-header { 
+      background: rgba(0,255,255,0.1); padding: 14px 16px; color: var(--cian);
+      font-family: var(--font-brand); border-bottom: 1px solid var(--cian); 
+      display: flex; justify-content: space-between; align-items: center; font-size: 0.9em;
+    }
+    #chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; max-height: 320px; }
+    .chat-msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85em; max-width: 88%; line-height: 1.4; text-align: left; }
+    .bot-msg { background: rgba(0,255,255,0.1); color: #fff; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid rgba(0,255,255,0.2); }
+    .user-msg { background: var(--neon-green); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 700; }
+    #chat-options { padding: 10px; background: rgba(255,255,255,0.02); border-top: 1px solid rgba(0,255,255,0.2); display: flex; flex-direction: column; gap: 8px; }
+    .chat-opt-btn { background: transparent; border: 1px solid var(--cian); color: var(--cian); padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.8em; font-weight: 600; font-family: var(--font-main); }
+    .chat-opt-btn:hover { background: var(--cian); color: #000; }
+    #close-chat { cursor: pointer; color: white; transition: 0.3s; }
+    #close-chat:hover { color: #ff4444; transform: scale(1.2); }
+
+    /* MODALES LEGALES BLINDADOS */
+    .modal-legal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px); z-index: 10010; display: none; align-items: center; justify-content: center; padding: 15px;
+    }
+    .modal-legal-card {
+      background: var(--bg-space); border: 1px solid var(--cian); border-radius: 15px;
+      width: 100%; max-width: 600px; padding: 30px; max-height: 80vh; overflow-y: auto; text-align: left;
+      font-size: 0.85rem; line-height: 1.6; position: relative; box-shadow: 0 0 30px rgba(0,255,255,0.1);
+    }
+    .modal-legal-card h3 { color: var(--amber); font-family: var(--font-brand); margin-bottom: 15px; font-size: 1.2rem; }
+    .close-legal-btn { position: absolute; top: 15px; right: 15px; background: rgba(0,255,255,0.1); border: 1px solid var(--cian); color: var(--cian); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s; }
+    .close-legal-btn:hover { background: var(--cian); color: #000; }
+  </style>
+</head>
+<body>
+
+  <div id="star-canvas"></div>
+
+  <div id="app-container">
+    <div id="encabezado">
+      <img id="logoPrincipal" src="https://i.postimg.cc/9FL0gGth/Espacio-Weed.gif" alt="Logo Espacio Weed">
+      <h1 id="tituloApp">ESPACIO WEED</h1>
+      <div id="redes-sociales"></div>
+    </div>
+
+    <div id="chatbot-bubble" style="position: fixed; top: 20px; left: 20px; width: 65px; height: 65px; border-radius: 50%; box-shadow: 0 0 15px rgba(46, 204, 113, 0.5); cursor: pointer; z-index: 9999; transition: transform 0.3s; background-image: url('https://i.postimg.cc/7ZHhnxmj/Logoew.png'); background-size: contain; background-color: #000; background-position: center; background-repeat: no-repeat; border: 2px solid var(--neon-green);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+    </div>
+
+    <div id="chatbot-window">
+      <div id="chat-header">
+        <span><i class="fa-solid fa-satellite-dish"></i> Asesor Espacial</span>
+        <i class="fa-solid fa-xmark" id="close-chat"></i>
+      </div>
+      <div id="chat-messages"></div>
+      <div id="chat-options"></div>
+    </div>
+
+    <div id="contenedorBotones"></div>
+
+    <div id="footer">
+      © 2026 Espacio Weed <br><br>
+      <a onclick="openLegalModal('privacyModal')">Políticas de Privacidad</a> |
+      <a onclick="openLegalModal('termsModal')">Términos y Condiciones</a>
+    </div>
+  </div>
+
+  <div class="modal-legal-overlay" id="termsModal">
+    <div class="modal-legal-card">
+      <button class="close-legal-btn" onclick="closeLegalModal('termsModal')">&times;</button>
+      <h3>Términos y Condiciones</h3>
+      <p>Bienvenido a los enlaces oficiales de Espacio Weed. El acceso a esta plataforma implica la aceptación de nuestros términos comerciales y de envíos detallados en nuestra tienda principal.</p>
+    </div>
+  </div>
+
+  <div class="modal-legal-overlay" id="privacyModal">
+    <div class="modal-legal-card">
+      <button class="close-legal-btn" onclick="closeLegalModal('privacyModal')">&times;</button>
+      <h3>Política de Privacidad (Ley N° 21.719)</h3>
+      <p>Los datos que nos proporciones vía WhatsApp o en la Tienda Oficial están protegidos. No compartimos tu información con terceros y aplicamos el principio de Minimización de Datos.</p>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // CEREBRO DE ENLACES ESPACIO WEED
+    // ==========================================
+    const CONFIG_LOCAL = {
+      instagram: "https://instagram.com/espacioweed.cl", // Cambia esto por tu link real
+      youtube: "",
+      tiktok: "",
+      botones: [
+        ["Tienda Oficial", "Entra a nuestra nave principal y compra online", "https://espacioweed.cl/", "#2ecc71", "fa-solid fa-rocket"],
+        ["Vaporizadores", "Descubre la última tecnología de extracción", "https://espacioweed.cl/", "#f1c40f", "fa-solid fa-fire"],
+        ["Soporte y Envíos", "Habla directo con el centro de mando", "https://wa.me/56900000000?text=Hola,%20necesito%20ayuda.", "#00ffff", "fa-brands fa-whatsapp"],
+        ["Ubicación", "Visítanos en nuestra base física", "https://espacioweed.cl/", "#e74c3c", "fa-solid fa-map-marker-alt"]
+      ],
+      chatbot: [
+        ["inicio", "Hola explorador, soy tu Asesor Espacial. ¿En qué te ayudo a preparar tu viaje?", "¡Bienvenido a Espacio Weed! ¿Qué buscas hoy?", "Quiero ver la Tienda, Dudas con mi Envío, Hablar con el Mando Central"],
+        ["Quiero ver la Tienda", "¡Perfecto! Abro la compuerta a nuestra tienda online.", "Entra aquí para ver el catálogo:", "Ir a la Tienda"],
+        ["Ir a la Tienda", "Redirigiendo...", "Abriendo enlace...", "[REDIRECCION_TIENDA]"],
+        ["Dudas con mi Envío", "Los envíos a todo Chile son rastreados por nuestro satélite.", "Por favor envíanos tu número de pedido para revisarlo:", "[ESPERAR_TEXTO]"],
+        ["Hablar con el Mando Central", "Abriendo canal de comunicación directo.", "Escribe tu duda y la enviaremos por WhatsApp:", "[ESPERAR_TEXTO]"],
+        ["default", "Entendido. Abriendo canal...", "Transfiriendo mensaje...", "[ESPERAR_TEXTO]"]
+      ]
+    };
+
+    function sanitizeInput(str) {
+      if (!str) return "";
+      return String(str).replace(/[<>'"]/g, function(tag) {
+        return { '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      construirInterfaz(CONFIG_LOCAL);
+    });
+
+    function construirInterfaz(config) {
+      let redesContenedor = document.getElementById('redes-sociales');
+      redesContenedor.innerHTML = "";
+      if (config.instagram) redesContenedor.innerHTML += `<a href="${config.instagram}" target="_blank" class="btn-red"><i class="fa-brands fa-instagram"></i></a>`;
+      if (config.tiktok) redesContenedor.innerHTML += `<a href="${config.tiktok}" target="_blank" class="btn-red"><i class="fa-brands fa-tiktok"></i></a>`;
+      if (config.youtube) redesContenedor.innerHTML += `<a href="${config.youtube}" target="_blank" class="btn-red"><i class="fa-brands fa-youtube"></i></a>`;
+
+      const contenedor = document.getElementById('contenedorBotones');
+      contenedor.innerHTML = "";
+      
+      config.botones.forEach((fila, index) => {
+        let [nombre, sub, link, color, icono] = fila;
+        if (!nombre) return; 
+
+        let btn = document.createElement('a');
+        btn.href = link;
+        btn.className = 'btn';
+        btn.style.borderLeft = `4px solid ${color}`; // Acento lateral estético
+        
+        // Destacar el primer botón
+        if(index === 0) {
+          btn.style.background = `linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(46, 204, 113, 0.1) 100%)`;
+          btn.style.border = `1px solid ${color}`;
+        }
+
+        btn.innerHTML = `<h3><i class="${icono}" style="color: ${color}; font-size: 1.2em;"></i> ${nombre}</h3><span>${sub}</span>`;
+        contenedor.appendChild(btn);
+      });
+
+      if(config.chatbot && config.chatbot.length > 0) initChatbot(config.chatbot);
+    }
+
+    // --- CEREBRO CHATBOT ---
+    let chatBotMap = {};
+    function initChatbot(data) {
+      data.forEach(row => {
+        let [id, msg, resp, opts] = row;
+        if(id) {
+          chatBotMap[id] = { msg: msg, resp: resp, opts: opts ? opts.toString().split(',').map(o => o.trim()) : [] };
+        }
+      });
+
+      document.getElementById('chatbot-bubble').onclick = function() {
+        let win = document.getElementById('chatbot-window');
+        if(win.style.display === 'none' || win.style.display === '') {
+          win.style.display = 'flex';
+          if(document.getElementById('chat-messages').innerHTML === '') renderChatNode('inicio');
+        } else {
+          win.style.display = 'none';
+        }
+      };
+
+      document.getElementById('close-chat').onclick = function() {
+        document.getElementById('chatbot-window').style.display = 'none';
+      };
+    }
+
+    function renderChatNode(nodeId) {
+      let node = chatBotMap[nodeId] || chatBotMap['inicio'];
+      let chatMessages = document.getElementById('chat-messages');
+      
+      let msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-msg bot-msg';
+      msgDiv.innerHTML = node.resp;
+      chatMessages.appendChild(msgDiv);
+      
+      let optsDiv = document.getElementById('chat-options');
+      optsDiv.innerHTML = '';
+
+      // BOTÓN ESPECIAL DE REDIRECCIÓN A TIENDA
+      if(node.opts.includes('[REDIRECCION_TIENDA]')) {
+         setTimeout(() => {
+            window.location.href = "https://espacioweed.cl/";
+         }, 800);
+         return;
+      }
+      
+      if(node.opts.includes('[ESPERAR_TEXTO]')) {
+        let inputContainer = document.createElement('div');
+        inputContainer.style.display = 'flex'; inputContainer.style.gap = '8px';
+        
+        let input = document.createElement('input');
+        input.type = 'text'; input.placeholder = 'Escribe aquí...';
+        input.style.flexGrow = '1'; input.style.padding = '10px';
+        input.style.borderRadius = '8px'; input.style.border = '1px solid var(--cian)';
+        input.style.background = 'transparent'; input.style.color = '#fff'; input.style.fontFamily = 'Montserrat';
+        
+        let btn = document.createElement('button');
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+        btn.style.background = 'var(--neon-green)'; btn.style.color = '#000';
+        btn.style.border = 'none'; btn.style.padding = '10px 15px';
+        btn.style.borderRadius = '8px'; btn.style.cursor = 'pointer';
+
+        btn.onclick = function() {
+          const rawVal = input.value.trim();
+          if(!rawVal) return;
+          const cleanText = sanitizeInput(rawVal);
+          
+          let userMsg = document.createElement('div');
+          userMsg.className = 'chat-msg user-msg';
+          userMsg.innerText = cleanText;
+          chatMessages.appendChild(userMsg);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+
+          optsDiv.innerHTML = '<div style="text-align:center; color:var(--neon-green); font-size:0.8em;"><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Mando Central...</div>';
+          
+          const textoWsp = `*CONSOLA LINK PAGE (Espacio Weed)*\n• Consulta: ${cleanText}`;
+          setTimeout(() => {
+            window.open(`https://wa.me/56900000000?text=${encodeURIComponent(textoWsp)}`, '_blank'); // Pon tu WhatsApp real
+            document.getElementById('chatbot-window').style.display = 'none';
+          }, 800);
+        };
+        
+        inputContainer.appendChild(input); inputContainer.appendChild(btn); optsDiv.appendChild(inputContainer);
+      } else {
+        node.opts.forEach(optText => {
+          if(!optText || optText === '') return;
+          let btn = document.createElement('button');
+          btn.className = 'chat-opt-btn'; btn.innerText = optText;
+          btn.onclick = function() {
+            let userMsg = document.createElement('div');
+            userMsg.className = 'chat-msg user-msg'; userMsg.innerText = optText;
+            chatMessages.appendChild(userMsg); chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            let nextNodeId = 'inicio';
+            for(let key in chatBotMap) {
+              if(chatBotMap[key].msg === optText || key === optText) { nextNodeId = key; break; }
+            }
+            optsDiv.innerHTML = '';
+            setTimeout(() => renderChatNode(nextNodeId), 400);
+          };
+          optsDiv.appendChild(btn);
+        });
+      }
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function openLegalModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+    function closeLegalModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+    window.addEventListener('click', (e) => { if (e.target.classList.contains('modal-legal-overlay')) e.target.style.display = 'none'; });
+  </script>
+</body>
+</html>

@@ -146,6 +146,7 @@
     .close-legal-btn { position: absolute; top: 15px; right: 15px; background: rgba(0,255,255,0.1); border: 1px solid var(--cian); color: var(--cian); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s; }
     .close-legal-btn:hover { background: var(--cian); color: #000; }
   </style>
+  <script src="mars.js" defer></script>
 </head>
 <body>
 
@@ -206,15 +207,7 @@
       ["Ubicación", "Visítanos en nuestra base física", "https://espacioweed.cl/?modal=ubicacion", "#e74c3c", "fa-solid fa-map-marker-alt"],
       ["Habla con Mars", "Conoce la nave y resuelve tus dudas", "CHATBOT", "#00ffff", "fa-solid fa-robot"]
     ],
-    chatbot: [
-      ["inicio", "Hola explorador, soy Mars. ¿En qué te ayudo a preparar tu viaje?", "¡Bienvenido a Espacio Weed! ¿Qué buscas hoy?", "Quiero ver la Tienda, Dudas con mi Envío, Hablar con el Mando Central"],
-        ["inicio", "Hola explorador, soy tu Asesor Espacial. ¿En qué te ayudo a preparar tu viaje?", "¡Bienvenido a Espacio Weed! ¿Qué buscas hoy?", "Quiero ver la Tienda, Dudas con mi Envío, Hablar con el Mando Central"],
-        ["Quiero ver la Tienda", "¡Perfecto! Abro la compuerta a nuestra tienda online.", "Entra aquí para ver el catálogo:", "Ir a la Tienda"],
-        ["Ir a la Tienda", "Redirigiendo...", "Abriendo enlace...", "[REDIRECCION_TIENDA]"],
-        ["Dudas con mi Envío", "Los envíos a todo Chile son rastreados por nuestro satélite.", "Por favor envíanos tu número de pedido para revisarlo:", "[ESPERAR_TEXTO]"],
-        ["Hablar con el Mando Central", "Abriendo canal de comunicación directo.", "Escribe tu duda y la enviaremos por WhatsApp:", "[ESPERAR_TEXTO]"],
-        ["default", "Entendido. Abriendo canal...", "Transfiriendo mensaje...", "[ESPERAR_TEXTO]"]
-      ]
+    chatbot: (typeof cerebroMars !== 'undefined') ? cerebroMars : []
     };
 
     function sanitizeInput(str) {

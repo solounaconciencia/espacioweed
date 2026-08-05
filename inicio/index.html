@@ -162,7 +162,7 @@
     <div id="chatbot-window">
       <div id="chat-header">
      <span style="display: flex; align-items: center; gap: 8px;">
-       <img src="TU_ENLACE_DE_MARS" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid var(--cian); object-fit: cover;"> Mars
+       <img src="marsfavicon.png" style="width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--cian); background: #000; object-fit: cover;"> Mars
      </span>
      <i class="fa-solid fa-xmark" id="close-chat"></i>
    </div>
@@ -287,10 +287,29 @@
       let node = chatBotMap[nodeId] || chatBotMap['inicio'];
       let chatMessages = document.getElementById('chat-messages');
       
-      let msgDiv = document.createElement('div');
-      msgDiv.className = 'chat-msg bot-msg';
-      msgDiv.innerHTML = node.resp;
-      chatMessages.appendChild(msgDiv);
+      // FOCUS: Contenedor con el rostro de Mars miniaturizado
+   let msgContainer = document.createElement('div');
+   msgContainer.style.display = 'flex';
+   msgContainer.style.alignItems = 'flex-end'; // El ícono quedará abajo, pegado a la colita de la burbuja
+   msgContainer.style.gap = '8px';
+
+   let botAvatar = document.createElement('img');
+   botAvatar.src = 'marsfavicon.png';
+   botAvatar.style.width = '22px';
+   botAvatar.style.height = '22px';
+   botAvatar.style.borderRadius = '50%';
+   botAvatar.style.border = '1px solid var(--cian)';
+   botAvatar.style.background = '#000'; // Fondo oscuro para resaltar la transparencia
+   botAvatar.style.flexShrink = '0'; // Evita que la foto se aplaste si el texto es muy largo
+
+   let msgDiv = document.createElement('div');
+   msgDiv.className = 'chat-msg bot-msg';
+   msgDiv.innerHTML = node.resp;
+
+   // Ensamblamos la foto y el texto en el chat
+   msgContainer.appendChild(botAvatar);
+   msgContainer.appendChild(msgDiv);
+   chatMessages.appendChild(msgContainer);
       
       let optsDiv = document.getElementById('chat-options');
       optsDiv.innerHTML = '';

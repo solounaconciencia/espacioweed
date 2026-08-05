@@ -3352,7 +3352,7 @@ function actualizarMapaPreview() {
     if (direccion !== "") {
         // Convierte el texto en coordenadas de Google Maps
         const direccionCodificada = encodeURIComponent(direccion);
-        iframe.src = `https://maps.google.com/maps?q=$${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+        iframeMapa.src = "https://maps.google.com/maps?q=" + direccionCodificada + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
     } else {
         iframe.src = "";
     }

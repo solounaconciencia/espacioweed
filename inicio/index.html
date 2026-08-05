@@ -146,7 +146,7 @@
     .close-legal-btn { position: absolute; top: 15px; right: 15px; background: rgba(0,255,255,0.1); border: 1px solid var(--cian); color: var(--cian); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s; }
     .close-legal-btn:hover { background: var(--cian); color: #000; }
   </style>
-  <script src="mars.js" defer></script>
+ <script src="mars.js"></script>
 </head>
 <body>
 
@@ -154,7 +154,7 @@
 
   <div id="app-container">
     <div id="encabezado">
-      <img id="logoPrincipal" src="https://i.postimg.cc/9FL0gGth/Espacio-Weed.gif" alt="Logo Espacio Weed">
+      <img id="logoPrincipal" src="logoew.png" alt="Logo Espacio Weed">
       <h1 id="tituloApp">ESPACIO WEED</h1>
       <div id="redes-sociales"></div>
     </div>
@@ -204,8 +204,8 @@
       youtube: "",
       tiktok: "",
       botones: [
-      ["Tienda Oficial", "Entra a nuestra nave principal y compra online", "https://espacioweed.cl/", "#2ecc71", "fa-solid fa-rocket"],
-      ["Vaporizadores", "Descubre la última tecnología de extracción", "https://espacioweed.cl/?cat=Vaporizadores", "#f1c40f", "fa-solid fa-fire"],
+      ["Tienda Oficial", "Entra a nuestra nave principal y compra online", "https://espacioweed.cl/", "#2ecc71", "nave.png"],
+   ["Vaporizadores", "Descubre la última tecnología de extracción", "https://espacioweed.cl/?cat=Vaporizadores", "#f1c40f", "vaporizador.png"],
       ["Ubicación", "Visítanos en nuestra base física", "https://espacioweed.cl/?modal=ubicacion", "#e74c3c", "fa-solid fa-map-marker-alt"],
       ["Habla con Mars", "Conoce la nave y resuelve tus dudas", "CHATBOT", "#00ffff", "fa-solid fa-robot"]
     ],
@@ -261,8 +261,13 @@
           btn.style.border = `1px solid ${color}`;
         }
 
-        btn.innerHTML = `<h3><i class="${icono}" style="color: ${color}; font-size: 1.2em;"></i> ${nombre}</h3><span>${sub}</span>`;
-        contenedor.appendChild(btn);
+        // FOCUS: Motor híbrido para Íconos FontAwesome o Imágenes PNG/SVG
+     let iconoHTML = icono.includes('.') 
+       ? `<img src="${icono}" style="width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 5px ${color});">` 
+       : `<i class="${icono}" style="color: ${color}; font-size: 1.2em;"></i>`;
+
+     btn.innerHTML = `<h3 style="display:flex; align-items:center; justify-content:center; gap:12px;">${iconoHTML} ${nombre}</h3><span>${sub}</span>`;
+     contenedor.appendChild(btn);
       });
 
       if(config.chatbot && config.chatbot.length > 0) initChatbot(config.chatbot);

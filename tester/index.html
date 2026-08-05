@@ -570,11 +570,12 @@ async function aplicarCuponCarrito() {
             <img src="https://i.postimg.cc/hj6mws46/Logoew.png" class="nave-logo">
             <h2 class="nave-title">CENTRO DE MANDO</h2>
             
-            <input type="email" id="login-email" class="nave-input" placeholder="EMAIL">
-            <input type="password" id="login-pass" class="nave-input" placeholder="CONTRASEÑA">
-            <input type="text" id="trampa-bot-login" style="display:none !important;" tabindex="-1" autocomplete="off">
-            
-            <button class="btn-nave-main" onclick="ejecutarLogin()">INGRESAR</button>
+            <form onsubmit="event.preventDefault(); ejecutarLogin();" style="width: 100%;">
+             <input type="email" id="login-email" class="nave-input" placeholder="EMAIL" autocomplete="email">
+             <input type="password" id="login-pass" class="nave-input" placeholder="CONTRASEÑA" autocomplete="current-password">
+             <input type="text" id="trampa-bot-login" style="display:none !important;" tabindex="-1" autocomplete="off">
+             <button type="submit" class="btn-nave-main">INGRESAR</button>
+         </form>
             
             <div class="nave-links">
                 <a href="#" onclick="cambiarVistaComunidad('registro', event)">CREAR CUENTA</a>
@@ -586,11 +587,12 @@ async function aplicarCuponCarrito() {
     <div id="registro-section" style="display: none; width: 100%;">
         <div class="login-card">
             <h2 class="nave-title">NUEVO EXPLORADOR</h2>
-            <input type="text" id="reg-nombre" class="nave-input" placeholder="NOMBRE COMPLETO">
-            <input type="email" id="reg-email" class="nave-input" placeholder="EMAIL">
-            <input type="password" id="reg-pass" class="nave-input" placeholder="CONTRASEÑA">
-            <input type="password" id="reg-pass-conf" class="nave-input" placeholder="CONFIRMAR">
-            <input type="text" id="trampa-bot-registro" style="display:none !important;" tabindex="-1" autocomplete="off">
+            <form onsubmit="event.preventDefault();" style="width: 100%;">
+             <input type="text" id="reg-nombre" class="nave-input" placeholder="NOMBRE COMPLETO" autocomplete="name">
+             <input type="email" id="reg-email" class="nave-input" placeholder="EMAIL" autocomplete="email">
+             <input type="password" id="reg-pass" class="nave-input" placeholder="CONTRASEÑA" autocomplete="new-password">
+             <input type="password" id="reg-pass-conf" class="nave-input" placeholder="CONFIRMAR" autocomplete="new-password">
+             <input type="text" id="trampa-bot-registro" style="display:none !important;" tabindex="-1" autocomplete="off">
             
             <select id="reg-pregunta" class="nave-input">
                 <option value="" disabled selected>Pregunta de Seguridad</option>
@@ -606,6 +608,7 @@ async function aplicarCuponCarrito() {
             </label>
             
             <button class="btn-nave-main" onclick="ejecutarRegistro()">UNIRSE</button>
+         </form>
             <a href="#" class="back-link" onclick="cambiarVistaComunidad('login', event)">VOLVER AL LOGIN</a>
         </div>
     </div>

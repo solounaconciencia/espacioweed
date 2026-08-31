@@ -170,17 +170,11 @@
             </div>
             <div style="margin-bottom: 20px; border-bottom: 1px solid var(--glass); padding-bottom: 15px;">
               <p style="font-size: 0.7rem; color: var(--cian); margin-bottom: 10px; font-family: var(--font-brand);">MÉTODO DE PAGO:</p>
-    
-              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; margin-bottom: 10px; cursor: pointer;">
-              <input type="radio" name="metodo-pago" value="efectivo" checked style="accent-color: var(--neon-green);">
-              <span>Transferencia / Efectivo</span>
-              </label>
-
               <label style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; cursor: pointer;">
-                <input type="radio" name="metodo-pago" value="mercadopago" style="accent-color: var(--neon-green);">
-                <span>Mercado Pago (Tarjetas)</span>
+                <input type="radio" name="metodo-pago" value="mercadopago" checked style="accent-color: var(--neon-green);">
+                <span>Mercado Pago (Débito, Crédito y Transferencia)</span>
               </label>
-            </div>
+        </div>
 
             <button class="btn-checkout" onclick="procesarCompra()">
                 FINALIZAR PEDIDO <i class="fas fa-chevron-right"></i>

@@ -194,15 +194,26 @@ function renderProductos(lista) {
     } else if (p.TIPO_PROMO === 'Regalo') {
         promoLabel = `<div class="scarcity-label" style="background:var(--cian); color:black; top:45px;">+ REGALO</div>`;
     }
+   // FOCUS UX: Calculamos el precio real a mostrar
+    let precioMostrar = (p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ? (Number(p.PRECIO) - Number(p.DETALLE_PROMO)) : Number(p.PRECIO);
+
     return `
       <div class="product-card" onclick="abrirDetalle('${p.SKU}')">
         ${stockBajo ? '<div class="scarcity-label">STOCK CRÍTICO</div>' : ''}
         ${promoLabel}
-        <img src="${imgUrl}" loading="lazy" alt="${p.NOMBRE}" onerror="this.src='https://i.postimg.cc/hj6mws46/Logoew.png'">
+        <div style="position: relative;">
+          <img src="${imgUrl}" loading="lazy" alt="${p.NOMBRE}" onerror="this.src='https://i.postimg.cc/hj6mws46/Logoew.png'">
+          <button class="btn-quick-add" onclick="event.stopPropagation(); agregarAlCarrito('${p.SKU}')" title="Añadir rápido">
+            <i class="fas fa-cart-plus"></i>
+          </button>
+        </div>
         <div class="more-info-btn">MÁS INFO</div>
         <div style="padding:15px; text-align:center;">
-          <small style="color:var(--amber); font-weight:bold;">${p.MARCA}</small>
-          <div style="font-size:0.85rem; margin-top:5px; font-weight:600; color:white;">${p.NOMBRE}</div>
+          <small style="color:var(--amber); font-weight:bold; letter-spacing: 1px;">${p.MARCA}</small>
+          <div style="font-family: var(--font-brand); font-size: 1.2rem; color: var(--neon-green); font-weight: bold; margin: 8px 0;">
+            $${precioMostrar.toLocaleString('es-CL')}
+          </div>
+          <div style="font-size:0.85rem; font-weight:600; color:white; line-height: 1.3;">${p.NOMBRE}</div>
         </div>
       </div>
     `;
@@ -251,9 +262,11 @@ ${p.TIPO_PROMO === 'Regalo' ? `<p style="color:var(--cian); font-size:0.8rem; ma
             ${crearSelectorVariante('TAMAÑO', p.TAMANO)}
         </div>
 
-        <p class="nave-text" style="text-align:justify; line-height:1.5; font-size:0.85rem;">
-            ${p.DESCRIPCION}
-        </p>
+        <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border-left: 3px solid var(--cian); margin-top: 15px; margin-bottom: 20px;">
+            <p class="nave-text" style="text-align:left; line-height:1.6; font-size:0.85rem; white-space: pre-line; margin: 0; color: #ddd;">
+                ${p.DESCRIPCION}
+            </p>
+        </div>
     `;
 
     // Inyección del Footer Fijo (Donde está el botón)

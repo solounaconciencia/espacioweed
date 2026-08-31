@@ -363,34 +363,43 @@ body {
   .slider-prev, .slider-next { font-size: 1rem; padding: 8px 12px; }
 }
 
-/* 6. CATEGORÍAS DINÁMICAS */
+/* 6. CATEGORÍAS DINÁMICAS (PÍLDORAS DESLIZABLES FOCUS UX) */
 .category-filter-bar {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-content: flex-start; /* Alinea a la izquierda para que empiece el scroll */
+  flex-wrap: nowrap; /* CRÍTICO: Evita que bajen a una segunda línea */
   gap: 12px;
-  padding: 25px;
-  background: rgba(0,0,0,0.4);
+  padding: 15px 20px;
+  background: rgba(0,0,0,0.6);
+  overflow-x: auto; /* Habilita el scroll horizontal */
+  -webkit-overflow-scrolling: touch; /* Suavidad nativa en iOS/Android */
+  scrollbar-width: none; /* Oculta la barra fea en Firefox */
+}
+
+/* Oculta la barra de scroll en Chrome/Safari/Edge */
+.category-filter-bar::-webkit-scrollbar {
+  display: none; 
 }
 
 .cat-btn {
   background: transparent;
   border: 1px solid var(--cian);
   color: var(--cian);
-  padding: 7px 20px;
-  border-radius: 20px;
+  padding: 8px 20px;
+  border-radius: 20px; /* Borde de Píldora */
   cursor: pointer;
   font-family: var(--font-brand);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   transition: var(--transition);
+  white-space: nowrap; /* Evita que el texto del botón se rompa */
+  flex-shrink: 0; /* Evita que el botón se aplaste si hay muchos */
 }
 
-.cat-btn:hover {
+.cat-btn:hover, .cat-btn.active {
   background: var(--cian);
   color: black;
   box-shadow: 0 0 15px var(--cian);
 }
-
 /* 7. VITRINA DE PRODUCTOS (GRID) */
 .content-wrapper { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
 

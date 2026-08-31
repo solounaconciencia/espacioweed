@@ -121,48 +121,67 @@ function filtrar() {
   renderProductos(filtrados);
 }
 
+
 /**
- * EVOLUCIÓN: Generación de Menú Desplegable (Dropdown)
+ * EVOLUCIÓN FOCUS: Generación Dual (Dropdown PC + Píldoras Móvil)
  */
 function generarMenuCategorias(productos) {
-  // Extraemos categorías únicas del listado de productos
-  const categorias = [...new Set(productos.map(function(p) { return p.CATEGORIA; }))];
-  const dropdown = document.getElementById('category-list'); // Elemento dentro del li.dropdown
+  // Extraemos categorías únicas y evitamos celdas vacías
+  const categorias = [...new Set(productos.map(p => p.CATEGORIA))].filter(c => c);
   
-  if (!dropdown) return;
+  const dropdown = document.getElementById('category-list');
+  const catBar = document.getElementById('category-bar');
+  
+  if (!dropdown || !catBar) return;
 
-  // Link "VER TODO" para resetear filtros
-  let html = '<a href="#" onclick="filtrarPorCat(\'TODOS\', event)">VER TODO</a>';
+  // 1. Llenar Dropdown Clásico (Para uso en Escritorio)
+  let htmlDropdown = '<a href="#" onclick="filtrarPorCat(\'TODOS\', event)">VER TODO</a>';
+  htmlDropdown += categorias.map(cat => 
+    `<a href="#" onclick="filtrarPorCat('${cat}', event)">${cat.toUpperCase()}</a>`
+  ).join('');
+  dropdown.innerHTML = htmlDropdown;
+
+  // 2. Llenar Barra Deslizable Táctil (Píldoras)
+  let htmlPills = `<button class="cat-btn active" onclick="filtrarPorCat('TODOS', event, this)">TODO</button>`;
+  htmlPills += categorias.map(cat => 
+    `<button class="cat-btn" onclick="filtrarPorCat('${cat}', event, this)">${cat.toUpperCase()}</button>`
+  ).join('');
   
-  // Generación dinámica de los links del dropdown
-  html += categorias.map(function(cat) {
-    return '<a href="#" onclick="filtrarPorCat(\'' + cat + '\', event)">' + cat.toUpperCase() + '</a>';
-  }).join('');
-  
-  dropdown.innerHTML = html;
+  catBar.innerHTML = htmlPills;
+  catBar.style.display = 'flex'; // Encendemos el radar visual
 }
 
 /**
- * EVOLUCIÓN: Lógica de Filtrado con ocultación de Slider
+ * EVOLUCIÓN FOCUS: Filtrado Inteligente con Feedback Visual
  */
-function filtrarPorCat(cat, e) {
+function filtrarPorCat(cat, e, btnElement = null) {
   if (e) e.preventDefault();
   const slider = document.getElementById('hero-slider');
   
-  // Regla FOCUS: Cualquier filtro (incluyendo TODOS) oculta el slider
-  if (slider) {
-    slider.style.display = 'none'; 
+  // Ocultamos el slider si empezamos a filtrar
+  if (slider) slider.style.display = 'none';
+
+  // Feedback Visual: Iluminamos la píldora tocada
+  if (btnElement) {
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+  } else if (cat === 'TODOS') {
+    // Si viene del menú de arriba en "VER TODO", reiniciamos la primera píldora
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+    const primerBoton = document.querySelector('.cat-btn');
+    if (primerBoton) primerBoton.classList.add('active');
   }
 
   if (cat === 'TODOS') {
     renderProductos(productosGlobal);
   } else {
-    const filtrados = productosGlobal.filter(function(p) { return p.CATEGORIA === cat; });
+    const filtrados = productosGlobal.filter(p => p.CATEGORIA === cat);
     renderProductos(filtrados);
   }
   
   document.getElementById('grid-productos').scrollIntoView({ behavior: 'smooth' });
 }
+
 
 // Función auxiliar para móviles (clic en la palabra Categorías)
 function abrirCategorias() {

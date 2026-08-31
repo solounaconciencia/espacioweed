@@ -486,13 +486,7 @@ async function procesarCompra() {
   }
   const metodo = metodoInput.value;
 
-  // 2. Bloqueo de seguridad para Mercado Pago
-  if (metodo === 'mercadopago' && !sessionUser) {
-    mostrarToast("Para pagar con tarjeta debes iniciar sesión.");
-    mostrarAcceso(); 
-    return;
-  }
-
+  
   const btn = document.querySelector('.btn-checkout');
   const originalText = btn.innerHTML;
   btn.innerText = "PROCESANDO...";

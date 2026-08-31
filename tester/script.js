@@ -327,15 +327,8 @@ function abrirDetalle(sku) {
             ` : ''}
         </div>
 
-        <h2 class="cian" style="margin-bottom:5px;">${p.NOMBRE}</h2>
-<p style="color:var(--amber); font-weight:bold; font-size:1.2rem; margin-bottom:15px;">
-${(p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ? 
-    `<span class="precio-old" style="text-decoration:line-through; color:#888; font-size:0.9rem; margin-right:10px;">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>
-     <span class="precio-promo">$${(Number(p.PRECIO) - Number(p.DETALLE_PROMO)).toLocaleString('es-CL')}</span>` : 
-    `<span class="precio-promo">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>`
-}
-</p>
-${p.TIPO_PROMO === 'Regalo' ? `<p style="color:var(--cian); font-size:0.8rem; margin-top:-10px; margin-bottom:15px;"><i class="fas fa-gift"></i> Incluye regalo por tu compra</p>` : ''}
+        <h2 class="cian" style="margin-bottom:5px; line-height: 1.2;">${p.NOMBRE}</h2>
+        ${p.TIPO_PROMO === 'Regalo' ? `<p style="color:var(--cian); font-size:0.8rem; margin-top:5px; margin-bottom:15px;"><i class="fas fa-gift"></i> Incluye regalo por tu compra</p>` : ''}
 
         <div class="variantes-container" style="margin-bottom:20px;">
             ${crearSelectorVariante('SABOR', p.SABOR)}
@@ -355,11 +348,23 @@ ${p.TIPO_PROMO === 'Regalo' ? `<p style="color:var(--cian); font-size:0.8rem; ma
     const oldFooter = modal.querySelector('.modal-footer-fixed');
     if (oldFooter) oldFooter.remove();
 
+    // FOCUS UX: Calculamos el bloque de precio para inyectarlo en el Footer Pegajoso
+    const htmlPrecioFooter = (p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ? 
+        `<div style="display:flex; flex-direction:column; line-height:1;">
+           <span style="text-decoration:line-through; color:#888; font-size:0.75rem;">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>
+           <span style="color:var(--neon-green); font-weight:bold; font-size:1.4rem; font-family:var(--font-brand); text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);">$${(Number(p.PRECIO) - Number(p.DETALLE_PROMO)).toLocaleString('es-CL')}</span>
+         </div>` : 
+        `<span style="color:var(--neon-green); font-weight:bold; font-size:1.4rem; font-family:var(--font-brand); text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>`;
+
     const footer = document.createElement('div');
     footer.className = 'modal-footer-fixed';
     footer.innerHTML = `
-        <button class="btn-checkout" onclick="agregarConVariantes('${p.SKU}')" style="width:100%; margin:0;">
-            AÑADIR A CARRO
+        <div style="flex: 1; text-align: left;">
+            <span style="font-size: 0.65rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px;">Precio Final</span><br>
+            ${htmlPrecioFooter}
+        </div>
+        <button class="btn-checkout" onclick="agregarConVariantes('${p.SKU}')" style="flex: 1.2; margin:0; padding: 14px 10px; font-size: 0.85rem; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <i class="fas fa-shopping-basket"></i> AÑADIR
         </button>
     `;
     modal.querySelector('.modal-content').appendChild(footer);

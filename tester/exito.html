@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡PAGO EXITOSO! | Espacio Weed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --cian: #00ffff; --neon-green: #2ecc71; --bg-space: #020204; }
+        body { background: var(--bg-space); color: white; font-family: 'Rajdhani', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        .success-card { background: rgba(10, 15, 26, 0.95); padding: 40px; border-radius: 20px; border: 1px solid var(--neon-green); box-shadow: 0 0 30px rgba(46, 204, 113, 0.2); max-width: 400px; width: 90%; }
+        .icon-check { font-size: 4rem; color: var(--neon-green); margin-bottom: 20px; }
+        h1 { font-family: 'Orbitron'; font-size: 1.5rem; color: var(--neon-green); margin-bottom: 10px; }
+        p { color: #aaa; margin-bottom: 30px; font-size: 0.9rem; }
+        .btn-exito { display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; text-decoration: none; font-weight: bold; font-family: 'Orbitron'; font-size: 0.9rem; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-wa { background: var(--neon-green); color: black; }
+        .btn-nave { background: transparent; color: white; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <i class="fas fa-check-circle icon-check"></i>
+        <h1>¡PAGO CONFIRMADO!</h1>
+        <p>La transacción fue un éxito. Tu pedido ha sido registrado en la base de datos.</p>
+        <a href="#" id="link-wa" class="btn-exito btn-wa"><i class="fab fa-whatsapp"></i> COORDINAR ENTREGA</a>
+        <a href="index.html" class="btn-exito btn-nave"><i class="fas fa-rocket"></i> VOLVER A LA NAVE</a>
+    </div>
+
+    <script>
+        // 1. PEGA AQUÍ TU URL DE APPS SCRIPT
+        const API_URL = "https://script.google.com/macros/s/AKfycbwpzm-n0UUwvEgYOCtPDE6Z5OJkq4jBracHGXE7i3XHmn9xaolZchSNt8Sy95mGONActA/exec";
+
+        async function cargarPantallaExito() {
+            const params = new URLSearchParams(window.location.search);
+            const numMP = params.get('payment_id') || 'N/A';
+            const numPedido = params.get('external_reference') || 'PENDIENTE';
+            
+            let lista = "Consultar detalle";
+            try {
+                let car = localStorage.getItem('carritoWeed') || localStorage.getItem('carrito');
+                if (car) {
+                    let items = JSON.parse(car);
+                    lista = items.map(i => i.cantidad + "x " + (i.nombre || i.producto)).join("%0A- ");
+                    localStorage.removeItem('carrito'); localStorage.removeItem('carritoWeed');
+                }
+            } catch(e) { console.log(e); }
+
+            try {
+                const res = await fetch(API_URL + "?action=getInitialData");
+                const data = await res.json();
+                const wa = data.config['WHATSAPP_ADMIN'] || data.config['WHATSAPP'];
+                if(wa) {
+                    const num = wa.toString().replace(/\D/g, '');
+                    let msg = "¡Hola Espacio Weed! Pago confirmado. 🚀%0A%0A📦 *Pedido:* " + numPedido + "%0A💳 *Pago ID:* " + numMP + "%0A🛍️ *Items:*%0A- " + lista;
+                    document.getElementById('link-wa').href = "https://wa.me/" + num + "?text=" + msg;
+                }
+            } catch (err) { console.error(err); }
+        }
+        cargarPantallaExito();
+    </script>
+</body>
+</html>

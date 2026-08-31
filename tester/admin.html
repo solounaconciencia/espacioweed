@@ -1,0 +1,3664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MANDO CENTRAL | Espacio Weed</title>
+    
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@300;400;600;700&display=swap');
+
+:root {
+  --neon-green: #2ecc71;
+  --amber: #f1c40f;
+  --cian: #00ffff;
+  --bg-space: #020204;
+  --glass: rgba(255, 255, 255, 0.05);
+  --font-main: 'Montserrat', sans-serif;
+  --font-brand: 'Orbitron', sans-serif;
+  --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* 1. RESET Y BASE */
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg-space);
+  color: white;
+  font-family: var(--font-main);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* 2. FONDO GALÁCTICO DEFINITIVO */
+#star-canvas {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at center, #1B2735 0%, #020204 100%);
+  overflow: hidden;
+}
+
+/* Capa de estrellas real (50 estrellas blancas) */
+#star-canvas::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 3px; height: 3px;
+  background: transparent;
+  /* Aquí están tus estrellas */
+  box-shadow: 15vw 10vh #fff, 35vw 45vh #fff, 65vw 15vh #fff, 85vw 85vh #fff, 45vw 95vh #fff, 25vw 75vh #fff, 55vw 35vh #fff, 10vw 80vh #fff, 90vw 10vh #fff, 40vw 30vh #fff, 70vw 60vh #fff, 20vw 20vh #fff, 80vw 40vh #fff, 30vw 90vh #fff, 60vw 10vh #fff, 5vw 40vh #fff, 95vw 60vh #fff, 50vw 50vh #fff, 12vw 12vh #fff, 88vw 88vh #fff, 22vw 66vh #fff, 77vw 33vh #fff, 44vw 11vh #fff, 66vw 99vh #fff, 33vw 55vh #fff, 11vw 77vh #fff, 99vw 22vh #fff;
+  opacity: 0.6;
+  animation: moveStars 100s linear infinite;
+}
+
+@keyframes moveStars {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100vh); }
+}
+
+/* 6. CORRECCIÓN DEL MENÚ DESPLEGABLE (DROPDOWN) */
+.dropdown { position: relative; display: inline-block; }
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #0a0a0c;
+  min-width: 220px;
+  box-shadow: 0px 8px 16px rgba(0,255,255,0.4); /* Sombra más fuerte para resaltar sobre el slider */
+  z-index: 20000; /* Nivel máximo de órbita */
+  border: 1px solid var(--cian);
+  border-radius: 8px;
+  margin-top: 0;
+  padding: 10px 0;
+}
+
+.dropdown-content a {
+  color: white !important;
+  padding: 12px 20px !important;
+  text-decoration: none;
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: rgba(0, 255, 255, 0.1);
+  color: var(--amber) !important;
+}
+
+/* Mostrar al pasar el mouse */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Eliminar el cuadro gris feo si se queda pegado */
+.skeleton-loader {
+  background: rgba(255,255,255,0.05);
+  width: 100%; height: 100%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.1; }
+  100% { opacity: 0.3; }
+}
+
+/* 3. BARRA SUPERIOR (TOP BAR) - CÁPSULAS ESTÁTICAS */
+.top-bar {
+  position: fixed;
+  top: 0; width: 100%;
+  background: #000;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+  z-index: 5000;
+  padding: 6px 0;
+}
+
+.top-bar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.trust-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 4px 14px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.5px;
+  /* Estático según auditoría */
+}
+
+.wa-link { 
+  color: var(--cian) !important; 
+  cursor: pointer; 
+}
+
+/* 4. HEADER Y NAVEGACIÓN */
+.header-wrap {
+  margin-top: 45px;
+  padding: 30px 0;
+  background: #000;
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+  position: relative; /* Vital para que el z-index funcione */
+  z-index: 9000;      /* Nivel superior al slider */
+}
+
+.logo-area { text-align: center; margin-bottom: 25px; }
+.main-logo { 
+  width: 170px;  
+  transition: var(--transition);
+}
+
+.main-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-brand);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+  opacity: 0.75;
+}
+
+.nav-links a:hover {
+  color: var(--cian);
+  opacity: 1;
+  text-shadow: 0 0 10px var(--cian);
+}
+
+.search-container {
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+}
+
+#main-search {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  color: white;
+  outline: none;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+#main-search:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+}
+
+.search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.3);
+}
+
+/* 5. SLIDER DESTACADOS - CÁPSULA DE ACCESO DIRECTO */
+.slider-container {
+  width: 100%;
+  height: 400px; /* Altura fija para la cápsula */
+  position: relative;
+  overflow: hidden;
+  background: transparent; /* El fondo lo da la cápsula */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.slide {
+  position: absolute;
+  width: 90%; /* Caja más pequeña que el contenedor */
+  max-width: 800px;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Imagen izquierda, texto derecha */
+  opacity: 0;
+  transition: opacity 1s ease-in-out, transform 0.5s ease-out;
+  background: var(--glass);
+  border: 2px solid var(--neon-green);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+  transform: translateX(50px); /* Efecto de entrada */
+  pointer-events: none;
+}
+
+.slide.active { 
+  opacity: 1; 
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* Imagen a la izquierda (Neuro-Marketing) */
+.img-slide {
+  width: 40%;
+  height: 100%;
+  object-fit: contain; /* No recorta la imagen, la ajusta */
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+
+/* Texto y Acciones a la derecha */
+.slide-content {
+  width: 55%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.slide-content h2 { 
+  font-family: var(--font-brand); 
+  color: var(--amber); 
+  margin: 0; 
+  font-size: 0.9rem; 
+  letter-spacing: 2px;
+}
+
+.slide-content h1 { 
+  font-family: var(--font-brand); 
+  font-size: 1.8rem; 
+  color: white; 
+  margin: 5px 0 15px 0; 
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.slide-content p {
+  color: #ccc;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+/* Botón de compra rápido en el Banner */
+.btn-banner-buy {
+  background: var(--neon-green);
+  color: black;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-family: var(--font-brand);
+  font-weight: bold;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-banner-buy:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+/* CONTROLES DE NAVEGACIÓN (FLECHAS) */
+.slider-prev, .slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: var(--cian);
+  border: 1px solid var(--cian);
+  font-size: 1.5rem;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 100;
+  transition: 0.3s;
+}
+
+.slider-prev:hover, .slider-next:hover {
+  background: var(--cian);
+  color: black;
+}
+
+.slider-prev { left: 10px; }
+.slider-next { right: 10px; }
+
+/* MOBILE FIX */
+@media (max-width: 768px) {
+  .slider-container { height: 520px; padding: 10px; }
+  .slide { flex-direction: column; height: 96%; padding: 15px; justify-content: flex-start; gap: 5px; left: 5%; pointer-events: none;}
+  .img-slide { width: auto; max-height: 180px; object-fit: contain; margin-bottom: 5px; flex-shrink: 0; }
+  .slide-content { width: 100%; text-align: center; }
+  .slide-content h1 { font-size: 1.2rem; margin: 5px 0; }
+  .slide-content p { font-size: 0.75rem; line-height: 1.2; margin-bottom: 10px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+  .slide-content h1 { font-size: 1.4rem; }
+  .slider-prev, .slider-next { font-size: 1rem; padding: 8px 12px; }
+}
+
+/* 6. CATEGORÍAS DINÁMICAS */
+.category-filter-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 25px;
+  background: rgba(0,0,0,0.4);
+}
+
+.cat-btn {
+  background: transparent;
+  border: 1px solid var(--cian);
+  color: var(--cian);
+  padding: 7px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font-brand);
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+
+.cat-btn:hover {
+  background: var(--cian);
+  color: black;
+  box-shadow: 0 0 15px var(--cian);
+}
+
+/* 7. VITRINA DE PRODUCTOS (GRID) */
+.content-wrapper { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 30px;
+}
+
+.product-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: var(--transition);
+}
+
+.product-card:hover {
+  border-color: var(--neon-green);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+.product-card img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.product-card:hover img { transform: scale(1.1); }
+
+.more-info-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--amber);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: var(--font-brand);
+  font-size: 0.65rem;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.product-card:hover .more-info-btn { opacity: 1; }
+
+.scarcity-label {
+  position: absolute;
+  top: 15px; left: 15px;
+  background: #e74c3c;
+  color: white;
+  padding: 3px 10px;
+  font-size: 0.6rem;
+  font-weight: bold;
+  border-radius: 3px;
+  z-index: 5;
+}
+
+/* 8. CARRITO SIDEBAR */
+.cart-sidebar {
+  position: fixed;
+  top: 0; right: -400px;
+  width: 380px; height: 100%;
+  background: #08080a;
+  border-left: 1px solid var(--cian);
+  z-index: 100000;
+  transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-sidebar.active { right: 0; }
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--glass);
+  padding-bottom: 20px;
+}
+
+.cart-header h3 { font-family: var(--font-brand); margin: 0; letter-spacing: 2px; }
+.close-cart {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 45px;         /* Área de clic ampliada para pulgares */
+  height: 45px;
+  display: flex;       /* Centrado perfecto */
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;     /* 'X' más grande y clara */
+  cursor: pointer;
+  color: var(--neon-green); /* Color de marca activo */
+  background: rgba(0, 0, 0, 0.5); /* Fondo oscuro para resaltar sobre cualquier imagen */
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 50%;  /* Botón circular */
+  transition: 0.3s all cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2000;       /* Siempre por encima de todo */
+  line-height: 1;
+  user-select: none;   /* Evita seleccionar el texto por error */
+}
+.close-cart:hover {
+  background: var(--neon-green);
+  color: #000 !important;
+  box-shadow: 0 0 20px var(--neon-green);
+  transform: rotate(90deg) scale(1.1); /* Efecto visual dinámico */
+}
+
+.cart-items-container {
+  flex: 1;
+  overflow-y: auto;
+  margin: 25px 0;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dotted rgba(255,255,255,0.1);
+}
+
+.btn-qty {
+  background: #222; border: 1px solid #444; color: white;
+  width: 25px; height: 25px; cursor: pointer; border-radius: 3px;
+}
+
+.btn-del {
+  background: none; border: none; color: #e74c3c; cursor: pointer; margin-left: 10px;
+}
+
+.cart-footer {
+  border-top: 1px solid var(--cian);
+  padding-top: 20px;
+}
+
+.cart-total-box {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-brand);
+  font-size: 1.3rem;
+  color: var(--amber);
+  margin-bottom: 20px;
+}
+
+.btn-checkout {
+  width: 100%;
+  padding: 18px;
+  background: var(--neon-green);
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-brand);
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-checkout:hover { background: white; transform: scale(1.02); }
+
+/* 9. MODAL DETALLE */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 99999 !important; /* Por encima de todo, incluso del carrito */
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0,0,0,0.8); /* Fondo oscuro para enfocar la mente */
+  backdrop-filter: blur(8px); /* Efecto neuro-relajante */
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--glass);
+  border: 1px solid var(--neon-green);
+  margin: auto;
+  padding: 25px;
+  width: 90%; /* Ocupa el 90% en móviles */
+  max-width: 500px; /* Pero nunca más de 500px en PC */
+  border-radius: 15px;
+  position: relative;
+  box-sizing: border-box; /* CRÍTICO: Evita que el padding empuje los bordes hacia afuera */
+}
+
+.modal-flex { display: flex; gap: 40px; flex-wrap: wrap; }
+.modal-img { width: 350px; border-radius: 15px; }
+
+.price-box {
+  background: rgba(255,255,255,0.03);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.precio-old { text-decoration: line-through; opacity: 0.5; font-size: 1rem; margin-right: 15px; }
+.precio-promo { color: var(--amber); font-weight: bold; font-size: 1.8rem; font-family: var(--font-brand); }
+
+/* 10. WHATSAPP BUBBLE */
+.wa-bubble {
+  position: fixed;
+  bottom: 30px; right: 30px;
+  width: 65px; height: 65px;
+  z-index: 5500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.wa-bubble:hover { transform: scale(1.15) rotate(10deg); }
+.wa-bubble img { width: 100%; filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.4)); }
+
+/* 11. TOAST NOTIFICATION */
+.toast-notification {
+  position: fixed;
+  bottom: -60px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--neon-green);
+  color: black;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-family: var(--font-brand);
+  font-size: 0.8rem;
+  z-index: 200000 !important;
+  transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-notification.show { bottom: 110px; }
+
+/* 12. RESPONSIVE DESIGN (MOBILE) */
+@media (max-width: 768px) {
+  .top-bar-container { gap: 6px; }
+  .trust-card { font-size: 0.55rem; padding: 4px 8px; }
+  
+  .main-logo { width: 130px; }
+  .nav-links { gap: 15px; font-size: 0.65rem; flex-wrap: wrap; justify-content: center; }
+  
+  .product-grid { grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+  
+  .cart-sidebar { width: 100%; right: -100%; }
+  
+  .modal-img { width: 100%; }
+  .modal-content { margin: 10px; padding: 20px; }
+}
+.section-title {
+  text-align: center;
+  font-family: var(--font-brand);
+  color: var(--cian);
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  border-bottom: 2px solid var(--neon-green);
+  display: inline-block;
+  padding-bottom: 10px;
+  width: 100%;
+}
+/* DISEÑO QUIRÚRGICO DE LA NAVE */
+.nave-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(2, 2, 4, 0.9) !important;
+    backdrop-filter: blur(15px) !important;
+    z-index: 99999 !important;
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto; /* PERMITE SCROLL SI ALGO QUEDA ABAJO */
+    padding: 20px 0;
+}
+
+.login-card {
+    background: var(--glass);
+    border: 2px solid var(--cian);
+    padding: 30px;
+    border-radius: 20px;
+    width: 95%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+    position: relative;
+    margin: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    /* LÍNEAS DE CORRECCIÓN QUIRÚRGICA: */
+    display: flex;
+    flex-direction: column; /* Apila todo verticalmente */
+    align-items: center;    /* Centra inputs y botones */
+}
+
+.nave-logo { width: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--neon-green)); }
+.nave-title { font-family: var(--font-brand); font-size: 1.2rem; color: var(--amber); margin-bottom: 30px; letter-spacing: 2px; }
+
+.input-group {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+}
+
+.btn-nave-main {
+    width: 100%;
+    padding: 14px;
+    background: var(--neon-green);
+    color: black;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font-brand);
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-nave-main:hover { transform: scale(1.02); background: white; }
+
+/* 1. Enlaces del Login/Registro (Se mantienen compactos) */
+.nave-links { 
+    margin-top: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+.nave-links a { 
+    color: var(--cian); 
+    font-size: 0.75rem; 
+    text-decoration: none; 
+    opacity: 0.7; 
+    transition: 0.3s;
+}
+.nave-links a:hover { opacity: 1; text-decoration: underline; }
+
+/* 2. Botón VOLVER (Independiente y Ergonómico para el dedo) */
+.back-link { 
+    display: block;
+    margin-top: 35px;       /* Distancia generosa del botón de arriba */
+    padding: 12px;          /* Zona de toque ampliada para el celular */
+    color: var(--cian); 
+    font-size: 0.8rem; 
+    text-decoration: none; 
+    opacity: 0.7; 
+    font-family: var(--font-brand);
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.back-link:hover { 
+    opacity: 1; 
+    text-shadow: 0 0 8px var(--cian); 
+}
+
+/* 3. Textos informativos */
+.nave-text { font-size: 0.8rem; color: #ccc; margin-bottom: 20px; }
+
+.close-nave {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 45px;         /* Área de clic ampliada para pulgares */
+  height: 45px;
+  display: flex;       /* Centrado perfecto */
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;     /* 'X' más grande y clara */
+  cursor: pointer;
+  color: var(--neon-green); /* Color de marca activo */
+  background: rgba(0, 0, 0, 0.5); /* Fondo oscuro para resaltar sobre cualquier imagen */
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 50%;  /* Botón circular */
+  transition: 0.3s all cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2000;       /* Siempre por encima de todo */
+  line-height: 1;
+  user-select: none;   /* Evita seleccionar el texto por error */
+}
+.close-nave:hover { 
+  background: var(--neon-green);
+  color: #000 !important;
+  box-shadow: 0 0 20px var(--neon-green);
+  transform: rotate(90deg) scale(1.1); /* Efecto visual dinámico */
+}
+.nave-input {
+    width: 100%;
+    align-self: stretch;
+    box-sizing: border-box; /* Evita que el padding "estire" el input hacia afuera */
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;        /* Evita el zoom automático en iPhones al clickear */
+    outline: none;
+}
+
+.dash-avatar {
+    width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--neon-green);
+    cursor: pointer; box-shadow: 0 0 15px var(--neon-green); transition: 0.3s;
+}
+
+.dash-avatar:hover { transform: scale(1.1); }
+
+.compras-grid {
+    display: flex; gap: 10px; overflow-x: auto; padding: 10px 0;
+}
+
+.compra-card {
+    min-width: 100px; background: rgba(255,255,255,0.05);
+    padding: 10px; border-radius: 10px; border: 1px solid var(--glass);
+    text-align: center; font-size: 0.6rem;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Se adapta solo */
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tool-btn {
+    background: var(--glass); border: 1px solid var(--cian); color: white;
+    padding: 15px 5px; border-radius: 8px; font-size: 0.6rem; cursor: pointer;
+}
+
+.avatar-opt { width: 100%; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.avatar-opt:hover { border-color: var(--amber); }
+
+.btn-logout { background: none; border: none; color: #ff4444; font-size: 0.7rem; cursor: pointer; }
+/* AJUSTES ESPECÍFICOS PARA MÓVILES (Pantallas menores a 600px) */
+@media (max-width: 600px) {
+    /* Ajustes de tarjetas y comunidad (Tu código original) */
+    .login-card {
+        padding: 20px 15px; /* Menos espacio interno para ganar pantalla */
+        border-radius: 15px;
+    }
+
+    .nave-title {
+        font-size: 1rem; /* Título un poco más pequeño */
+        margin-bottom: 20px;
+    }
+
+    .compra-card {
+        min-width: 120px; /* Tarjetas de compras un poco más cómodas para scroll */
+    }
+    
+    .tools-grid {
+        grid-template-columns: 1fr 1fr; /* 2 botones por fila en lugar de 3 si es muy angosto */
+    }
+
+    /* Ajuste táctil para los botones de cierre (Protocolo FOCUS) */
+    .close-nave, .close-cart {
+        top: 10px;
+        right: 10px;
+        width: 50px;       /* Área generosa para el pulgar */
+        height: 50px;
+        background: rgba(0, 0, 0, 0.8); /* Mayor contraste en exteriores */
+        border: 2px solid var(--neon-green);
+    }
+}
+.suggestions-box {
+    background: rgba(46, 204, 113, 0.05);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.sugerencia-item {
+    display: none; /* Se controlan por JS */
+    animation: fadeIn 0.5s ease;
+}
+
+.sugerencia-item.active { display: flex; gap: 15px; align-items: center; }
+
+.img-sug { width: 80px; height: 80px; object-fit: contain; background: white; border-radius: 10px; }
+
+.info-sug { text-align: left; flex: 1; }
+
+.badge-desc {
+    background: var(--amber); color: black; font-weight: bold;
+    font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+}
+
+.dots-container { display: flex; justify-content: center; gap: 5px; margin-top: 10px; }
+.dot { width: 8px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; }
+.dot.active { background: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+
+/* CONTROL DE AVATARES EN PERFIL */
+.avatar-grid {
+    display: grid;
+    /* Esto asegura que quepan varios avatares por línea según el ancho */
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); 
+    gap: 12px;
+    min-height: 90px;   /* ¡NUEVO! Espacio garantizado para una fila */
+    max-height: 180px;  /* Altura máxima para ver dos filas antes de hacer scroll */
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 12px;
+    width: 100%;
+    border: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.avatar-opt {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.avatar-opt:hover {
+    transform: scale(1.1);
+    border-color: var(--cian);
+}
+
+.avatar-opt.seleccionado {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+/* AJUSTE PARA EL SELECT (PREGUNTA) */
+select.nave-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+}
+
+/* BLINDAJE FOCUS: Opciones legibles en TODAS las listas desplegables */
+select option {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-weight: bold !important;
+    font-size: 0.9rem !important;
+}
+
+.auspiciadores-container {
+  background: var(--glass);
+  border-top: 1px solid rgba(46, 204, 113, 0.2);
+  border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 8000;
+}
+
+.marquee-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.marquee-content {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  padding: 0 25px;
+}
+
+.marquee-content img {
+  height: 40px; /* Tamaño discreto */
+  width: auto;
+  filter: grayscale(100%) opacity(0.7);
+  transition: var(--transition);
+}
+
+.marquee-content img:hover {
+  filter: grayscale(0%) opacity(1);
+}
+
+/* Animación de giro infinito */
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.scrolling {
+  animation: scroll-marquee 25s linear infinite;
+}
+
+/* BURBUJA CARRITO FLOTANTE - INTEGRACIÓN ESPACIO WEED */
+.cart-float-bubble {
+  position: fixed;
+  bottom: 105px; /* Situada sobre la de WhatsApp (30px + 65px + 10px gap) */
+  right: 30px;
+  width: 65px;
+  height: 65px;
+  background: var(--cian); /* Color de acción de tu Nave */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+  z-index: 5400; /* Justo debajo de la de WhatsApp para jerarquía visual */
+  cursor: pointer;
+  transition: var(--transition);
+  color: black;
+  font-size: 1.6rem;
+}
+
+.cart-float-bubble:hover {
+  transform: scale(1.1);
+  background: white;
+}
+
+.cart-badge-float {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #e74c3c; /* Rojo alerta para el contador */
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--bg-space);
+}
+
+/* Ajuste para que en móviles no tapen demasiado */
+@media (max-width: 768px) {
+  .wa-bubble, .cart-float-bubble {
+    right: 20px;
+    width: 55px;
+    height: 55px;
+  }
+  .wa-bubble { bottom: 20px; }
+  .cart-float-bubble { bottom: 85px; font-size: 1.3rem; }
+}
+
+/* ESTRUCTURA MODAL DETALLES BLINDADO */
+.modal-detalles-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* Altura máxima de la ventana */
+  overflow: hidden; /* Evita que el contenedor padre crezca */
+  background: var(--bg-space);
+  border: 1px solid var(--cian);
+  border-radius: 15px;
+}
+
+.modal-detalles-body {
+  flex: 1; /* Toma todo el espacio disponible */
+  overflow-y: auto; /* Solo esta parte tiene scroll */
+  padding: 20px;
+}
+
+.modal-detalles-footer {
+  padding: 15px 20px;
+  background: rgba(0,0,0,0.9);
+  border-top: 1px solid rgba(0,255,255,0.2);
+  text-align: center;
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,255,255,0.5);
+  border: none;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* VARIANTES */
+.variant-select {
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  border: 1px solid #333;
+  color: white;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+/* DISEÑO DE MODAL PROFESIONAL "BLINDADO" */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh; /* Evita que se salga de la pantalla */
+    padding: 0 !important; /* Quitamos padding para que el footer pegue abajo */
+    overflow: hidden;
+    background: #0b0f1a;
+    border: 1px solid var(--cian);
+}
+
+#detalle-body {
+    flex: 1; /* Esto permite que el cuerpo crezca y el footer se quede abajo */
+    overflow-y: auto; /* Solo el contenido tiene scroll */
+    padding: 20px;
+}
+
+.modal-footer-fixed {
+    padding: 15px;
+    background: rgba(0,0,0,0.9);
+    border-top: 1px solid rgba(0,255,255,0.2);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ESTILO CARRUSEL */
+.carousel-container {
+    position: relative;
+    width: 60%; /* Reducido del 100% al 60% para que no ocupe toda la pantalla */
+    margin: 0 auto 15px; /* Centra la imagen horizontalmente y da aire abajo */
+    aspect-ratio: 1/1; /* Mantiene el cuadrado perfecto */
+    background: rgba(0,0,0,0.3); /* Fondo sutil para que la imagen destaque */
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,255,255,0.1); /* Borde cian muy fino */
+}
+
+.carousel-img {
+    max-width: 95%; /* Pequeño margen interno para que no pegue al borde del cuadro */
+    max-height: 95%;
+    object-fit: contain; /* Evita que la imagen se estire feo */
+    border-radius: 8px;
+}
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,255,255,0.3);
+    border: none;
+    color: white;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.nav-btn:hover { background: var(--cian); color: black; }
+.prev { left: 10px; }
+.next { right: 10px; }
+.close-nave:active {
+  background: var(--neon-green);
+    color: #000 !important;
+    box-shadow: 0 0 20px var(--neon-green);
+    transform: rotate(90deg) scale(1.1); /* Efecto visual dinámico */
+}
+.close-cart:active {
+  background: var(--neon-green);
+  color: #000 !important;
+  box-shadow: 0 0 20px var(--neon-green);
+  transform: rotate(90deg) scale(1.1); /* Efecto visual dinámico */
+}
+/* ==========================================
+   ESTÉTICA FOCUS: SUBIDA DE ARCHIVOS
+   ========================================== */
+.custom-file-upload {
+    border: 1px dashed var(--cian);
+    background: rgba(0, 255, 255, 0.05);
+    color: var(--cian);
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-brand);
+    font-size: 0.75rem;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.custom-file-upload:hover {
+    background: rgba(0, 255, 255, 0.2);
+    color: white;
+    border-style: solid;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+/* Ocultamos el botón horrible de Windows 98 */
+input[type="file"].hidden-file {
+    display: none;
+}
+/* ==========================================
+   ESTÉTICA FOCUS: SUBIDA DE ARCHIVOS
+   ========================================== */
+.custom-file-upload {
+    border: 1px dashed var(--cian);
+    background: rgba(0, 255, 255, 0.05);
+    color: var(--cian);
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-brand);
+    font-size: 0.75rem;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.custom-file-upload:hover {
+    background: rgba(0, 255, 255, 0.2);
+    color: white;
+    border-style: solid;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+input[type="file"].hidden-file { display: none; }    
+/* ==========================================
+   ESTÉTICA FOCUS: UNIFICACIÓN DE IMÁGENES
+   ========================================== */
+.producto-card img, .producto-img {
+    width: 100% !important;
+    height: 200px !important; /* Altura fija y estricta para todas las fotos */
+    object-fit: contain !important; /* Ajusta la foto sin deformarla ni recortarla */
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+</style>    
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { --glass-admin: rgba(10, 15, 26, 0.95); }
+    body { background: #05070a; color: white; font-family: 'Rajdhani', sans-serif; margin:0; }
+    .admin-nav { background: #000; padding: 15px; display: flex; gap: 10px; overflow-x: auto; border-bottom: 1px solid var(--cian); }
+    .tab-btn { background: transparent; border: 1px solid #333; color: #888; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: bold; font-family: 'Orbitron'; font-size: 0.7rem; transition: 0.3s; white-space: nowrap; }
+    .tab-btn.active { border-color: var(--cian); color: var(--cian); box-shadow: 0 0 10px rgba(0,255,255,0.2); }
+    .admin-container { padding: 20px; max-width: 1000px; margin: auto; }
+    .metric-card { background: var(--glass-admin); border-left: 4px solid var(--cian); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .admin-table th { text-align: left; color: var(--amber); padding: 10px; border-bottom: 1px solid #333; }
+    .admin-table td { padding: 10px; border-bottom: 1px solid #111; }
+    .input-admin { background: #000; border: 1px solid #333; color: white; padding: 5px; border-radius: 3px; width: 80px; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .btn-save { background: var(--cian); color: black; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    .btn-promo { background: var(--amber); color: black; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 5px; }
+    /* DISEÑO PROFESIONAL DE CHAT */
+.buzon-layout { 
+  display: flex; 
+  height: 65vh; /* Altura de la ventana en pantalla */
+  min-height: 500px; /* Para que nunca se vea enana */
+  background: rgba(10, 15, 26, 0.98); 
+  border-radius: 10px; 
+  overflow: hidden; 
+  border: 1px solid #1a1a1a; 
+}
+.buzon-sidebar { 
+  width: 200px; /* Achicada al 25% como pediste */
+  min-width: 200px;
+  border-right: 1px solid #1a1a1a; 
+  background: rgba(0,0,0,0.4); 
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.buzon-chat-window { 
+  flex: 1; /* Toma absolutamente todo el espacio sobrante a la derecha */
+  display: flex; 
+  flex-direction: column; 
+  background: #05070a;
+  height: 100%;
+}
+
+/* Tarjetas de usuario a la izquierda */
+.user-card { 
+  padding: 15px; 
+  border-bottom: 1px solid #111; 
+  cursor: pointer; 
+  transition: 0.2s; 
+}
+.user-card:hover { background: rgba(0,255,255,0.05); }
+.user-card.active { background: rgba(0,255,255,0.1); border-left: 4px solid var(--cian); }
+.user-card .email { font-size: 0.75rem; font-weight: bold; color: var(--cian); display: block; }
+.user-card .preview { font-size: 0.65rem; color: #777; display: block; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Globos de texto */
+.chat-mensajes { 
+  flex: 1; /* ESTO ES CLAVE: Empuja la barra de escritura hacia el fondo */
+  padding: 20px; 
+  overflow-y: auto; /* Agrega la barra de desplazamiento si hay muchos mensajes */
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+}
+
+.bubble { 
+  max-width: 75%; 
+  padding: 10px 14px; 
+  border-radius: 12px; 
+  font-size: 0.85rem; 
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* ADMIN: A LA DERECHA (CIAN) */
+.bubble.admin { 
+  align-self: flex-end; 
+  background: var(--cian); 
+  color: black; 
+  border-bottom-right-radius: 2px; 
+}
+
+/* USUARIO: A LA IZQUIERDA (GRIS) */
+.bubble.user { 
+  align-self: flex-start; 
+  background: #1a1a1a; 
+  color: white; 
+  border-bottom-left-radius: 2px; 
+  border: 1px solid #333;
+}
+
+.chat-input-area { 
+  padding: 15px; 
+  background: #000; 
+  border-top: 1px solid #1a1a1a; 
+  display: flex; 
+  gap: 10px; 
+  margin-top: auto; /* Anclaje forzado al suelo */
+}
+.chat-input-area textarea { 
+  flex: 1; 
+  background: #0a0a0a; 
+  border: 1px solid #222; 
+  color: white; 
+  padding: 10px; 
+  border-radius: 5px; 
+  height: 40px; 
+  resize: none;
+  font-family: 'Rajdhani';
+}
+
+/* Badge de mensajes nuevos */
+.badge-new { 
+  background: var(--amber); 
+  color: black; 
+  font-size: 0.6rem; 
+  padding: 1px 5px; 
+  border-radius: 4px; 
+  font-weight: bold; 
+  margin-left: 5px; 
+}
+/* Notificación elegante */
+.toast-weed {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--cian);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: 'Orbitron';
+  font-size: 0.7rem;
+  box-shadow: 0 0 15px rgba(0,255,255,0.3);
+  z-index: 9999;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+from { transform: translateX(100%); opacity: 0; }
+to { transform: translateX(0); opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<div class="admin-nav">
+        <button class="tab-btn active" onclick="showSection('dash', this)"><i class="fas fa-chart-line"></i> MÉTRICAS</button>
+        <button class="tab-btn" onclick="showSection('productos_manager', this)"><i class="fas fa-box-open"></i> PRODUCTOS</button>
+        <button class="tab-btn" onclick="showSection('buzon', this)"><i class="fas fa-envelope"></i> BUZÓN</button>
+        <button class="tab-btn" onclick="showSection('config', this)"><i class="fas fa-cog"></i> AJUSTES</button>
+        <button class="tab-btn" onclick="showSection('estilo', this)"><i class="fas fa-palette"></i> ESTILO</button>
+    </div>
+
+  <div class="admin-container">
+    <div id="dash" class="section active">
+      <h2 class="cian">CONTROL DE CAJA</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <div class="metric-card"><h3>HOY</h3><p id="ventas-hoy" class="cian" style="font-size: 1.5rem;">$0</p></div>
+        <div class="metric-card"><h3>ESTE MES</h3><p id="ventas-mes" class="amber" style="font-size: 1.5rem;">$0</p></div>
+      </div>
+      <button class="btn-nave-main" onclick="abrirVentaManual()">+ INFORMAR VENTA PRESENCIAL</button>
+      <div style="margin-top:20px; display:flex; align-items:center; gap:10px;">
+        <label style="font-size:0.7rem; color:var(--cian);">PERIODO:</label>
+        <select id="periodo-selector" class="nave-input" style="width:auto; margin:0;" onchange="actualizarGrafico()">
+          <option value="0" selected>MES EN CURSO</option>
+          <option value="3">Últimos 3 Meses</option>
+          <option value="6">Últimos 6 Meses</option>
+          <option value="12" selected>Último Año</option>
+        </select>
+      </div>
+
+      <div class="metric-card" style="margin-top:15px; padding:10px; height:300px;">
+        <canvas id="ventasChart"></canvas>
+      </div>
+    </div>
+
+    <div id="buzon" class="section">
+      <h2 class="cian"><i class="fas fa-comments"></i> BUZÓN MAESTRO</h2>
+      
+      <div class="buzon-layout">
+        <div class="buzon-sidebar">
+          <input type="text" id="search-buzon" class="nave-input" placeholder="Buscar cliente..." onkeyup="filtrarBuzon()" style="margin: 10px; width: calc(100% - 20px);">
+          <div id="lista-usuarios-buzon">
+            <p style="padding:20px; color:#666; font-size: 0.8rem;">Cargando mensajes...</p>
+          </div>
+        </div>
+
+        <div class="buzon-chat-window">
+          <div id="chat-header" class="chat-header">Selecciona un chat para comenzar</div>
+          <div id="chat-mensajes" class="chat-mensajes">
+            <div style="text-align:center; color:#333; margin-top:100px;">
+              <i class="fas fa-terminal" style="font-size:3rem; opacity:0.2;"></i>
+              <p>ESPERANDO ENLACE...</p>
+            </div>
+          </div>
+          
+          <div id="chat-input-area" class="chat-input-area" style="display:none;">
+            <textarea id="msj-admin-input" placeholder="Escribe tu respuesta..."></textarea>
+            <button class="btn-nave-main" onclick="enviarMensajeBuzon()" style="width: auto; padding: 10px 20px;">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div> 
+      
+<div id="productos_manager" class="section">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <h2 class="cian"><i class="fas fa-box-open"></i> GESTIÓN DE CATÁLOGO</h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalDestacados()">
+                <i class="fas fa-star"></i> DESTACADOS
+            </button>
+            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalPatrocinadores()">
+                <i class="fas fa-handshake"></i> PATROCINADORES
+            </button>
+            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: var(--amber); color: black;" onclick="abrirModalCupones()">
+                <i class="fas fa-ticket-alt"></i> CREAR DESCUENTO
+            </button>
+            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0;" onclick="abrirModalProductoNuevo()">
+                <i class="fas fa-plus"></i> NUEVO PRODUCTO
+            </button>
+        </div>
+    </div>
+    
+    <div style="margin-top: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+        <input type="text" id="search-catalogo" class="nave-input" placeholder="Buscar por Nombre o SKU..." onkeyup="filtrarCatalogo()" style="width: 100%; max-width: 400px; margin-bottom: 0;">
+        <button id="btn-eliminar-masa" class="btn-save" style="background: #e74c3c; color: white; display: none; padding: 12px 20px;" onclick="confirmarEliminacionMasa()">
+            <i class="fas fa-trash-alt"></i> Eliminar (0)
+        </button>
+        <button id="btn-cancelar-masa" class="btn-save" style="background: transparent; border: 1px solid #444; color: #888; display: none; padding: 12px 20px;" onclick="cancelarSeleccionMasa()">
+            Cancelar
+        </button>
+    </div>
+    
+    <div style="overflow-x: auto; margin-top: 15px;">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px; text-align: center;"><input type="checkbox" id="chk-master-masa" onchange="seleccionarTodosMasa(this)"></th>
+                    <th>FOTO</th>
+                    <th>PRODUCTO / SKU</th>
+                    <th>CATEGORÍA</th>
+                    <th>PRECIO Y STOCK</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-catalogo">
+                </tbody>
+        </table>
+    </div>
+</div>      
+      
+      
+
+<div id="config" class="section">
+  <h2 class="cian"><i class="fas fa-cogs"></i> CONFIGURACIÓN MAESTRA</h2>
+  
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
+    
+    <div class="metric-card" style="margin-bottom:0;">
+      <h3 style="color: var(--amber); margin-bottom: 15px;"><i class="fas fa-store"></i> TIENDA Y SISTEMA</h3>
+      
+      <label style="font-size:0.7rem; color:#888;">ESTADO DE LA TIENDA (Pausa/Vacaciones)</label>
+      <select id="aj_estado" class="nave-input">
+        <option value="ABIERTO">ABIERTO (Recibiendo pedidos)</option>
+        <option value="CERRADO">CERRADO (Modo Pausa)</option>
+      </select>
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">ANUNCIO EMERGENTE (Texto)</label>
+      <input type="text" id="aj_anuncio_texto" class="nave-input" placeholder="Ej: ¡Envíos gratis este finde!">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">ANUNCIO EMERGENTE (URL Imagen opcional)</label>
+      <input type="text" id="aj_anuncio_imagen" class="nave-input" placeholder="URL de la imagen (Drive, Imgur...)">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">COSTO DE ENVÍO ($)</label>
+      <input type="number" id="aj_envio" class="nave-input" placeholder="Ej: 3500">
+
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">TOKEN MERCADO PAGO</label>
+      <input type="password" id="aj_mp_token" class="nave-input" placeholder="APP_USR-...">
+    </div>
+
+    <div class="metric-card" style="margin-bottom:0; border-color: #e1306c;">
+      <h3 style="color: #e1306c; margin-bottom: 15px;"><i class="fas fa-hashtag"></i> COMUNICACIÓN</h3>
+      
+      <label style="font-size:0.7rem; color:#888;">WHATSAPP (Contacto Clientes)</label>
+      <input type="text" id="aj_wa" class="nave-input" placeholder="569...">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">WHATSAPP (Alertas Admin)</label>
+      <input type="text" id="aj_wa_admin" class="nave-input" placeholder="569...">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">LINK INSTAGRAM</label>
+      <input type="text" id="aj_ig" class="nave-input" placeholder="https://instagram.com/...">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">LINK FACEBOOK</label>
+      <input type="text" id="aj_fb" class="nave-input" placeholder="https://facebook.com/...">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">LINK YOUTUBE</label>
+      <input type="text" id="aj_yt" class="nave-input" placeholder="https://youtube.com/...">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">LINK TIKTOK</label>
+      <input type="text" id="aj_tk" class="nave-input" placeholder="https://tiktok.com/...">
+    </div>
+
+    <div class="metric-card" style="margin-bottom:0; border-color: #00ff88;">
+      <h3 style="color: #00ff88; margin-bottom: 15px;"><i class="fas fa-university"></i> DATOS BANCARIOS</h3>
+      
+      <label style="font-size:0.7rem; color:#888;">NOMBRE DEL BANCO</label>
+      <input type="text" id="aj_banco_nombre" class="nave-input" placeholder="Ej: Banco Estado">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">TIPO DE CUENTA</label>
+      <input type="text" id="aj_banco_tipo" class="nave-input" placeholder="Ej: Cuenta RUT">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">RUT</label>
+      <input type="text" id="aj_banco_rut" class="nave-input" placeholder="Ej: 11.111.111-1">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">NÚMERO DE CUENTA</label>
+      <input type="text" id="aj_banco_numero" class="nave-input" placeholder="Ej: 11111111">
+      
+      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">CORREO ELECTRÓNICO</label>
+      <input type="text" id="aj_banco_correo" class="nave-input" placeholder="transferencias@espacioweed.cl">
+    </div>
+  </div>
+
+  <button class="btn-nave-main" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1rem;" onclick="guardarAjustesPanel(this)">
+    <i class="fas fa-save"></i> GUARDAR CONFIGURACIÓN MAESTRA
+  </button>
+</div>
+
+<div id="estilo" class="section">
+        <h2 class="amber"><i class="fas fa-palette"></i> METAMORFOSIS VISUAL</h2>
+        <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Modifica el ADN gráfico de la nave. Los cambios se aplicarán al guardar.</p>
+
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(241,196,15,0.5); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 class="amber" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(241,196,15,0.2); padding-bottom:10px;"><i class="fas fa-magic"></i> ESTILOS PREDEFINIDOS (PLANTILLAS)</h3>
+            <select id="est-preset" class="nave-input" style="padding:10px; margin-bottom: 10px;" onchange="aplicarPreset(this.value)">
+                <option value="">Selecciona un estilo base...</option>
+                <option value="clean_slate">1. Quiero comenzar desde cero</option>
+                <option value="cyberpunk">2. Cyberpunk Neon (El original)</option>
+                <option value="matrix">3. Matrix Hacker (Verde/Oscuro)</option>
+                <option value="luxury">4. Luxury Gold (Premium/Elegante)</option>
+                <option value="nature">5. Organic Nature (CBD/Salud)</option>
+                <option value="ocean">6. Deep Ocean (Azules/Limpios)</option>
+                <option value="retro">7. Retro Vaporwave (80s Neon)</option>
+                <option value="blood">8. Blood Moon (Rojo/Agresivo)</option>
+                <option value="ice">9. Arctic Ice (Celeste/Gélido)</option>
+                <option value="minimalist">10. Minimalist White (Limpio/Clínico)</option>
+                <option value="corporate">11. Corporate Blue (Profesional/B2B)</option>
+                <option value="pastel">12. Soft Pastel (Boutique/Suave)</option>
+                <option value="sunset">13. Warm Sunset (Acogedor/Cálido)</option>
+                <option value="industrial">14. Industrial Grunge (Urbano/Gris)</option>
+            </select>
+            
+            <div id="preset-preview-box" style="width: 100%; height: 100px; background: #111; border-radius: 8px; border: 1px dashed var(--amber); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <span style="font-size: 0.7rem; color: #666;">Selecciona un estilo para previsualizar</span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-fingerprint"></i> IDENTIDAD</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">LOGO PRINCIPAL (URL):</label>
+                <input type="text" id="est-logo" class="nave-input" placeholder="URL de la imagen...">
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">LOGO SECUNDARIO / ERROR (Reemplazo):</label>
+                <input type="text" id="est-logo-error" class="nave-input" placeholder="URL de la imagen...">
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">FAVICON (Icono pestaña navegador):</label>
+                <input type="text" id="est-favicon" class="nave-input" placeholder="URL del icono...">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-image"></i> FONDO Y BANNER SUPERIOR</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">FONDO DE LA TIENDA (URL Imagen recomendada 1920x1080):</label>
+                <input type="text" id="est-bg-img" class="nave-input" placeholder="Dejar vacío para usar color...">
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">COMPORTAMIENTO DEL FONDO:</label>
+                <select id="est-bg-modo" class="nave-input" style="padding:8px;">
+                    <option value="cover">Estirar (Cubrir pantalla completa)</option>
+                    <option value="repeat">Mosaico (Repetir patrón)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">FONDO DEL BANNER SUPERIOR (URL o Color Hex):</label>
+                <input type="text" id="est-banner-bg" class="nave-input" placeholder="Ej: #000000 o URL imagen...">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-tint"></i> PALETA CROMÁTICA PRO</h3>
+                <p style="font-size:0.65rem; color:#888; margin-bottom:15px;">Puedes usar el selector visual o escribir el código HEX directamente.</p>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">FONDO PRINCIPAL (Tienda):</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-bg-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-bg').value = this.value">
+                        <input type="color" id="est-color-bg" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-bg-txt').value = this.value">
+                    </div>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">FONDO TARJETAS Y CAJAS:</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-glass-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-glass').value = this.value">
+                        <input type="color" id="est-color-glass" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-glass-txt').value = this.value">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">FONDO BARRA SUPERIOR (Menú):</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-topbar-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-topbar').value = this.value">
+                        <input type="color" id="est-color-topbar" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-topbar-txt').value = this.value">
+                    </div>
+                </div>
+
+                <hr style="border:0; border-top:1px dashed rgba(0,255,255,0.2); margin:15px 0;">
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">TÍTULOS Y TEXTO PRINCIPAL:</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-text-main-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-text-main').value = this.value">
+                        <input type="color" id="est-color-text-main" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-text-main-txt').value = this.value">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">PÁRRAFOS Y TEXTO SECUNDARIO:</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-text-sec-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-text-sec').value = this.value">
+                        <input type="color" id="est-color-text-sec" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-text-sec-txt').value = this.value">
+                    </div>
+                </div>
+
+                <hr style="border:0; border-top:1px dashed rgba(0,255,255,0.2); margin:15px 0;">
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">ACCIÓN PRINCIPAL (Botón Comprar):</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-neon-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-neon').value = this.value">
+                        <input type="color" id="est-color-neon" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-neon-txt').value = this.value">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">ACCIÓN SECUNDARIA (Destacados):</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-amber-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-amber').value = this.value">
+                        <input type="color" id="est-color-amber" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-amber-txt').value = this.value">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="font-size:0.65rem; color:#ccc; flex:1;">BORDES Y ENLACES:</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <input type="text" id="est-color-cian-txt" class="nave-input" style="width:70px; margin:0; padding:5px; font-size:0.7rem; text-align:center;" oninput="document.getElementById('est-color-cian').value = this.value">
+                        <input type="color" id="est-color-cian" style="background:none; border:none; cursor:pointer; width:30px; height:30px; padding:0;" oninput="document.getElementById('est-color-cian-txt').value = this.value">
+                    </div>
+                </div>
+                
+                <label style="font-size:0.7rem; color:#ccc; margin-top:15px; display:block;">OPACIDAD DE CAJAS (0% a 100%):</label>
+                <input type="range" id="est-opacidad" min="0" max="100" value="5" style="width:100%; accent-color:var(--cian);">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-font"></i> TIPOGRAFÍA</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">TÍTULOS PRINCIPALES:</label>
+                <select id="est-font-titulos" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
+                    <option value="'Orbitron', sans-serif" style="font-family: 'Orbitron', sans-serif;">Orbitron (Geométrica / Tech)</option>
+                    <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat (Moderna / Limpia)</option>
+                    <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Imponente / Cartel)</option>
+                    <option value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel (Clásica / Elegante)</option>
+                    <option value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald (Condensada / Fuerza)</option>
+                    <option value="'Rajdhani', sans-serif" style="font-family: 'Rajdhani', sans-serif;">Rajdhani (Cyberpunk / Gamer)</option>
+                    <option value="'Share Tech Mono', monospace" style="font-family: 'Share Tech Mono', monospace;">Share Tech Mono (Consola)</option>
+                    <option value="'Inter', sans-serif" style="font-family: 'Inter', sans-serif;">Inter (Limpia / Minimalista)</option>
+                    <option value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Poppins (Redonda / Amigable)</option>
+                    <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto (Equilibrada / Android)</option>
+                    <option value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans (Lectura fluida)</option>
+                    <option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato (Estilizada / Corp)</option>
+                    <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display (Boutique / Editorial)</option>
+                    <option value="'Nunito', sans-serif" style="font-family: 'Nunito', sans-serif;">Nunito (Suave / Orgánica)</option>
+                    <option value="'Raleway', sans-serif" style="font-family: 'Raleway', sans-serif;">Raleway (Delgada / Fina)</option>
+                    <option value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (Clásica Universal / Shopify)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">MENÚ Y BARRA SUPERIOR:</label>
+                <select id="est-font-menu" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
+                    <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat (Moderna / Limpia)</option>
+                    <option value="'Orbitron', sans-serif" style="font-family: 'Orbitron', sans-serif;">Orbitron (Geométrica / Tech)</option>
+                    <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Imponente / Cartel)</option>
+                    <option value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel (Clásica / Elegante)</option>
+                    <option value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald (Condensada / Fuerza)</option>
+                    <option value="'Rajdhani', sans-serif" style="font-family: 'Rajdhani', sans-serif;">Rajdhani (Cyberpunk / Gamer)</option>
+                    <option value="'Share Tech Mono', monospace" style="font-family: 'Share Tech Mono', monospace;">Share Tech Mono (Consola)</option>
+                    <option value="'Inter', sans-serif" style="font-family: 'Inter', sans-serif;">Inter (Limpia / Minimalista)</option>
+                    <option value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Poppins (Redonda / Amigable)</option>
+                    <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto (Equilibrada / Android)</option>
+                    <option value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans (Lectura fluida)</option>
+                    <option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato (Estilizada / Corp)</option>
+                    <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display (Boutique / Editorial)</option>
+                    <option value="'Nunito', sans-serif" style="font-family: 'Nunito', sans-serif;">Nunito (Suave / Orgánica)</option>
+                    <option value="'Raleway', sans-serif" style="font-family: 'Raleway', sans-serif;">Raleway (Delgada / Fina)</option>
+                    <option value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (Clásica Universal / Shopify)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:5px; display:block;">TARJETAS DE PRODUCTO:</label>
+                <select id="est-font-cuerpo" class="nave-input" style="padding:8px;" onchange="this.style.fontFamily = this.value.split(',')[0]">
+                    <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat (Moderna / Limpia)</option>
+                    <option value="'Orbitron', sans-serif" style="font-family: 'Orbitron', sans-serif;">Orbitron (Geométrica / Tech)</option>
+                    <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Imponente / Cartel)</option>
+                    <option value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel (Clásica / Elegante)</option>
+                    <option value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald (Condensada / Fuerza)</option>
+                    <option value="'Rajdhani', sans-serif" style="font-family: 'Rajdhani', sans-serif;">Rajdhani (Cyberpunk / Gamer)</option>
+                    <option value="'Share Tech Mono', monospace" style="font-family: 'Share Tech Mono', monospace;">Share Tech Mono (Consola)</option>
+                    <option value="'Inter', sans-serif" style="font-family: 'Inter', sans-serif;">Inter (Limpia / Minimalista)</option>
+                    <option value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Poppins (Redonda / Amigable)</option>
+                    <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto (Equilibrada / Android)</option>
+                    <option value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans (Lectura fluida)</option>
+                    <option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato (Estilizada / Corp)</option>
+                    <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display (Boutique / Editorial)</option>
+                    <option value="'Nunito', sans-serif" style="font-family: 'Nunito', sans-serif;">Nunito (Suave / Orgánica)</option>
+                    <option value="'Raleway', sans-serif" style="font-family: 'Raleway', sans-serif;">Raleway (Delgada / Fina)</option>
+                    <option value="Arial, sans-serif" style="font-family: Arial, sans-serif;">Arial (Clásica Universal / Shopify)</option>
+                </select>
+
+                <div style="display:flex; gap:10px; margin-top:15px; align-items:flex-end;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.6rem; color:#ccc;">TAMAÑO BASE (%):</label>
+                        <input type="range" id="est-font-size" min="80" max="120" value="100" style="width:100%; accent-color:var(--cian);">
+                    </div>
+                    <div style="display:flex; gap:5px;">
+                        <button id="btn-f-bold" class="tool-btn" onclick="toggleStyleBtn(this, 'est-font-bold')" title="Negrita" style="font-weight:bold; font-family:serif;">B</button>
+                        <button id="btn-f-ital" class="tool-btn" onclick="toggleStyleBtn(this, 'est-font-italic')" title="Cursiva" style="font-style:italic; font-family:serif;">I</button>
+                        <button id="btn-f-unde" class="tool-btn" onclick="toggleStyleBtn(this, 'est-font-underline')" title="Subrayado" style="text-decoration:underline; font-family:serif;">U</button>
+                        <input type="hidden" id="est-font-bold" value="normal">
+                        <input type="hidden" id="est-font-italic" value="normal">
+                        <input type="hidden" id="est-font-underline" value="none">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-layer-group"></i> ESTRUCTURA PRO (Layout)</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">BORDES DE TARJETAS Y BOTONES:</label>
+                <select id="est-borde" class="nave-input" style="padding:8px;">
+                    <option value="15px">Redondeados (Amigable/Boutique)</option>
+                    <option value="4px">Ligeros (Moderno/Tech)</option>
+                    <option value="0px">Cuadrados (Industrial/Rudo)</option>
+                    <option value="30px">Píldora (Infantil/Suave)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">ALINEACIÓN DE PRODUCTOS:</label>
+                <select id="est-alineacion" class="nave-input" style="padding:8px;">
+                    <option value="center">Centrado (Elegante)</option>
+                    <option value="left">Izquierda (Shopify/Amazon)</option>
+                </select>
+
+                <label style="font-size:0.7rem; color:#ccc; margin-top:10px; display:block;">PROFUNDIDAD Y SOMBRAS:</label>
+                <select id="est-sombra" class="nave-input" style="padding:8px;">
+                    <option value="0 15px 35px rgba(0,0,0,0.5)">Sombra Profunda (Flotante)</option>
+                    <option value="0 4px 10px rgba(0,0,0,0.2)">Sombra Suave (Minimalista)</option>
+                    <option value="none">Sin Sombra (Diseño Flat 100%)</option>
+                </select>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-meteor"></i> EFECTOS AVANZADOS</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">TIPO DE ATMÓSFERA ANIMADA:</label>
+                <select id="est-atmosfera" class="nave-input" style="padding:8px; border-color:var(--amber);" onchange="previsualizarAtmosfera(this.value)">
+                    <option value="espacial">1. Vuelo Espacial (Estrellas hipervelocidad)</option>
+                    <option value="matrix">2. Matrix Hacker (Lluvia de datos verde)</option>
+                    <option value="bokeh">3. Brisa Elegante (Luces doradas desenfocadas)</option>
+                    <option value="vaporwave">4. Retro Vaporwave (Ocaso neón 80s)</option>
+                    <option value="naturaleza">5. Naturaleza Zen (Partículas orgánicas/Hojas)</option>
+                    <option value="ondas">6. Ondas Minimalistas (Olas suaves corporativas)</option>
+                    <option value="nieve">7. Tormenta Gélida (Copos cayendo lentamente)</option>
+                    <option value="sangre">8. Luna de Sangre (Partículas rojas y oscuras)</option>
+                    <option value="fuego">9. Ascuas Ardientes (Chispas de fuego subiendo)</option>
+                    <option value="oceano">10. Abismo Oceánico (Burbujas subacuáticas)</option>
+                    <option value="confeti">11. Modo Festivo (Confeti de celebración)</option>
+                    <option value="lujo">12. Lluvia de Oro (Destellos dorados premium)</option>
+                    <option value="tv">13. Estática TV Vieja (Ruido visual Grunge)</option>
+                    <option value="ninguna">14. Apagado (Fondo 100% estático y limpio)</option>
+                </select>
+
+                <div id="atmosfera-preview-box" style="width: 100%; height: 130px; background: var(--bg-space); border-radius: 8px; border: 1px dashed var(--cian); margin-top: 15px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <span style="position:relative; z-index:10; font-size: 0.7rem; color: white; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px; font-family: var(--font-brand);">VISTA PREVIA DE FONDO</span>
+                    <div id="atmosfera-preview-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;"></div>
+                </div>
+            </div>
+            
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-map-marked-alt"></i> UBICACIÓN Y VIDEO NAVE</h3>
+                
+                <label style="font-size:0.7rem; color:#ccc;">DIRECCIÓN EXACTA (Calle, Número, Ciudad):</label>
+                <div style="display:flex; gap:10px; margin-bottom: 10px;">
+                    <input type="text" id="est-direccion-txt" class="nave-input" placeholder="Ej: Providencia 123, Santiago" style="margin-bottom:0;">
+                    <button class="tool-btn" style="border-color:var(--cian); color:var(--cian); margin:0; padding:0 15px;" onclick="actualizarMapaPreview()"><i class="fas fa-search"></i> VER MAPA</button>
+                </div>
+                
+                <div style="width: 100%; height: 200px; background: rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden; margin-bottom: 15px; border: 1px solid #333;">
+                    <iframe id="mapa-preview" src="" width="100%" height="100%" style="border:0;"></iframe>
+                </div>
+
+                <label style="font-size:0.7rem; color:#ccc; display:block;">ID VIDEO DE PRESENTACIÓN (Google Drive):</label>
+                <input type="text" id="est-video-id" class="nave-input" placeholder="Ej: 1f_LD_zdHRSa3wYCm3_IdwoHTe2nrIr89">
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,255,0.2); padding: 20px; border-radius: 10px;">
+                <h3 class="cian" style="font-size:0.9rem; margin-top:0; border-bottom:1px solid rgba(0,255,255,0.2); padding-bottom:10px;"><i class="fas fa-bullhorn"></i> ANUNCIO EMERGENTE</h3>
+                <p style="font-size:0.65rem; color:#888; margin-top:0; margin-bottom:10px;">*Controla el Pop-Up de bienvenida.</p>
+                
+                <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px;">IMAGEN (URL):</label>
+                <input type="text" id="est-popup-img" class="nave-input" placeholder="URL de la imagen...">
+                
+                <label style="font-size:0.7rem; color:#ccc; display:block; margin-bottom:5px; margin-top:10px;">TEXTO DEL ANUNCIO:</label>
+                <input type="text" id="est-popup-txt" class="nave-input" placeholder="Ej: ¡Envíos gratis este finde!">
+                    </div>
+
+                </div> <button class="btn-nave-main" style="margin-top:30px; font-size:1rem; padding:12px;" onclick="guardarEstilos()">
+                    <i class="fas fa-save"></i> GUARDAR ESTILOS
+                </button>
+            </div> </div> <div id="modal-venta-manual" class="modal" style="display:none; align-items:center; justify-content:center;">
+    <div class="modal-content" style="max-width:450px; padding:20px !important;">
+      <h2 class="cian">REGISTRAR VENTA FÍSICA</h2>
+      <select id="manual-prod-select" class="nave-input"><option value="">Cargando...</option></select>
+      <input type="number" id="manual-cantidad" class="nave-input" value="1" min="1">
+      <div id="manual-total-preview" class="cian">$0</div>
+      <button class="btn-nave-main" onclick="procesarVentaManual()">CONFIRMAR VENTA</button>
+      <button class="btn-save" onclick="cerrarVentaManual()" style="background:transparent; border:1px solid #444; color:#888; margin-top:10px; width:100%;">
+      CANCELAR
+      </button>
+    </div>
+  </div>
+
+<div id="modal-nuevo-producto" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 100000;">
+    <div class="modal-content" style="max-width:650px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
+        <h2 class="neon-green"><i class="fas fa-rocket"></i> ALTA DE PRODUCTO</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <label style="font-size:0.7rem; color:var(--cian);">NOMBRE:</label>
+                <input type="text" id="np-nombre" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">CATEGORÍA:</label>
+                <input type="text" id="np-categoria" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">MARCA:</label>
+                <input type="text" id="np-marca" class="nave-input" value="EW">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">ESTADO INICIAL:</label>
+                <select id="np-estado" class="nave-input">
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="PAUSA">PAUSADO / OCULTO</option>
+                </select>
+            </div>
+            
+            <div>
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.7rem; color:var(--cian);">PRECIO ($):</label>
+                        <input type="number" id="np-precio" class="nave-input">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:0.7rem; color:var(--cian);">STOCK:</label>
+                        <input type="number" id="np-stock" class="nave-input">
+                    </div>
+                </div>
+
+                <div style="background: rgba(241, 196, 15, 0.1); border: 1px solid var(--amber); padding: 10px; border-radius: 8px; margin-top: 10px;">
+                    <h4 style="margin:0 0 10px 0; color:var(--amber); font-size:0.8rem;"><i class="fas fa-star"></i> PROMOCIÓN INICIAL</h4>
+                    <label style="font-size:0.65rem; color:#ccc;">TIPO DE PROMO:</label>
+                    <select id="np-tipo-promo" class="nave-input" style="padding: 8px;">
+                        <option value="Ninguna">SIN PROMO / NORMAL</option>
+                        <option value="Descuento">DESCUENTO DIRECTO ($)</option>
+                        <option value="Regalo">REGALO POR COMPRA (SKU)</option>
+                    </select>
+                    
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <div style="flex:1;">
+                            <label style="font-size:0.65rem; color:#ccc;">PRECIO PROMO:</label>
+                            <input type="number" id="np-precio-promo" class="nave-input" placeholder="$0">
+                        </div>
+                        <div style="flex:1;">
+                            <label style="font-size:0.65rem; color:#ccc;">MONTO DESC. O SKU REGALO:</label>
+                            <input type="text" id="np-detalle-promo" class="nave-input" placeholder="Ej: EW-001" autocomplete="off" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly');">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="color:var(--cian); border-bottom: 1px solid var(--cian); padding-bottom:5px; margin-top:20px;">VARIANTES (Separar con comas)</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div>
+                <label style="font-size:0.65rem; color:#888;">SABORES:</label>
+                <input type="text" id="np-sabor" class="nave-input" placeholder="Menta, Fresa...">
+            </div>
+            <div>
+                <label style="font-size:0.65rem; color:#888;">COLORES:</label>
+                <input type="text" id="np-color" class="nave-input" placeholder="Rojo, Azul...">
+            </div>
+            <div>
+                <label style="font-size:0.65rem; color:#888;">TAMAÑOS:</label>
+                <input type="text" id="np-tamano" class="nave-input" placeholder="10ml, 50ml...">
+            </div>
+        </div>
+
+        <label style="font-size:0.7rem; color:var(--cian); margin-top:10px; display:block;">DESCRIPCIÓN:</label>
+        <textarea id="np-descripcion" class="nave-input" style="min-height: 110px; resize:vertical; padding:15px; font-family:var(--font-main);"></textarea>
+
+        <h4 style="color:var(--neon-green); border-bottom: 1px solid var(--neon-green); padding-bottom:5px; margin-top:15px;">
+            <i class="fas fa-images"></i> GESTIÓN DE FOTOS
+        </h4>
+        
+        <div id="np-fotos-container" style="display:flex; gap:10px; overflow-x:auto; overflow-y:hidden; padding:15px 5px; min-height:165px; align-items:center;">
+            <p style="color:#666; font-size:0.8rem; margin:auto;">Sin fotos. Agrega una nueva.</p>
+        </div>
+
+        <div style="margin-top:15px;">
+            <label for="np-nueva-foto" class="custom-file-upload" id="lbl-np-foto">
+                <i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...
+            </label>
+            <input type="file" id="np-nueva-foto" accept="image/*" class="hidden-file">
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:25px;">
+            <button id="btn-crear-producto" class="btn-nave-main" onclick="procesarNuevoProducto()" style="flex:2;">
+                <i class="fas fa-rocket"></i> SUBIR A LA NAVE
+            </button>
+            <button class="btn-save" onclick="cerrarModalProductoNuevo()" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CANCELAR
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-editar-producto" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 100000;">
+    <div class="modal-content" style="max-width:650px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
+        <h2 class="amber"><i class="fas fa-edit"></i> EDICIÓN MAESTRA</h2>
+        
+        <input type="hidden" id="ed-sku"> <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <label style="font-size:0.7rem; color:var(--cian);">NOMBRE:</label>
+                <input type="text" id="ed-nombre" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">CATEGORÍA:</label>
+                <input type="text" id="ed-categoria" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">MARCA:</label>
+                <input type="text" id="ed-marca" class="nave-input">
+                
+                <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">ESTADO:</label>
+                <select id="ed-estado" class="nave-input">
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="PAUSA">PAUSADO / OCULTO</option>
+                </select>
+            </div>
+            
+            <div>
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.7rem; color:var(--cian);">PRECIO ($):</label>
+                        <input type="number" id="ed-precio" class="nave-input">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:0.7rem; color:var(--cian);">STOCK:</label>
+                        <input type="number" id="ed-stock" class="nave-input">
+                    </div>
+                </div>
+
+                <div style="background: rgba(241, 196, 15, 0.1); border: 1px solid var(--amber); padding: 10px; border-radius: 8px; margin-top: 10px;">
+                    <h4 style="margin:0 0 10px 0; color:var(--amber); font-size:0.8rem;"><i class="fas fa-star"></i> PROMOCIÓN</h4>
+                    <label style="font-size:0.65rem; color:#ccc;">TIPO DE PROMO:</label>
+                    <select id="ed-tipo-promo" class="nave-input" style="padding: 8px;">
+                        <option value="Ninguna">SIN PROMO / NORMAL</option>
+                        <option value="Descuento">DESCUENTO DIRECTO ($)</option>
+                        <option value="Regalo">REGALO POR COMPRA (SKU)</option>
+                    </select>
+                    
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <div style="flex:1;">
+                            <label style="font-size:0.65rem; color:#ccc;">PRECIO PROMO:</label>
+                            <input type="number" id="ed-precio-promo" class="nave-input" placeholder="$0">
+                        </div>
+                        <div style="flex:1;">
+                            <label style="font-size:0.65rem; color:#ccc;">MONTO DESC. O SKU REGALO:</label>
+                            <input type="text" id="ed-detalle-promo" class="nave-input" placeholder="Ej: EW-001"autocomplete="off" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly');">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="color:var(--cian); border-bottom: 1px solid var(--cian); padding-bottom:5px; margin-top:20px;">VARIANTES (Separar con comas)</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div>
+                <label style="font-size:0.65rem; color:#888;">SABORES:</label>
+                <input type="text" id="ed-sabor" class="nave-input" placeholder="Menta, Fresa...">
+            </div>
+            <div>
+                <label style="font-size:0.65rem; color:#888;">COLORES:</label>
+                <input type="text" id="ed-color" class="nave-input" placeholder="Rojo, Azul...">
+            </div>
+            <div>
+                <label style="font-size:0.65rem; color:#888;">TAMAÑOS:</label>
+                <input type="text" id="ed-tamano" class="nave-input" placeholder="10ml, 50ml...">
+            </div>
+        </div>
+
+        <label style="font-size:0.7rem; color:var(--cian); margin-top:10px; display:block;">DESCRIPCIÓN:</label>
+        <textarea id="ed-descripcion" class="nave-input" style="min-height: 110px; resize:vertical; padding:15px; font-family:var(--font-main);"></textarea>
+
+        <h4 style="color:var(--neon-green); border-bottom: 1px solid var(--neon-green); padding-bottom:5px; margin-top:15px;">
+            <i class="fas fa-images"></i> GESTIÓN DE FOTOS
+        </h4>
+        
+        <div id="ed-fotos-container" style="display:flex; gap:10px; overflow-x:auto; overflow-y:hidden; padding:15px 5px; min-height:165px; align-items:center;">
+            </div>
+
+        <div style="margin-top:15px;">
+            <label for="ed-nueva-foto" class="custom-file-upload" id="lbl-ed-foto">
+                <i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...
+            </label>
+            <input type="file" id="ed-nueva-foto" accept="image/*" class="hidden-file" onchange="actualizarLabelArchivo(this, 'lbl-ed-foto')">
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:25px;">
+            <button id="btn-guardar-edicion" class="btn-nave-main" onclick="guardarEdicionProducto()" style="flex:2;">
+                <i class="fas fa-save"></i> GUARDAR CAMBIOS
+            </button>
+            <button class="btn-save" onclick="cerrarModalEdicion()" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CANCELAR
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-destacados" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">
+    <div class="modal-content" style="max-width:600px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
+        <h2 class="amber"><i class="fas fa-star"></i> GESTOR DE DESTACADOS</h2>
+        <p style="font-size:0.75rem; color:#888;">Elige hasta 5 productos para mostrar en el Slider de inicio de la tienda.</p>
+        
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(241, 196, 15, 0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <label style="font-size:0.7rem; color:var(--amber);">AÑADIR PRODUCTO AL SLIDER:</label>
+            <select id="dest-prod-select" class="nave-input" style="margin-bottom:10px;"><option value="">Cargando catálogo...</option></select>
+            
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1;">
+                    <label style="font-size:0.6rem; color:#ccc;">TÍTULO COMERCIAL CORTITO:</label>
+                    <input type="text" id="dest-titulo" class="nave-input" placeholder="Ej: ¡NUEVO INGRESO!">
+                </div>
+                <div style="flex:2;">
+                    <label style="font-size:0.6rem; color:#ccc;">DESCRIPCIÓN DEL SLIDER:</label>
+                    <input type="text" id="dest-desc" class="nave-input" placeholder="Lleva tu experiencia a otro nivel con...">
+                </div>
+            </div>
+            <button class="btn-nave-main" style="background:var(--amber); color:black; padding:10px;" onclick="agregarDestacado()">+ AÑADIR A LA LISTA</button>
+        </div>
+
+        <h4 class="cian" style="border-bottom: 1px solid var(--cian); padding-bottom:5px; font-size:0.8rem;">PRODUCTOS EN EL SLIDER ACTUAL</h4>
+        <div id="destacados-lista-container" style="display:flex; flex-direction:column; gap:10px; min-height:100px; max-height: 300px; overflow-y: auto; padding-right: 10px;">
+            <p style="color:#666; font-size:0.8rem; text-align:center;">Cargando destacados...</p>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px; flex-shrink: 0; position: relative; z-index: 10;">
+            <button id="btn-guardar-destacados" class="btn-nave-main" onclick="guardarDestacadosBase()" style="flex:2;">
+                <i class="fas fa-save"></i> GUARDAR DESTACADOS
+            </button>
+            <button class="btn-save" onclick="document.getElementById('modal-destacados').style.display='none'" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CERRAR
+            </button>
+        </div>
+    </div>
+</div>    
+    
+<script>
+// ==========================================
+// MOTOR API GITHUB -> GOOGLE (FOCUS)
+// ==========================================
+const API_URL = "https://script.google.com/macros/s/AKfycbwpzm-n0UUwvEgYOCtPDE6Z5OJkq4jBracHGXE7i3XHmn9xaolZchSNt8Sy95mGONActA/exec";
+
+async function ejecutarEnServidor(action, data = null) {
+    const url = `${API_URL}?action=${action}`;
+    const payload = data || {}; 
+    const options = { 
+        method: "POST", 
+        mode: "cors",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "text/plain;charset=utf-8" }
+    };
+    try {
+        const response = await fetch(url, options);
+        return await response.json();
+    } catch (e) {
+        console.error("Falla de API en acción: " + action, e);
+        throw e;
+    }
+}
+        
+let globalStock = [];
+let promoSkuActive = "";
+let miGrafico = null;
+
+// INICIO DE LA NAVE
+document.addEventListener('DOMContentLoaded', async function() {  // Blindaje de Seguridad Local
+  const session = JSON.parse(localStorage.getItem('weed_session'));
+  if (!session || session.rol !== 'Admin') {
+      document.body.innerHTML = "<h1 style='color:var(--cian); text-align:center; margin-top:100px; font-family:Orbitron;'>ACCESO DENEGADO</h1>";
+      return;
+  }
+
+  try {
+      const res = await ejecutarEnServidor("getAdminDashboardData");
+      inicializarAdmin(res);
+  } catch(e) { 
+      alert("Error de conexión al Iniciar Mando Central."); 
+  }
+  
+  // Sensores de cálculo automático (Venta Manual) - INTACTOS
+  const sel = document.getElementById('manual-prod-select');
+  const can = document.getElementById('manual-cantidad');
+  if(sel) sel.addEventListener('change', actualizarPreviewManual);
+  if(can) can.addEventListener('input', actualizarPreviewManual);
+});
+
+function inicializarAdmin(res) {
+  globalStock = res.productos;
+  document.getElementById('ventas-hoy').innerText = "$" + (res.hoy || 0).toLocaleString();
+  document.getElementById('ventas-mes').innerText = "$" + (res.mes || 0).toLocaleString();
+  renderStock(globalStock);
+  renderCatalogo(globalStock); // <-- INYECCIÓN FOCUS: Enciende la lista de productos
+  
+  // FORZAR EL SELECTOR AL MES ACTUAL (0)
+  const selector = document.getElementById('periodo-selector');
+  if(selector) {
+    selector.value = "0";
+    actualizarGrafico(); // Esto dispara la carga de los 30 días
+  }
+  if(res.destacados) destacadosActivos = res.destacados;
+}
+
+// --- SECCIÓN INVENTARIO ---
+function renderStock(lista) {
+  const tbody = document.getElementById('tbody-stock');
+  if(!tbody) return;
+  tbody.innerHTML = lista.map(p => `
+    <tr>
+      <td><strong class="cian">${p.NOMBRE}</strong><br><small>${p.SKU}</small></td>
+      <td><input type="number" class="input-admin" value="${p.PRECIO}" id="pr-${p.SKU}"></td>
+      <td><input type="number" class="input-admin" value="${p.STOCK}" id="st-${p.SKU}"></td>
+      <td>
+        <button class="btn-save" onclick="saveQuick('${p.SKU}')">GUARDAR</button>
+        <button class="btn-promo" onclick="openPromo('${p.SKU}', '${p.NOMBRE}')" style="margin-top:5px; display:block; width:100%;">PROMO</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filtrarStock() {
+  const texto = document.getElementById('search-stock').value.toLowerCase();
+  const filtrados = globalStock.filter(p => 
+    p.NOMBRE.toLowerCase().includes(texto) || p.SKU.toLowerCase().includes(texto)
+  );
+  renderStock(filtrados);
+}
+
+async function saveQuick(sku) {
+  const precio = document.getElementById('pr-' + sku).value;
+  const stock = document.getElementById('st-' + sku).value;
+  try {
+    await ejecutarEnServidor("actualizarProductoAdmin", {sku: sku, precio: precio, stock: stock});
+    alert("SISTEMA: Producto " + sku + " actualizado.");
+    const idx = globalStock.findIndex(it => it.SKU === sku);
+    if(idx !== -1) { globalStock[idx].PRECIO = precio; globalStock[idx].STOCK = stock; }
+  } catch(e) {
+    alert("Error de red al guardar producto.");
+  }
+}
+
+// --- SECCIÓN PROMOCIONES ---
+function openPromo(sku, nombre) {
+  promoSkuActive = sku;
+  document.getElementById('p-promo-name').innerText = nombre;
+  document.getElementById('modal-promo').style.display = 'flex';
+}
+
+async function aplicarPromo() {
+  const tipo = document.getElementById('tipo-promo-select').value;
+  const detalle = document.getElementById('detalle-promo-input').value;
+  try {
+    await ejecutarEnServidor("guardarPromoAdmin", {sku: promoSkuActive, tipo: tipo, detalle: detalle});
+    alert("SISTEMA: Promoción aplicada.");
+    cerrarPromo();
+  } catch(e) {
+    alert("Error al aplicar la promoción.");
+  }
+}
+
+function cerrarPromo() { document.getElementById('modal-promo').style.display = 'none'; }
+
+// --- SECCIÓN VENTA MANUAL ---
+function abrirVentaManual() {
+  const select = document.getElementById('manual-prod-select');
+  if(!select || globalStock.length === 0) return alert("Cargando suministros, reintenta...");
+  
+  select.innerHTML = '<option value="">Selecciona producto...</option>' + 
+    globalStock.map(p => `<option value="${p.SKU}" data-precio="${p.PRECIO}">${p.NOMBRE}</option>`).join('');
+  document.getElementById('modal-venta-manual').style.display = 'flex';
+}
+
+function cerrarVentaManual() { document.getElementById('modal-venta-manual').style.display = 'none'; }
+
+function actualizarPreviewManual() {
+  const select = document.getElementById('manual-prod-select');
+  const cant = document.getElementById('manual-cantidad').value;
+  const precio = select.options[select.selectedIndex].getAttribute('data-precio') || 0;
+  document.getElementById('manual-total-preview').innerText = "$" + (precio * cant).toLocaleString();
+}
+
+async function procesarVentaManual() {
+  const sku = document.getElementById('manual-prod-select').value;
+  const cant = document.getElementById('manual-cantidad').value;
+  if(!sku) return alert("Selecciona un producto.");
+  
+  try {
+    await ejecutarEnServidor("registrarVentaManualServidor", {sku: sku, cant: cant});
+    alert("VENTA EXITOSA");
+    cerrarVentaManual();
+    const res = await ejecutarEnServidor("getAdminDashboardData");
+    inicializarAdmin(res);
+  } catch(e) {
+    alert("Error de conexión al registrar venta.");
+  }
+}
+
+// --- SECCIÓN GRÁFICO (RADAR) ---
+async function actualizarGrafico() {
+  const meses = document.getElementById('periodo-selector').value;
+  try {
+    const data = await ejecutarEnServidor("getHistoricalData", {meses: meses});
+    renderizarGrafico(data);
+  } catch(e) { 
+    console.error("Error al cargar gráfico", e); 
+  }
+}
+
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+
+  if (id === 'buzon') cargarBuzon();
+  if (id === 'config') cargarAjustesPanel();
+  if (id === 'estilo') cargarEstilosPanel();
+  if (id === 'estilo') cargarEstilosPanel();
+}
+
+function renderizarGrafico(listaData) {
+  const ctx = document.getElementById('ventasChart').getContext('2d');
+  const etiquetas = listaData.map(item => item.label);
+  const datosFisicos = listaData.map(item => item.fisico);
+  const datosOnline = listaData.map(item => item.online);
+
+  if (miGrafico) miGrafico.destroy();
+
+  miGrafico = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: etiquetas,
+      datasets: [
+        { 
+          label: 'FÍSICO', 
+          data: datosFisicos, 
+          borderColor: '#ffaa00', 
+          backgroundColor: 'rgba(255, 170, 0, 0.1)', 
+          fill: true, 
+          tension: 0.3,
+          pointRadius: etiquetas.length > 20 ? 2 : 5, // Puntos pequeños si hay muchos datos
+          pointBackgroundColor: '#ffaa00',
+          pointHoverRadius: 8,
+          borderWidth: 2
+        },
+        { 
+          label: 'ONLINE', 
+          data: datosOnline, 
+          borderColor: '#00ffff', 
+          backgroundColor: 'rgba(0, 255, 255, 0.1)', 
+          fill: true, 
+          tension: 0.3,
+          pointRadius: etiquetas.length > 20 ? 2 : 5,
+          pointBackgroundColor: '#00ffff',
+          pointHoverRadius: 8,
+          borderWidth: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false }, // Mejora el toque en móvil
+      plugins: { 
+        legend: { labels: { color: '#888', font: { family: 'Rajdhani', size: 11 } } },
+        tooltip: {
+          backgroundColor: 'rgba(10, 15, 26, 0.9)',
+          titleFont: { family: 'Orbitron' },
+          bodyFont: { family: 'Rajdhani' },
+          callbacks: {
+            label: function(context) {
+              return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        y: { 
+          beginAtZero: true, 
+          grid: { color: '#1a1a1a' }, 
+          ticks: { 
+            color: '#666',
+            font: { size: 10 },
+            callback: value => '$' + value.toLocaleString()
+          } 
+        },
+        x: { 
+          grid: { display: false }, 
+          ticks: { 
+            color: '#666',
+            font: { size: 10 },
+            autoSkip: true,      // CRÍTICO: Salta etiquetas si no caben
+            maxTicksLimit: 12,   // Máximo de etiquetas visibles para evitar caos
+            maxRotation: 0       // Mantiene las etiquetas horizontales
+          } 
+        }
+      }
+    }
+  });
+}
+
+let currentChatEmail = "";
+let dataBuzonGlobal = [];
+
+// CARGA INICIAL Y REFRESCO CADA 60 SEG
+// CARGA INICIAL Y REFRESCO CADA 60 SEG
+setInterval(async () => {
+  if (document.getElementById('buzon').classList.contains('active')) {
+    try {
+      const usuarios = await ejecutarEnServidor("obtenerResumenBuzon");
+      renderizarListaUsuarios(usuarios);
+    } catch(e) { console.error("Error al auto-refrescar buzón", e); }
+  }
+}, 60000);
+
+// Esta función debe llamarse al hacer clic en la pestaña BUZON
+async function cargarBuzon() {
+  try {
+    const usuarios = await ejecutarEnServidor("obtenerResumenBuzon");
+    renderizarListaUsuarios(usuarios);
+  } catch(e) { console.error("Error al cargar buzón", e); }
+}
+
+function renderizarListaUsuarios(usuarios) {
+  dataBuzonGlobal = usuarios || [];
+  const lista = document.getElementById('lista-usuarios-buzon');
+  if (!lista) return;
+  
+  if (dataBuzonGlobal.length === 0) {
+    lista.innerHTML = '<p style="padding:20px; color:#444; font-size:0.8rem;">Sin mensajes en el buzón.</p>';
+    return;
+  }
+  
+  lista.innerHTML = dataBuzonGlobal.map(u => `
+    <div class="user-card ${currentChatEmail === u.email ? 'active' : ''}" onclick="abrirChat('${u.email}')">
+      <span class="email">${u.email} ${u.noLeidos > 0 ? `<span class="badge-new">${u.noLeidos}</span>` : ''}</span>
+      <span class="preview">${u.ultimoMsj}</span>
+    </div>
+  `).join('');
+}
+
+async function abrirChat(email) {
+  currentChatEmail = email;
+  document.getElementById('chat-header').innerText = "CONVERSACIÓN: " + email;
+  document.getElementById('chat-input-area').style.display = 'flex';
+  document.getElementById('chat-mensajes').innerHTML = '<p style="color:#333; text-align:center;">Abriendo canal...</p>';
+  
+  renderizarListaUsuarios(dataBuzonGlobal);
+  
+  try {
+    const mensajes = await ejecutarEnServidor("obtenerChatUsuario", {email: email});
+    renderizarChat(mensajes);
+  } catch(e) { 
+    document.getElementById('chat-mensajes').innerHTML = '<p style="color:var(--amber); text-align:center;">Error de conexión con el buzón.</p>';
+  }
+}
+
+function renderizarChat(mensajes) {
+  const contenedor = document.getElementById('chat-mensajes');
+  
+  // Si el servidor envía nulo o vacío
+  if (!mensajes || mensajes.length === 0) {
+    contenedor.innerHTML = '<p style="text-align:center; color:#666; margin-top:20px;">Sin historial de mensajes.</p>';
+    return;
+  }
+
+  // Dibujamos las burbujas directamente (sin cálculos de fechas complejos)
+  contenedor.innerHTML = mensajes.map(m => {
+    const claseBurbuja = m.soyYo ? 'admin' : 'user';
+    return `
+      <div class="bubble ${claseBurbuja}">
+        ${m.mensaje}
+      </div>
+    `;
+  }).join('');
+  
+  // Scroll hacia abajo
+  contenedor.scrollTop = contenedor.scrollHeight;
+}
+
+async function enviarMensajeBuzon() {
+  const input = document.getElementById('msj-admin-input');
+  const msj = input.value.trim();
+  if (!msj || !currentChatEmail) return;
+
+  input.value = "Enviando...";
+  try {
+    await ejecutarEnServidor("enviarRespuestaAdmin", {email: currentChatEmail, msj: msj});
+    input.value = "";
+    const mensajes = await ejecutarEnServidor("obtenerChatUsuario", {email: currentChatEmail});
+    renderizarChat(mensajes);
+  } catch(e) { 
+    alert("Error al enviar mensaje"); 
+    input.value = msj; 
+  }
+}
+
+// ESTA ES LA FUNCIÓN QUE TE FALTABA
+function filtrarBuzon() {
+  const input = document.getElementById('search-buzon');
+  if (!input) return;
+  const texto = input.value.toLowerCase();
+  const filtrados = dataBuzonGlobal.filter(u => u.email.toLowerCase().includes(texto));
+  renderizarListaUsuarios(filtrados);
+}
+
+function mostrarNotificacion(msj) {
+  const t = document.createElement('div');
+  t.className = 'toast-weed';
+  t.innerText = msj;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000); // Se borra solo en 3 segundos
+}
+
+// --- FUNCIONES DEL PANEL DE AJUSTES ---
+async function cargarAjustesPanel() {
+  try {
+    // FOCUS: Motor API
+    const ajustes = await ejecutarEnServidor("getConfig");
+    document.getElementById('aj_estado').value = ajustes['ESTADO_TIENDA'] || 'ABIERTO';
+    document.getElementById('aj_anuncio_texto').value = ajustes['ANUNCIO_TEXTO'] || '';
+    document.getElementById('aj_anuncio_imagen').value = ajustes['ANUNCIO_IMAGEN'] || '';
+    document.getElementById('aj_envio').value = ajustes['COSTO_ENVIO'] || '';
+    document.getElementById('aj_mp_token').value = ajustes['MP_TOKEN'] || '';
+    
+    document.getElementById('aj_wa').value = ajustes['WHATSAPP'] || '';
+    document.getElementById('aj_wa_admin').value = ajustes['WHATSAPP_ADMIN'] || '';
+    document.getElementById('aj_ig').value = ajustes['LINK_INSTAGRAM'] || '';
+    document.getElementById('aj_fb').value = ajustes['LINK_FACEBOOK'] || '';
+    document.getElementById('aj_yt').value = ajustes['LINK_YOUTUBE'] || '';
+    document.getElementById('aj_tk').value = ajustes['LINK_TIKTOK'] || '';
+    
+    document.getElementById('aj_banco_nombre').value = ajustes['BANCO_NOMBRE'] || '';
+    document.getElementById('aj_banco_tipo').value = ajustes['BANCO_TIPO'] || '';
+    document.getElementById('aj_banco_rut').value = ajustes['BANCO_RUT'] || '';
+    document.getElementById('aj_banco_numero').value = ajustes['BANCO_NUMERO'] || '';
+    document.getElementById('aj_banco_correo').value = ajustes['BANCO_CORREO'] || '';
+  } catch(e) { console.error("Error al cargar ajustes", e); }
+}
+
+async function guardarAjustesPanel(btn) {
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO...';
+  btn.disabled = true;
+
+  const nuevos = {
+    'ESTADO_TIENDA': document.getElementById('aj_estado').value,
+    'ANUNCIO_TEXTO': document.getElementById('aj_anuncio_texto').value,
+    'ANUNCIO_IMAGEN': document.getElementById('aj_anuncio_imagen').value,
+    'COSTO_ENVIO': document.getElementById('aj_envio').value,
+    'MP_TOKEN': document.getElementById('aj_mp_token').value,
+    
+    'WHATSAPP': document.getElementById('aj_wa').value,
+    'WHATSAPP_ADMIN': document.getElementById('aj_wa_admin').value,
+    'LINK_INSTAGRAM': document.getElementById('aj_ig').value,
+    'LINK_FACEBOOK': document.getElementById('aj_fb').value,
+    'LINK_YOUTUBE': document.getElementById('aj_yt').value,
+    'LINK_TIKTOK': document.getElementById('aj_tk').value,
+    
+    'BANCO_NOMBRE': document.getElementById('aj_banco_nombre').value,
+    'BANCO_TIPO': document.getElementById('aj_banco_tipo').value,
+    'BANCO_RUT': document.getElementById('aj_banco_rut').value,
+    'BANCO_NUMERO': document.getElementById('aj_banco_numero').value,
+    'BANCO_CORREO': document.getElementById('aj_banco_correo').value
+  };
+
+  try {
+    await ejecutarEnServidor("guardarAjustes", nuevos);
+    btn.innerHTML = '<i class="fas fa-check"></i> GUARDADO EXITOSO';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR CONFIGURACIÓN MAESTRA';
+      btn.disabled = false;
+    }, 2000);
+  } catch(e) {
+    alert("Error de red al guardar ajustes.");
+    btn.innerHTML = '<i class="fas fa-save"></i> REINTENTAR';
+    btn.disabled = false;
+  }
+}
+
+// ==========================================
+// MOTOR FOCUS: CREACIÓN AVANZADA Y FOTOS
+// ==========================================
+let fotosNuevo = []; // Array táctico para el Nuevo Producto
+
+function abrirModalProductoNuevo() {
+    fotosNuevo = [];
+    renderFotosNuevo();
+    document.getElementById('lbl-np-foto').innerHTML = '<i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...';
+    document.getElementById('lbl-np-foto').style.borderColor = 'var(--cian)';
+    document.getElementById('lbl-np-foto').style.color = 'var(--cian)';
+    document.getElementById('modal-nuevo-producto').style.display = 'flex';
+}
+
+function cerrarModalProductoNuevo() {
+    document.getElementById('modal-nuevo-producto').style.display = 'none';
+    const inputs = ['np-nombre', 'np-categoria', 'np-precio', 'np-stock', 'np-tipo-promo', 'np-precio-promo', 'np-detalle-promo', 'np-sabor', 'np-color', 'np-tamano', 'np-descripcion'];
+    inputs.forEach(id => document.getElementById(id).value = '');
+    document.getElementById('np-marca').value = 'EW';
+    document.getElementById('np-estado').value = 'ACTIVO';
+    fotosNuevo = [];
+}
+
+// LÓGICA DE FOTOS (Idéntica a Editar)
+function renderFotosNuevo() {
+    const container = document.getElementById('np-fotos-container');
+    container.innerHTML = '';
+    if(fotosNuevo.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; margin:auto;">Sin fotos. Agrega una nueva.</p>';
+        return;
+    }
+    fotosNuevo.forEach((foto, index) => {
+        container.innerHTML += `
+        <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:5px; border-radius:8px; text-align:center; min-width:110px;">
+            <img src="${foto}" style="width:80px; height:80px; object-fit:cover; border-radius:5px; margin-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; gap:2px;">
+                <button class="tool-btn" onclick="moverFotoNuevo(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
+                <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarFotoNuevo(${index})"><i class="fas fa-trash"></i></button>
+                <button class="tool-btn" onclick="moverFotoNuevo(${index}, 1)" ${index === fotosNuevo.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
+            </div>
+            ${index === 0 ? '<span style="font-size:0.5rem; color:var(--amber); display:block; margin-top:3px;">PORTADA</span>' : ''}
+        </div>`;
+    });
+}
+
+function moverFotoNuevo(index, direccion) {
+    const nuevaPos = index + direccion;
+    if(nuevaPos < 0 || nuevaPos >= fotosNuevo.length) return;
+    const temp = fotosNuevo[index];
+    fotosNuevo[index] = fotosNuevo[nuevaPos];
+    fotosNuevo[nuevaPos] = temp;
+    renderFotosNuevo();
+}
+
+function borrarFotoNuevo(index) {
+    fotosNuevo.splice(index, 1);
+    renderFotosNuevo();
+}
+
+document.getElementById('np-nueva-foto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        fotosNuevo.push(evt.target.result);
+        renderFotosNuevo();
+        const lbl = document.getElementById('lbl-np-foto');
+        lbl.innerHTML = '<i class="fas fa-check"></i> FOTO AGREGADA';
+        lbl.style.color = 'var(--neon-green)';
+        lbl.style.borderColor = 'var(--neon-green)';
+        document.getElementById('np-nueva-foto').value = ''; 
+    };
+    reader.readAsDataURL(file);
+});
+
+// DISPARO AL SERVIDOR
+async function procesarNuevoProducto() {
+    const btn = document.getElementById('btn-crear-producto');
+    const nombre = document.getElementById('np-nombre').value.trim();
+    if(!nombre || !document.getElementById('np-precio').value) {
+        alert("El Nombre y el Precio son vitales para la nave.");
+        return;
+    }
+
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO PRODUCTO...';
+    btn.disabled = true;
+
+    const payload = {
+        nombre: nombre,
+        categoria: document.getElementById('np-categoria').value.trim(),
+        marca: document.getElementById('np-marca').value.trim(),
+        estado: document.getElementById('np-estado').value,
+        precio: document.getElementById('np-precio').value,
+        stock: document.getElementById('np-stock').value,
+        tipo_promo: document.getElementById('np-tipo-promo').value,
+        precio_promo: document.getElementById('np-precio-promo').value,
+        detalle_promo: document.getElementById('np-detalle-promo').value,
+        sabor: limpiarEtiquetas(document.getElementById('np-sabor').value),
+        color: limpiarEtiquetas(document.getElementById('np-color').value),
+        tamano: limpiarEtiquetas(document.getElementById('np-tamano').value),
+        descripcion: document.getElementById('np-descripcion').value.trim(),
+        fotosUrlArr: fotosNuevo 
+    };
+
+    try {
+        await ejecutarEnServidor("crearProductoAdmin", payload);
+        alert("¡ÉXITO! Producto creado e inyectado en el catálogo.");
+        cerrarModalProductoNuevo();
+        btn.innerHTML = '<i class="fas fa-rocket"></i> SUBIR A LA NAVE';
+        btn.disabled = false;
+        const refresh = await ejecutarEnServidor("getAdminDashboardData");
+        inicializarAdmin(refresh);
+    } catch(e) {
+        alert("Error de transmisión al servidor.");
+        btn.innerHTML = '<i class="fas fa-rocket"></i> SUBIR A LA NAVE';
+        btn.disabled = false;
+    }
+}
+
+// ==========================================
+// MOTOR FOCUS: RENDERIZADO DEL CATÁLOGO HÍBRIDO (CORREGIDO)
+// ==========================================
+let skusSeleccionadosMasa = [];
+
+function renderCatalogo(lista) {
+  const tbody = document.getElementById('tbody-catalogo');
+  if(!tbody) return;
+
+  // Resetear selectores maestros al re-dibujar
+  const chkMaster = document.getElementById('chk-master-masa');
+  if(chkMaster) chkMaster.checked = false;
+
+  tbody.innerHTML = lista.map(p => {
+    let imgPortada = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : p.IMAGEN_URL;
+    if (!imgPortada || imgPortada.trim() === "") imgPortada = 'https://i.postimg.cc/1RF0H6Ff/Logoew.png';
+
+    const estaChequeado = skusSeleccionadosMasa.includes(p.SKU.toString()) ? "checked" : "";
+
+    return `
+    <tr>
+      <td style="text-align: center; vertical-align: middle;">
+        <input type="checkbox" class="chk-item-masa" value="${p.SKU}" ${estaChequeado} onchange="actualizarSeleccionFilaMasa(this)">
+      </td>
+      <td>
+        <img src="${imgPortada}" style="width:50px; height:50px; object-fit:cover; border-radius:5px; border:1px solid rgba(0,255,255,0.3);">
+      </td>
+      <td><strong class="cian">${p.NOMBRE}</strong><br><small style="color:#888;">${p.SKU}</small></td>
+      <td>${p.CATEGORIA || '-'}</td>
+      <td>
+        <div style="display:flex; flex-direction:column; gap:5px; width: 80px;">
+          <input type="number" class="input-admin" style="width:100%;" value="${p.PRECIO}" id="q-pr-${p.SKU}" title="Precio">
+          <input type="number" class="input-admin" style="width:100%; border-color:var(--amber);" value="${p.STOCK}" id="q-st-${p.SKU}" title="Stock">
+        </div>
+      </td>
+      <td>
+        <div style="display:flex; flex-direction:column; gap:5px;">
+            <button class="tool-btn" style="border-color:var(--neon-green); color:var(--neon-green);" onclick="guardarRapido('${p.SKU}')"><i class="fas fa-bolt"></i> GUARDAR</button>
+            <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="abrirModalEdicion('${p.SKU}')"><i class="fas fa-edit"></i> DETALLES</button>
+        </div>
+      </td>
+    </tr>
+    `;
+  }).join('');
+}
+
+async function guardarRapido(sku) {
+  const precio = document.getElementById('q-pr-' + sku).value;
+  const stock = document.getElementById('q-st-' + sku).value;
+  
+  // Efecto visual en los inputs
+  document.getElementById('q-pr-' + sku).style.backgroundColor = "rgba(46, 204, 113, 0.2)";
+  document.getElementById('q-st-' + sku).style.backgroundColor = "rgba(46, 204, 113, 0.2)";
+  
+  try {
+    // Usamos el motor antiguo ultrarrápido
+    await ejecutarEnServidor("actualizarProductoAdmin", {sku: sku, precio: precio, stock: stock});
+    mostrarNotificacion("Stock y Precio guardados: " + sku); // Usa tu bonita notificación verde
+    
+    // Actualizamos la memoria global sin recargar la página
+    const idx = globalStock.findIndex(it => it.SKU === sku);
+    if(idx !== -1) { 
+        globalStock[idx].PRECIO = precio; 
+        globalStock[idx].STOCK = stock; 
+    }
+  } catch(e) {
+    alert("Error de conexión al guardar rápido.");
+    document.getElementById('q-pr-' + sku).style.backgroundColor = "rgba(255, 0, 0, 0.2)";
+  }
+}
+
+function filtrarCatalogo() {
+  const texto = document.getElementById('search-catalogo').value.toLowerCase();
+  const filtrados = globalStock.filter(p => 
+    (p.NOMBRE && p.NOMBRE.toLowerCase().includes(texto)) || 
+    (p.SKU && p.SKU.toLowerCase().includes(texto))
+  );
+  renderCatalogo(filtrados);
+}
+
+// ==========================================
+// MOTOR FOCUS: LÓGICA DE EDICIÓN AVANZADA Y FOTOS
+// ==========================================
+let fotosEditando = []; // Array táctico para guardar y mover las fotos
+
+function abrirModalEdicion(sku) {
+    const p = globalStock.find(item => item.SKU === sku);
+    if(!p) return alert("Error: Producto no encontrado en el radar.");
+
+    // 1. Cargar Datos Básicos
+    document.getElementById('ed-sku').value = p.SKU || '';
+    document.getElementById('ed-nombre').value = p.NOMBRE || '';
+    document.getElementById('ed-categoria').value = p.CATEGORIA || '';
+    document.getElementById('ed-marca').value = p.MARCA || 'EW';
+    document.getElementById('ed-estado').value = p.ESTADO || 'ACTIVO';
+    document.getElementById('ed-precio').value = p.PRECIO || 0;
+    document.getElementById('ed-stock').value = p.STOCK || 0;
+    
+    // 2. Cargar Promociones
+    document.getElementById('ed-tipo-promo').value = p.TIPO_PROMO || 'Ninguna';
+    document.getElementById('ed-precio-promo').value = p.PRECIO_PROMO || '';
+    document.getElementById('ed-detalle-promo').value = p.DETALLE_PROMO || '';
+
+    // 3. Cargar Variantes
+    document.getElementById('ed-sabor').value = p.SABOR || '';
+    document.getElementById('ed-color').value = p.COLOR || '';
+    document.getElementById('ed-tamano').value = p.TAMAÑO || '';
+    document.getElementById('ed-descripcion').value = p.DESCRIPCION || '';
+
+    // 4. Procesar Fotos (Soporta múltiples separadas por coma)
+    fotosEditando = [];
+    if (p.IMAGEN_URL) {
+        // CORRECCIÓN: El backend ya nos envía un Array, lo copiamos directamente
+        if (Array.isArray(p.IMAGEN_URL)) {
+            fotosEditando = [...p.IMAGEN_URL];
+        } else if (typeof p.IMAGEN_URL === 'string' && p.IMAGEN_URL.trim() !== "") {
+            fotosEditando = p.IMAGEN_URL.split(',').map(url => url.trim());
+        }
+    }
+    
+    renderFotosEdicion(); // Dibujar las miniaturas
+    document.getElementById('modal-editar-producto').style.display = 'flex';
+}
+
+function cerrarModalEdicion() {
+    document.getElementById('modal-editar-producto').style.display = 'none';
+    fotosEditando = [];
+}
+
+// DIBUJAR LAS FOTOS Y SUS BOTONES
+function renderFotosEdicion() {
+    const container = document.getElementById('ed-fotos-container');
+    container.innerHTML = '';
+
+    if(fotosEditando.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; margin:auto;">Sin fotos. Agrega una nueva.</p>';
+        return;
+    }
+
+    fotosEditando.forEach((foto, index) => {
+        container.innerHTML += `
+        <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:5px; border-radius:8px; text-align:center; min-width:110px;">
+            <img src="${foto}" style="width:80px; height:80px; object-fit:cover; border-radius:5px; margin-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; gap:2px;">
+                <button class="tool-btn" onclick="moverFoto(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
+                <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarFoto(${index})"><i class="fas fa-trash"></i></button>
+                <button class="tool-btn" onclick="moverFoto(${index}, 1)" ${index === fotosEditando.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
+            </div>
+            ${index === 0 ? '<span style="font-size:0.5rem; color:var(--amber); display:block; margin-top:3px;">PORTADA</span>' : ''}
+        </div>`;
+    });
+}
+
+// FUNCIONES DE ORDENAMIENTO DE FOTOS
+function moverFoto(index, direccion) {
+    const nuevaPos = index + direccion;
+    if(nuevaPos < 0 || nuevaPos >= fotosEditando.length) return;
+    
+    // Intercambio táctico en el array
+    const temp = fotosEditando[index];
+    fotosEditando[index] = fotosEditando[nuevaPos];
+    fotosEditando[nuevaPos] = temp;
+    
+    renderFotosEdicion();
+}
+
+function borrarFoto(index) {
+    fotosEditando.splice(index, 1);
+    renderFotosEdicion();
+}
+
+// CONVERTIR NUEVA FOTO A BASE64 Y AÑADIR A LA LISTA
+document.getElementById('ed-nueva-foto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        fotosEditando.push(evt.target.result); // Guardar Base64 en el array
+        renderFotosEdicion();
+        document.getElementById('ed-nueva-foto').value = ''; // Limpiar el input
+    };
+    reader.readAsDataURL(file);
+});
+
+// DISPARO AL SERVIDOR
+async function guardarEdicionProducto() {
+    const btn = document.getElementById('btn-guardar-edicion');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> TRANSMITIENDO A LA NAVE...';
+    btn.disabled = true;
+
+    const payload = {
+        sku: document.getElementById('ed-sku').value,
+        nombre: document.getElementById('ed-nombre').value.trim(),
+        categoria: document.getElementById('ed-categoria').value.trim(),
+        marca: document.getElementById('ed-marca').value.trim(),
+        estado: document.getElementById('ed-estado').value,
+        precio: document.getElementById('ed-precio').value,
+        stock: document.getElementById('ed-stock').value,
+        
+        tipo_promo: document.getElementById('ed-tipo-promo').value,
+        precio_promo: document.getElementById('ed-precio-promo').value,
+        detalle_promo: document.getElementById('ed-detalle-promo').value,
+        
+        sabor: limpiarEtiquetas(document.getElementById('ed-sabor').value),
+        color: limpiarEtiquetas(document.getElementById('ed-color').value),
+        tamano: limpiarEtiquetas(document.getElementById('ed-tamano').value),
+        descripcion: document.getElementById('ed-descripcion').value.trim(),
+        
+        // Enviamos el array con todas las fotos (las que ya estaban y las nuevas en Base64)
+        fotosUrlArr: fotosEditando 
+    };
+
+    try {
+        await ejecutarEnServidor("actualizarProductoAvanzado", payload);
+        alert("¡ÉXITO! Producto actualizado.");
+        cerrarModalEdicion();
+        
+        // Recargar panel para reflejar cambios
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR CAMBIOS';
+        btn.disabled = false;
+        
+        const refresh = await ejecutarEnServidor("getAdminDashboardData");
+        inicializarAdmin(refresh);
+        
+    } catch(e) {
+        console.error("Falla al editar:", e);
+        alert("Error de red. Intenta de nuevo.");
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR CAMBIOS';
+        btn.disabled = false;
+    }
+}
+
+// ==========================================
+// ESTÉTICA: ACTUALIZADOR DE BOTONES DE ARCHIVO
+// ==========================================
+function actualizarLabelArchivo(input, labelId) {
+    const label = document.getElementById(labelId);
+    if (input.files && input.files.length > 0) {
+        // Cuando seleccionas una foto, se pone verde
+        label.innerHTML = '<i class="fas fa-check"></i> FOTO LISTA: ' + input.files[0].name;
+        label.style.borderColor = 'var(--neon-green)';
+        label.style.color = 'var(--neon-green)';
+    } else {
+        // Vuelve al estado original si cancelas
+        label.innerHTML = '<i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...';
+        label.style.borderColor = 'var(--cian)';
+        label.style.color = 'var(--cian)';
+    }
+}
+
+function limpiarEtiquetas(texto) {
+    if (!texto) return "";
+    return texto.split(',') // Separa por comas
+        .map(t => t.trim()) // Quita los espacios vacíos a los lados
+        .filter(t => t.length > 0) // Borra las comas vacías (ej: "rojo,,azul")
+        .map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()) // Pone la Primera en Mayúscula y el resto en minúscula
+        .join(', '); // Los vuelve a unir con una coma y un espacio perfecto
+}
+
+// ==========================================
+// MOTOR FOCUS: CMS ESTILOS Y AUSPICIADORES
+// ==========================================
+let auspiciadoresActivos = []; 
+
+function blindarFontSelect(idSelect, valorGuardado, valorPorDefecto) {
+    const el = document.getElementById(idSelect);
+    if (!el) return;
+    
+    // Extrae el nombre puro (ej: "orbitron") para no fallar por comillas o espacios
+    const nombrePuroGuardado = (valorGuardado || valorPorDefecto).replace(/['"\s]/g, '').toLowerCase().split(',')[0];
+    
+    for (let i = 0; i < el.options.length; i++) {
+        const nombrePuroOpcion = el.options[i].value.replace(/['"\s]/g, '').toLowerCase().split(',')[0];
+        if (nombrePuroOpcion === nombrePuroGuardado) {
+            el.selectedIndex = i;
+            el.style.fontFamily = el.options[i].value.split(',')[0]; // Cambia el look del select en caliente
+            return;
+        }
+    }
+    el.value = valorPorDefecto;
+}
+
+function syncColor(idBase, valor) {
+    if(document.getElementById(idBase)) document.getElementById(idBase).value = valor;
+    if(document.getElementById(idBase + '-txt')) document.getElementById(idBase + '-txt').value = valor;
+}
+    
+async function cargarEstilosPanel() {
+    try {
+        // Indicador visual de carga
+        document.getElementById('est-logo').value = "Conectando al servidor...";
+
+        const res = await ejecutarEnServidor("getEstilosPanelData");
+        
+        // Si falla la conexión, usamos un objeto vacío para forzar los valores por defecto
+        const conf = (res && res.success) ? res.config : {};
+        
+        // 1. Identidad (Si está vacío, muestra tu Logo actual)
+        document.getElementById('est-logo').value = conf['LOGO_PRINCIPAL'] || 'https://i.postimg.cc/9FL0gGth/Espacio-Weed.gif';
+        document.getElementById('est-logo-error').value = conf['LOGO_ERROR'] || 'https://i.postimg.cc/hj6mws46/Logoew.png';
+        document.getElementById('est-favicon').value = conf['FAVICON'] || '';
+        
+        // 2. Fondo y Banner
+        document.getElementById('est-bg-img').value = conf['BG_IMG'] || '';
+        document.getElementById('est-bg-modo').value = conf['BG_MODO'] || 'cover';
+        document.getElementById('est-banner-bg').value = conf['BANNER_BG'] || '#000000';
+        
+        // 3. Paleta Cromática Sincronizada
+        syncColor('est-color-bg', conf['COLOR_BG'] || '#020204');
+        syncColor('est-color-glass', conf['COLOR_GLASS'] || '#ffffff');
+        syncColor('est-color-topbar', conf['COLOR_TOPBAR'] || '#000000');
+        syncColor('est-color-text-main', conf['COLOR_TEXT_MAIN'] || '#ffffff');
+        syncColor('est-color-text-sec', conf['COLOR_TEXT_SEC'] || '#cccccc');
+        syncColor('est-color-neon', conf['COLOR_NEON'] || '#2ecc71');
+        syncColor('est-color-amber', conf['COLOR_AMBER'] || '#f1c40f');
+        syncColor('est-color-cian', conf['COLOR_CIAN'] || '#00ffff');
+        if(document.getElementById('est-opacidad')) document.getElementById('est-opacidad').value = conf['OPACIDAD_GLASS'] || '5';
+        
+        // 4. Tipografía
+        blindarFontSelect('est-font-titulos', conf['FONT_TITULOS'], "'Orbitron', sans-serif");
+        blindarFontSelect('est-font-menu', conf['FONT_MENU'], "'Montserrat', sans-serif");
+        blindarFontSelect('est-font-cuerpo', conf['FONT_CUERPO'], "'Montserrat', sans-serif");
+        if(document.getElementById('est-font-size')) document.getElementById('est-font-size').value = conf['fontSize'] || '100';
+        if(document.getElementById('est-borde')) document.getElementById('est-borde').value = conf['borde'] || '15px';
+        if(document.getElementById('est-alineacion')) document.getElementById('est-alineacion').value = conf['alineacion'] || 'center';
+        if(document.getElementById('est-sombra')) document.getElementById('est-sombra').value = conf['sombra'] || '0 15px 35px rgba(0,0,0,0.5)';
+        
+        ['est-font-bold', 'est-font-italic', 'est-font-underline'].forEach(id => {
+            if(document.getElementById(id)) {
+                const val = conf[id] || (id === 'est-font-underline' ? 'none' : 'normal');
+                document.getElementById(id).value = val;
+                const btnId = 'btn-f-' + id.split('-')[2].substring(0,4); // bold, ital, unde
+                const btn = document.getElementById(btnId);
+                if(btn && val !== 'normal' && val !== 'none') {
+                    btn.style.borderColor = 'var(--neon-green)'; btn.style.color = 'var(--neon-green)';
+                }
+            }
+        });
+        
+        // 5. Atmósfera
+        document.getElementById('est-atmosfera').value = conf['ATMOSFERA'] || 'espacial';
+        previsualizarAtmosfera(document.getElementById('est-atmosfera').value);
+        
+        // 6. Ubicación y Video (Con seguro anti-nulos)
+        const dirEl = document.getElementById('est-direccion-txt');
+        if(dirEl) {
+            dirEl.value = conf['DIRECCION_TEXTO'] || '';
+            actualizarMapaPreview(); // <--- Esto dibuja el mapa apenas entras
+        }
+        const vidEl = document.getElementById('est-video-id');
+        if(vidEl) vidEl.value = conf['VIDEO_DRIVE_ID'] || '';
+        
+        // Pop-Up Emergente (Conexión directa a Configuración Maestra)
+        const configMaestra = await ejecutarEnServidor("getConfig");
+        if(configMaestra) {
+            document.getElementById('est-popup-img').value = configMaestra['ANUNCIO_IMAGEN'] || '';
+            document.getElementById('est-popup-txt').value = configMaestra['ANUNCIO_TEXTO'] || '';
+        }
+
+        // 8. Patrocinadores
+        auspiciadoresActivos = (res && res.success && res.auspiciadores) ? res.auspiciadores : [];
+        renderAuspiciadoresEstilo();
+
+        if (res && !res.success) {
+            console.warn("Falla de API: ¿Olvidaste hacer una Nueva Implementación en Apps Script?");
+        }
+
+    } catch(e) {
+        console.error("Error al cargar la matriz de estilos:", e);
+        // Respaldo de emergencia cromático
+        document.getElementById('est-color-neon').value = '#2ecc71';
+        document.getElementById('est-color-amber').value = '#f1c40f';
+        document.getElementById('est-color-cian').value = '#00ffff';
+    }
+} 
+// DIBUJAR MINIATURAS DE MARCAS (SIMPLIFICADO)
+// ==========================================
+function renderAuspiciadoresEstilo() {
+    const container = document.getElementById('est-auspiciadores-container');
+    if (!container) return;
+    
+    if (auspiciadoresActivos.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; margin:auto;">Sin marcas patrocinadoras.</p>';
+        return;
+    }
+    
+    container.innerHTML = auspiciadoresActivos.map((marca, index) => `
+        <div style="background:rgba(0,0,0,0.5); border:1px solid #333; padding:10px; border-radius:8px; text-align:center; min-width:100px;">
+            <img src="${marca.logo || marca}" style="width:80px; height:40px; object-fit:contain; border-radius:5px; margin-bottom:5px; background:rgba(255,255,255,0.1);">
+            <div style="display:flex; justify-content:space-between; gap:2px; margin-top:5px;">
+                <button class="tool-btn" onclick="moverAuspiciador(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-left"></i></button>
+                <button class="tool-btn" style="color:#ff4444; border-color:#ff4444;" onclick="borrarAuspiciador(${index})"><i class="fas fa-trash"></i></button>
+                <button class="tool-btn" onclick="moverAuspiciador(${index}, 1)" ${index === auspiciadoresActivos.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function moverAuspiciador(index, direccion) {
+    const nuevaPos = index + direccion;
+    if(nuevaPos < 0 || nuevaPos >= auspiciadoresActivos.length) return;
+    const temp = auspiciadoresActivos[index];
+    auspiciadoresActivos[index] = auspiciadoresActivos[nuevaPos];
+    auspiciadoresActivos[nuevaPos] = temp;
+    renderAuspiciadoresEstilo();
+}
+
+function borrarAuspiciador(index) {
+    auspiciadoresActivos.splice(index, 1);
+    renderAuspiciadoresEstilo();
+}
+
+// ==========================================
+// MOTOR FOCUS: RECOLECTOR DE MARCAS (SOLO LOGO - LÍMITE 7)
+// ==========================================
+const inputAuspiciador = document.getElementById('est-nuevo-auspiciador');
+if(inputAuspiciador) {
+    inputAuspiciador.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(!file) return;
+
+        if(auspiciadoresActivos.length >= 7) {
+            alert("Has alcanzado el límite máximo de 7 patrocinadores permitidos.");
+            inputAuspiciador.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            // Guardamos SOLO el logo en base64
+            auspiciadoresActivos.push({
+                logo: evt.target.result
+            });
+            renderAuspiciadoresEstilo();
+            
+            const lbl = document.getElementById('lbl-est-ausp');
+            if(lbl) {
+                lbl.innerHTML = '<i class="fas fa-check"></i> MARCA AÑADIDA A LA LISTA';
+                lbl.style.color = 'var(--neon-green)';
+                setTimeout(() => {
+                    lbl.innerHTML = '<i class="fas fa-upload"></i> SUBIR LOGO (PNG/JPG)';
+                    lbl.style.color = 'var(--cian)';
+                }, 2000);
+            }
+            inputAuspiciador.value = ''; 
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function abrirModalPatrocinadores() {
+    document.getElementById('modal-patrocinadores').style.display = 'flex';
+    renderAuspiciadoresEstilo();
+}
+
+async function guardarPatrocinadoresBase() {
+    const btn = document.getElementById('btn-guardar-patrocinadores');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO EN NAVE...';
+    btn.disabled = true;
+
+    try {
+        await ejecutarEnServidor("guardarPatrocinadores", { patrocinadores: auspiciadoresActivos });
+        alert("¡Éxito! Las marcas patrocinadoras han sido actualizadas.");
+        document.getElementById('modal-patrocinadores').style.display = 'none';
+    } catch(e) {
+        alert("Error de transmisión al guardar patrocinadores.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR MARCAS';
+        btn.disabled = false;
+    }
+}
+
+
+
+// ==========================================
+// MOTOR FOCUS: PREVIEW DE ATMÓSFERAS
+// ==========================================
+function previsualizarAtmosfera(tipo) {
+    const canvas = document.getElementById('atmosfera-preview-canvas');
+    if(!canvas) return;
+    
+    // Reset visual
+    canvas.style.background = 'transparent';
+    canvas.style.backgroundImage = 'none';
+    
+    // Previsualizaciones de color base representativo
+    if (tipo === 'espacial') {
+        canvas.style.background = 'radial-gradient(circle at center, #1B2735 0%, #020204 100%)';
+        canvas.style.backgroundImage = "url(\"data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1' fill='white' opacity='0.8'/%3E%3Ccircle cx='70' cy='60' r='1.5' fill='white' opacity='0.6'/%3E%3C/svg%3E\")";
+    } else if (tipo === 'matrix') {
+        canvas.style.background = '#000';
+        canvas.style.backgroundImage = 'radial-gradient(rgba(0, 40, 0, 0.6), #000)';
+    } else if (tipo === 'bokeh' || tipo === 'lujo') {
+        canvas.style.background = 'radial-gradient(circle at bottom, #2c1a04 0%, #020204 100%)';
+    } else if (tipo === 'vaporwave') {
+        canvas.style.background = 'linear-gradient(to bottom, #140526, #020204)';
+    } else if (tipo === 'naturaleza') {
+        canvas.style.background = 'radial-gradient(circle at top, #061f10 0%, #020204 100%)';
+    } else if (tipo === 'ondas') {
+        canvas.style.background = 'linear-gradient(135deg, #0f172a, #020204)';
+    } else if (tipo === 'nieve') {
+        canvas.style.background = 'linear-gradient(to bottom, #001122, #020204)';
+    } else if (tipo === 'sangre' || tipo === 'fuego') {
+        canvas.style.background = 'linear-gradient(to top, #1a0000, #000000)';
+    } else if (tipo === 'oceano') {
+        canvas.style.background = 'linear-gradient(to bottom, #001f3f, #000000)';
+    } else {
+        canvas.style.background = 'var(--bg-space)';
+    }
+}
+
+    
+function aplicarPreset(val) {
+    const previewBox = document.getElementById('preset-preview-box');
+    if(!val) {
+        previewBox.innerHTML = '<span style="font-size: 0.7rem; color: #666;">Selecciona un estilo para previsualizar</span>';
+        previewBox.style.borderColor = 'var(--amber)';
+        return;
+    }
+    
+    // Matriz de los 13 Estilos
+    const presets = {
+        'clean_slate': { neon: '#121212', amber: '#008060', cian: '#6a6a6a', bg: '#ffffff', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'ninguna' },
+        'cyberpunk': { neon: '#ff00ff', amber: '#00ffff', cian: '#ff00ff', bg: '#090014', fontT: "'Orbitron', sans-serif", fontM: "'Rajdhani', sans-serif", atm: 'matrix' },
+        'matrix': { neon: '#00ff00', amber: '#00ff00', cian: '#00cc00', bg: '#000000', fontT: "'Share Tech Mono', monospace", fontM: "'Share Tech Mono', monospace", atm: 'matrix' },
+        'luxury': { neon: '#d4af37', amber: '#ffffff', cian: '#d4af37', bg: '#1a1a1a', fontT: "'Cinzel', serif", fontM: "'Montserrat', sans-serif", atm: 'bokeh' },
+        'nature': { neon: '#2ecc71', amber: '#f1c40f', cian: '#27ae60', bg: '#021206', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'naturaleza' },
+        'ocean': { neon: '#00d2ff', amber: '#3a7bd5', cian: '#00d2ff', bg: '#000c18', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'espacial' },
+        'retro': { neon: '#ff00ff', amber: '#00ffff', cian: '#ffff00', bg: '#2b00ff', fontT: "'Oswald', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'vaporwave' },
+        'blood': { neon: '#ff0000', amber: '#ff6600', cian: '#cc0000', bg: '#1a0000', fontT: "'Bebas Neue', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'espacial' },
+        'ice': { neon: '#00ffff', amber: '#ffffff', cian: '#aaddff', bg: '#001122', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'espacial' },
+        'minimalist': { neon: '#333333', amber: '#555555', cian: '#888888', bg: '#ffffff', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'ninguna' },
+        'corporate': { neon: '#0056b3', amber: '#004085', cian: '#cce5ff', bg: '#f8f9fa', fontT: "'Montserrat', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'ondas' },
+        'pastel': { neon: '#ffb3ba', amber: '#ffdfba', cian: '#baffc9', bg: '#fdfdff', fontT: "'Montserrat', sans-serif", fontM: "'Poppins', sans-serif", atm: 'ninguna' },
+        'sunset': { neon: '#ff7e67', amber: '#f9d276', cian: '#c25975', bg: '#2c1e31', fontT: "'Oswald', sans-serif", fontM: "'Montserrat', sans-serif", atm: 'bokeh' },
+        'industrial': { neon: '#d9534f', amber: '#f0ad4e', cian: '#5bc0de', bg: '#292b2c', fontT: "'Bebas Neue', sans-serif", fontM: "'Rajdhani', sans-serif", atm: 'ninguna' }
+    };
+    
+    const p = presets[val];
+    if(p) {
+        // Auto-rellenar todos los selectores
+        const mapIds = {
+            'est-color-neon': p.neon, 'est-color-amber': p.amber, 'est-color-cian': p.cian, 'est-color-bg': p.bg,
+            'est-font-titulos': p.fontT, 'est-font-menu': p.fontM, 'est-font-cuerpo': p.fontM, 'est-atmosfera': p.atm
+        };
+        for (let id in mapIds) {
+            let el = document.getElementById(id);
+            if(el) el.value = mapIds[id];
+        }
+        
+        // Dibujar miniatura
+        if(previewBox) {
+            previewBox.innerHTML = `
+                <div style="width: 100%; height: 100%; background: ${p.bg}; display: flex; flex-direction: column; padding: 10px; box-sizing: border-box; font-family: ${p.fontM};">
+                    <div style="width: 100%; height: 25px; background: ${p.neon}; border-radius: 4px; margin-bottom: 8px; display:flex; align-items:center; justify-content:center;">
+                        <span style="color: ${['minimalist', 'corporate', 'pastel'].includes(val) ? '#fff' : '#000'}; font-size: 0.6rem; font-family: ${p.fontT}; font-weight:bold; letter-spacing:1px;">${val.toUpperCase()}</span>
+                    </div>
+                    <div style="display: flex; gap: 5px; flex: 1;">
+                        <div style="flex: 1; background: ${p.amber}; border-radius: 4px; opacity: 0.8;"></div>
+                        <div style="flex: 1; background: ${p.cian}; border-radius: 4px; opacity: 0.8;"></div>
+                    </div>
+                </div>
+            `;
+            previewBox.style.borderColor = p.neon; 
+        }
+    }
+}
+
+
+function toggleStyleBtn(btn, inputId) {
+    const input = document.getElementById(inputId);
+    if (input.value === 'normal' || input.value === 'none') {
+        input.value = (inputId === 'est-font-bold') ? 'bold' : (inputId === 'est-font-italic') ? 'italic' : 'underline';
+        btn.style.borderColor = 'var(--neon-green)'; btn.style.color = 'var(--neon-green)';
+    } else {
+        input.value = (inputId === 'est-font-underline') ? 'none' : 'normal';
+        btn.style.borderColor = 'var(--cian)'; btn.style.color = 'white';
+    }
+}    
+async function guardarEstilos() {
+    const btn = document.querySelector('#estilo .btn-nave-main');
+    const txtOriginal = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RGUARDANDO NUEVO ESTILO GRÁFICO...';
+    btn.disabled = true;
+
+    const payload = {
+        logo: document.getElementById('est-logo').value.trim(),
+        logoError: document.getElementById('est-logo-error').value.trim(),
+        favicon: document.getElementById('est-favicon').value.trim(),
+        bgImg: document.getElementById('est-bg-img').value.trim(),
+        bgModo: document.getElementById('est-bg-modo').value,
+        bannerBg: document.getElementById('est-banner-bg').value.trim(),
+        colorBg: document.getElementById('est-color-bg').value,
+        colorGlass: document.getElementById('est-color-glass').value,
+        colorTopbar: document.getElementById('est-color-topbar').value,
+        colorTextMain: document.getElementById('est-color-text-main').value,
+        colorTextSec: document.getElementById('est-color-text-sec').value,
+        colorNeon: document.getElementById('est-color-neon').value,
+        colorAmber: document.getElementById('est-color-amber').value,
+        colorCian: document.getElementById('est-color-cian').value,
+        opacidadGlass: document.getElementById('est-opacidad').value,
+        opacidadGlass: document.getElementById('est-opacidad').value,
+        fontTitulos: document.getElementById('est-font-titulos').value,
+        fontMenu: document.getElementById('est-font-menu').value,
+        fontCuerpo: document.getElementById('est-font-cuerpo').value,
+        fontSize: document.getElementById('est-font-size').value,
+        fontBold: document.getElementById('est-font-bold').value,
+        fontItalic: document.getElementById('est-font-italic').value,
+        fontUnderline: document.getElementById('est-font-underline').value,
+        borde: document.getElementById('est-borde').value,
+        alineacion: document.getElementById('est-alineacion').value,
+        sombra: document.getElementById('est-sombra').value,
+        atmosfera: document.getElementById('est-atmosfera').value,
+        popupImg: document.getElementById('est-popup-img').value.trim(),
+        popupTxt: document.getElementById('est-popup-txt').value.trim(),
+        direccionTxt: document.getElementById('est-direccion-txt').value.trim(),
+        mapaUrl: document.getElementById('est-mapa-url').value.trim(),
+        videoId: document.getElementById('est-video-id').value.trim(),
+        auspiciadoresArr: auspiciadoresActivos
+    };
+
+    try {
+        const res = await ejecutarEnServidor("actualizarEstilosGlobales", payload);
+        if(res.success) {
+            alert("¡ÉXITO! La matriz de estilos se ha inyectado en el servidor. La nave ha mutado.");
+        } else {
+            alert("Error en el servidor: " + res.msg);
+        }
+    } catch(e) {
+        alert("Falla de conexión al enviar los datos.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR Y MUTAR NAVE';
+        btn.disabled = false;
+    }
+}
+
+// Hack rápido para que no inicie vacío en la prueba
+renderAuspiciadoresEstilo();
+
+// ==========================================
+// PREVISUALIZACIÓN AUTOMÁTICA DEL MAPA (FOCUS)
+// ==========================================
+function actualizarMapaPreview() {
+    const direccion = document.getElementById('est-direccion-txt').value.trim();
+    const iframe = document.getElementById('mapa-preview');
+    if (direccion !== "") {
+        // Convierte el texto en coordenadas de Google Maps
+        const direccionCodificada = encodeURIComponent(direccion);
+        iframeMapa.src = "https://maps.google.com/maps?q=" + direccionCodificada + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
+    } else {
+        iframe.src = "";
+    }
+}
+
+// ==========================================
+// MOTOR FOCUS: GESTOR DE DESTACADOS (SLIDER)
+// ==========================================
+let destacadosActivos = [];
+
+async function abrirModalDestacados() {
+    // Muestra el modal al instante con mensaje de carga
+    document.getElementById('modal-destacados').style.display = 'flex';
+    document.getElementById('destacados-lista-container').innerHTML = '<p style="color:#666; font-size:0.8rem; text-align:center; padding:20px;">Sincronizando con el satélite...</p>';
+    
+    // Llena el selector
+    const select = document.getElementById('dest-prod-select');
+    select.innerHTML = '<option value="">Selecciona un producto del catálogo...</option>' + 
+        globalStock.map(p => `<option value="${p.SKU}">${p.NOMBRE}</option>`).join('');
+    
+    // Fuerza la lectura en tiempo real del servidor
+    try {
+        const res = await ejecutarEnServidor("getAdminDashboardData");
+        if(res.destacados) destacadosActivos = res.destacados;
+    } catch(e) {
+        console.error("Falla de red al buscar destacados");
+    }
+    
+    // Dibuja el resultado final
+    renderDestacadosAdmin();
+}
+
+function renderDestacadosAdmin() {
+    const container = document.getElementById('destacados-lista-container');
+    if (destacadosActivos.length === 0) {
+        container.innerHTML = '<p style="color:#666; font-size:0.8rem; text-align:center; padding:20px;">No hay destacados. Añade hasta 5 productos.</p>';
+        return;
+    }
+    
+    container.innerHTML = destacadosActivos.map((d, index) => `
+        <div style="background:rgba(0,0,0,0.4); border:1px solid #333; padding:10px; border-radius:8px; display:flex; align-items:center; gap:12px;">
+            <img src="${d.img}" style="width:50px; height:50px; object-fit:cover; border-radius:5px; border:1px solid var(--cian);">
+            <div style="flex:1; overflow:hidden;">
+                <div style="font-size:0.65rem; color:var(--amber); font-weight:bold; letter-spacing:1px;">${d.titulo || 'PRODUCTO ESTRELLA'}</div>
+                <div style="font-size:0.85rem; font-weight:bold; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.nombre}</div>
+                <div style="font-size:0.65rem; color:#888; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.desc || ''}</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:5px;">
+                <button class="tool-btn" style="padding:5px 8px;" onclick="moverDestacado(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-up"></i></button>
+                <button class="tool-btn" style="padding:5px 8px;" onclick="moverDestacado(${index}, 1)" ${index === destacadosActivos.length - 1 ? 'disabled style="opacity:0.2"' : ''}><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <button class="tool-btn" style="color:#ff4444; border-color:#ff4444; padding:10px;" onclick="borrarDestacado(${index})"><i class="fas fa-trash"></i></button>
+        </div>
+    `).join('');
+}
+
+function agregarDestacado() {
+    if(destacadosActivos.length >= 5) return alert("Máximo 5 productos permitidos en el Slider para optimizar el rendimiento.");
+    
+    const sku = document.getElementById('dest-prod-select').value;
+    if(!sku) return alert("Selecciona un producto primero.");
+    
+    const prod = globalStock.find(p => p.SKU === sku);
+    if(!prod) return;
+
+    // Si el producto tiene múltiples imágenes, tomamos la primera
+    const imgReal = Array.isArray(prod.IMAGEN_URL) ? prod.IMAGEN_URL[0] : (prod.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
+
+    const titulo = document.getElementById('dest-titulo').value.trim() || 'DESTACADO';
+    const desc = document.getElementById('dest-desc').value.trim() || (prod.DESCRIPCION ? prod.DESCRIPCION.substring(0, 60) + '...' : '');
+    
+    destacadosActivos.push({
+        sku: prod.SKU,
+        nombre: prod.NOMBRE,
+        titulo: titulo,
+        desc: desc,
+        img: imgReal
+    });
+    
+    document.getElementById('dest-prod-select').value = '';
+    document.getElementById('dest-titulo').value = '';
+    document.getElementById('dest-desc').value = '';
+    renderDestacadosAdmin();
+}
+
+function moverDestacado(index, direccion) {
+    const nuevaPos = index + direccion;
+    if(nuevaPos < 0 || nuevaPos >= destacadosActivos.length) return;
+    const temp = destacadosActivos[index];
+    destacadosActivos[index] = destacadosActivos[nuevaPos];
+    destacadosActivos[nuevaPos] = temp;
+    renderDestacadosAdmin();
+}
+
+function borrarDestacado(index) {
+    destacadosActivos.splice(index, 1);
+    renderDestacadosAdmin();
+}
+
+async function guardarDestacadosBase() {
+    const btn = document.getElementById('btn-guardar-destacados');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO EN NAVE...';
+    btn.disabled = true;
+
+    try {
+        await ejecutarEnServidor("guardarDestacados", { destacados: destacadosActivos });
+        alert("¡Éxito! El Slider principal ha sido actualizado.");
+        document.getElementById('modal-destacados').style.display = 'none';
+    } catch(e) {
+        alert("Error de transmisión al guardar destacados.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR DESTACADOS';
+        btn.disabled = false;
+    }
+}
+
+function actualizarSeleccionFilaMasa(chk) {
+  const sku = chk.value.toString();
+  if (chk.checked) {
+    if (!skusSeleccionadosMasa.includes(sku)) skusSeleccionadosMasa.push(sku);
+  } else {
+    skusSeleccionadosMasa = skusSeleccionadosMasa.filter(id => id !== sku);
+  }
+  refrescarBotonesMasa();
+}
+
+function seleccionarTodosMasa(master) {
+  const checkboxes = document.querySelectorAll('.chk-item-masa');
+  skusSeleccionadosMasa = [];
+  
+  checkboxes.forEach(chk => {
+    chk.checked = master.checked;
+    if (master.checked) {
+      skusSeleccionadosMasa.push(chk.value.toString());
+    }
+  });
+  refrescarBotonesMasa();
+}
+
+function refrescarBotonesMasa() {
+  const btnEliminar = document.getElementById('btn-eliminar-masa');
+  const btnCancelar = document.getElementById('btn-cancelar-masa');
+  const cant = skusSeleccionadosMasa.length;
+  
+  if (cant > 0) {
+    btnEliminar.style.display = "inline-block";
+    btnCancelar.style.display = "inline-block";
+    btnEliminar.innerHTML = `<i class="fas fa-trash-alt"></i> Eliminar (${cant})`;
+  } else {
+    btnEliminar.style.display = "none";
+    btnCancelar.style.display = "none";
+  }
+}
+
+function cancelarSeleccionMasa() {
+  skusSeleccionadosMasa = [];
+  const checkboxes = document.querySelectorAll('.chk-item-masa');
+  checkboxes.forEach(chk => chk.checked = false);
+  const chkMaster = document.getElementById('chk-master-masa');
+  if(chkMaster) chkMaster.checked = false;
+  refrescarBotonesMasa();
+}
+
+async function confirmarEliminacionMasa() {
+  const cant = skusSeleccionadosMasa.length;
+  if (cant === 0) return;
+  
+  const operacionConfirmada = confirm(`¿ALERTAS DE ACCESO?: ¿Seguro que deseas eliminar permanentemente estos ${cant} productos del catálogo central? Esta acción no se puede deshacer.`);
+  
+  if (operacionConfirmada) {
+    const btnEliminar = document.getElementById('btn-eliminar-masa');
+    btnEliminar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+    btnEliminar.disabled = true;
+    
+    try {
+      const res = await ejecutarEnServidor("eliminarProductosMasa", { skus: skusSeleccionadosMasa });
+      if (res.success) {
+        alert("¡ÉXITO! Los elementos seleccionados han sido purgados.");
+        skusSeleccionadosMasa = [];
+        refrescarBotonesMasa();
+        // Recargar datos
+        const refresh = await ejecutarEnServidor("getAdminDashboardData");
+        inicializarAdmin(refresh);
+      } else {
+        alert("Error del servidor: " + res.msg);
+        btnEliminar.disabled = false;
+        refrescarBotonesMasa();
+      }
+    } catch (e) {
+      alert("Error de comunicación de red al purgar elementos.");
+      btnEliminar.disabled = false;
+      refrescarBotonesMasa();
+    }
+  }
+}
+    </script>
+
+<div id="modal-patrocinadores" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">
+    <div class="modal-content" style="max-width:600px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
+        <h2 class="cian"><i class="fas fa-handshake"></i> GESTOR DE PATROCINADORES</h2>
+        <p style="font-size:0.75rem; color:#888;">Sube hasta 7 logos de marcas. Aparecerán girando en el inicio de la tienda.</p>
+        
+        <div style="margin-top:15px; margin-bottom: 20px;">
+            <label for="est-nuevo-auspiciador" class="custom-file-upload" id="lbl-est-ausp">
+                <i class="fas fa-upload"></i> SUBIR LOGO (PNG / JPG)
+            </label>
+            <input type="file" id="est-nuevo-auspiciador" accept="image/*" class="hidden-file">
+        </div>
+
+        <h4 class="cian" style="border-bottom: 1px solid var(--cian); padding-bottom:5px; font-size:0.8rem;">LOGOS ACTUALES (Máx 7)</h4>
+        <div id="est-auspiciadores-container" style="display:flex; gap:10px; overflow-x:auto; padding:15px 5px; min-height:100px; align-items:center; margin-bottom: 15px;">
+            <p style="color:#666; font-size:0.8rem; margin:auto;">Cargando marcas...</p>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px; flex-shrink: 0; position: relative; z-index: 10;">
+            <button id="btn-guardar-patrocinadores" class="btn-nave-main" onclick="guardarPatrocinadoresBase()" style="flex:2;">
+                <i class="fas fa-save"></i> GUARDAR MARCAS
+            </button>
+            <button class="btn-save" onclick="document.getElementById('modal-patrocinadores').style.display='none'" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CERRAR
+            </button>
+        </div>
+    </div>
+</div>
+    
+<div id="modal-cupones" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">
+    <div class="modal-content" style="max-width:500px; padding:20px !important;">
+        <h2 class="amber"><i class="fas fa-ticket-alt"></i> MOTOR DE DESCUENTOS</h2>
+        <p style="font-size:0.75rem; color:#888;">Crea códigos promocionales porcentuales para tus clientes.</p>
+        
+        <label style="font-size:0.7rem; color:var(--cian);">CÓDIGO SECRETO (Ej: WEED20):</label>
+        <input type="text" id="cup-codigo" class="nave-input" placeholder="Escribe el código..." style="text-transform: uppercase;">
+        
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label style="font-size:0.7rem; color:var(--cian);">DESCUENTO (%):</label>
+                <input type="number" id="cup-pct" class="nave-input" placeholder="Ej: 15" min="1" max="99">
+            </div>
+            <div style="flex:2;">
+                <label style="font-size:0.7rem; color:var(--cian);">APLICA A:</label>
+                <select id="cup-sku" class="nave-input" style="padding:8px;">
+                    <option value="TODOS">Toda la Tienda</option>
+                    </select>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <div style="flex:1;">
+                <label style="font-size:0.65rem; color:var(--cian);">INICIO (Fecha y Hora):</label>
+                <input type="datetime-local" id="cup-inicio" class="nave-input">
+            </div>
+            <div style="flex:1;">
+                <label style="font-size:0.65rem; color:var(--cian);">FIN (Fecha y Hora):</label>
+                <input type="datetime-local" id="cup-fin" class="nave-input">
+            </div>
+        </div>
+
+
+        
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button id="btn-guardar-cupon" class="btn-nave-main" onclick="guardarCuponBase()" style="flex:2;">
+                <i class="fas fa-save"></i> ACTIVAR CUPÓN
+            </button>
+            <button class="btn-save" onclick="document.getElementById('modal-cupones').style.display='none'" style="flex:1; background:transparent; border:1px solid #444; color:#888;">
+                CERRAR
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Elimina la etiqueta <script> de arriba si ya estás dentro de tu zona de scripts
+function abrirModalCupones() {
+    const select = document.getElementById('cup-sku');
+    select.innerHTML = '<option value="TODOS">Toda la Tienda</option>' + 
+        globalStock.map(p => `<option value="${p.SKU}">${p.NOMBRE}</option>`).join('');
+    document.getElementById('modal-cupones').style.display = 'flex';
+}
+
+async function guardarCuponBase() {
+    const codigo = document.getElementById('cup-codigo').value.trim().toUpperCase();
+    const pct = document.getElementById('cup-pct').value;
+    const aplicaSku = document.getElementById('cup-sku').value;
+    const inicio = document.getElementById('cup-inicio').value;
+    const fin = document.getElementById('cup-fin').value;
+
+    if(!codigo || !pct || !inicio || !fin) return alert("Falta información o fechas del cupón.");
+
+    const btn = document.getElementById('btn-guardar-cupon');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO...';
+    btn.disabled = true;
+
+    try {
+        await ejecutarEnServidor("crearCuponAdmin", { codigo: codigo, porcentaje: pct, aplicaSku: aplicaSku, inicio: inicio, fin: fin });
+        alert("¡Cupón Activado Exitosamente!");
+        document.getElementById('modal-cupones').style.display = 'none';
+        document.getElementById('cup-codigo').value = '';
+        document.getElementById('cup-pct').value = '';
+    } catch(e) {
+        alert("Error al crear el cupón.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> ACTIVAR CUPÓN';
+        btn.disabled = false;
+    }
+}
+</script>
+
+</body>
+</html>

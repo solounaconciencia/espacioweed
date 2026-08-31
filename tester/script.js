@@ -488,6 +488,10 @@ function vaciarCarrito() {
 async function procesarCompra() {
   if (carrito.length === 0) return;
 
+  const metodoInput = document.querySelector('input[name="metodo-pago"]:checked');
+  if (!metodoInput) return mostrarToast("Por favor, selecciona un método de pago.");
+  const metodo = metodoInput.value;
+
   const btn = document.querySelector('.btn-checkout');
   const originalText = btn.innerHTML;
   btn.innerText = "PREPARANDO DESPEGUE...";
@@ -514,25 +518,74 @@ async function procesarCompra() {
     necesitaEnvio: necesitaEnvio,
     totalFinal: subtotal + envioVal,
     direccion: necesitaEnvio ? direccion : "Retiro en Local",
-    metodoPago: "mercadopago",
+    metodoPago: metodo,
     cuponActivo: miCuponValidado ? miCuponValidado.codigo : null
   };
 
   try {
-    const res = await ejecutarEnServidor("pagar", pedido);
-    if(res.success) {
-      mostrarToast("Redirigiendo a pago seguro...");
-      window.location.href = res.init_point;
-    } else {
-      mostrarToast("Error: " + res.msg);
-      btn.innerHTML = originalText;
-      btn.disabled = false;
+    if (metodo === 'mercadopago') {
+      const res = await ejecutarEnServidor("pagar", pedido);
+      if(res.success) {
+        mostrarToast("Redirigiendo a pago seguro...");
+        window.location.href = res.init_point;
+      } else {
+        mostrarToast("Error MP: " + res.msg);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    } 
+    else {
+      // --- NUEVO FLUJO UX PARA TRANSFERENCIAS ---
+      const res = await ejecutarEnServidor("registrarPedido", pedido);
+      
+      if(res.success || res.id) {
+        const num = (configGlobal['WHATSAPP_ADMIN'] || '569').toString().replace(/\D/g, '');
+        const msg = `🚀 *NUEVO PEDIDO ESPACIO WEED*\n📌 *ID:* ${res.id || 'N/A'}\n---\n🛒 *Productos:* ${pedido.resumenProductos}\n💰 *Total a Transferir:* $${pedido.totalFinal.toLocaleString('es-CL')}\n🚚 *Envío:* ${pedido.direccion}\n\n*Hola, aquí está el comprobante de mi transferencia.*`;
+        
+        // 1. Llenamos los datos del modal dinámicamente desde la Configuración
+        document.getElementById('mt-id-pedido').innerText = res.id || 'N/A';
+        document.getElementById('mt-total').innerText = "$" + pedido.totalFinal.toLocaleString('es-CL');
+        
+        const bancoCompleto = (configGlobal['BANCO_NOMBRE'] || '---') + " (" + (configGlobal['BANCO_TIPO'] || '---') + ")";
+        document.getElementById('mt-banco').innerText = bancoCompleto;
+        document.getElementById('mt-rut').innerText = configGlobal['BANCO_RUT'] || '---';
+        document.getElementById('mt-numero').innerText = configGlobal['BANCO_NUMERO'] || '---';
+        document.getElementById('mt-email').innerText = configGlobal['BANCO_CORREO'] || '---';
+        
+        // 2. Preparamos el link de WhatsApp en el botón verde
+        document.getElementById('mt-btn-wa').href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+
+        // 3. Vaciamos el carrito y ocultamos la barra lateral silenciosamente
+        vaciarCarrito(); 
+        document.getElementById('cart-drawer').classList.remove('active');
+        
+        // 4. Mostramos la obra de arte (El nuevo Modal)
+        document.getElementById('modal-transferencia-checkout').style.display = 'flex';
+        
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      } else {
+        mostrarToast("Error BD: " + (res.mensaje || "Falla al registrar."));
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
     }
   } catch(err) {
-    mostrarToast("Falla de conexión.");
+    mostrarToast("Falla de conexión con el servidor.");
     btn.innerHTML = originalText;
     btn.disabled = false;
   }
+}
+
+// Controladores del nuevo Modal de Transferencia
+function cerrarModalTransferenciaCheckout() {
+    document.getElementById('modal-transferencia-checkout').style.display = 'none';
+    location.reload(); // Recarga limpia al cerrar
+}
+
+function cerrarModalTransferenciaCheckoutYRecargar() {
+    // Le da 1 segundo al navegador para abrir la pestaña de WhatsApp antes de recargar la tienda
+    setTimeout(() => { location.reload(); }, 1000);
 }
 
 function irWhatsApp() {

@@ -1,0 +1,1323 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@300;400;600;700&display=swap');
+
+:root {
+  --neon-green: #2ecc71;
+  --amber: #f1c40f;
+  --cian: #00ffff;
+  --bg-space: #020204;
+  --glass: rgba(255, 255, 255, 0.05);
+  --font-main: 'Montserrat', sans-serif;
+  --font-brand: 'Orbitron', sans-serif;
+  --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* 1. RESET Y BASE */
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg-space);
+  color: white;
+  font-family: var(--font-main);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* 2. FONDO GALÁCTICO DEFINITIVO (GPU ACCELERATED) */
+#star-canvas {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at center, #1B2735 0%, #020204 100%);
+  overflow: hidden;
+}
+
+/* Capa de estrellas acelerada por hardware */
+#star-canvas::before {
+  content: "";
+  position: absolute;
+  top: -100%; left: 0; width: 100%; height: 200%; /* El lienzo es el doble de alto */
+  
+  /* Patrón infinito SVG en código (Cero tiempo de carga, peso imperceptible) */
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1' fill='white' opacity='0.8'/%3E%3Ccircle cx='150' cy='80' r='1.5' fill='white' opacity='0.6'/%3E%3Ccircle cx='90' cy='160' r='1' fill='white' opacity='0.9'/%3E%3Ccircle cx='180' cy='180' r='0.5' fill='white' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.6;
+  
+  /* Animación súper fluida usando tarjeta gráfica */
+  animation: moveStarsGPU 60s linear infinite;
+}
+
+@keyframes moveStarsGPU {
+  from { transform: translateY(0); }
+  to { transform: translateY(50%); } /* Bucle perfecto, cero estrés para el celular */
+}
+/* 6. CORRECCIÓN DEL MENÚ DESPLEGABLE (DROPDOWN) */
+.dropdown { position: relative; display: inline-block; }
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #0a0a0c;
+  min-width: 220px;
+  box-shadow: 0px 8px 16px rgba(0,255,255,0.4); /* Sombra más fuerte para resaltar sobre el slider */
+  z-index: 20000; /* Nivel máximo de órbita */
+  border: 1px solid var(--cian);
+  border-radius: 8px;
+  margin-top: 0;
+  padding: 10px 0;
+}
+
+.dropdown-content a {
+  color: white !important;
+  padding: 12px 20px !important;
+  text-decoration: none;
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: rgba(0, 255, 255, 0.1);
+  color: var(--amber) !important;
+}
+
+/* Mostrar al pasar el mouse */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Eliminar el cuadro gris feo si se queda pegado */
+.skeleton-loader {
+  background: rgba(255,255,255,0.05);
+  width: 100%; height: 100%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.1; }
+  100% { opacity: 0.3; }
+}
+
+/* 3. BARRA SUPERIOR (TOP BAR) - CÁPSULAS ESTÁTICAS */
+.top-bar {
+  position: fixed;
+  top: 0; width: 100%;
+  background: #000;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+  z-index: 5000;
+  padding: 6px 0;
+}
+
+.top-bar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.trust-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 4px 14px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.5px;
+  /* Estático según auditoría */
+}
+
+.wa-link { 
+  color: var(--cian) !important; 
+  cursor: pointer; 
+}
+
+/* 4. HEADER Y NAVEGACIÓN */
+.header-wrap {
+  margin-top: 45px;
+  padding: 30px 0;
+  background: #000;
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+  position: relative; /* Vital para que el z-index funcione */
+  z-index: 9000;      /* Nivel superior al slider */
+}
+
+.logo-area { text-align: center; margin-bottom: 25px; }
+.main-logo { 
+  width: 170px;  
+  transition: var(--transition);
+}
+
+.main-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-brand);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+  opacity: 0.75;
+}
+
+.nav-links a:hover {
+  color: var(--cian);
+  opacity: 1;
+  text-shadow: 0 0 10px var(--cian);
+}
+
+.search-container {
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+}
+
+#main-search {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  color: white;
+  outline: none;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+#main-search:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+}
+
+.search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.3);
+}
+
+/* 5. SLIDER DESTACADOS - CÁPSULA DE ACCESO DIRECTO */
+.slider-container {
+  width: 100%;
+  height: 400px; /* Altura fija para la cápsula */
+  position: relative;
+  overflow: hidden;
+  background: transparent; /* El fondo lo da la cápsula */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.slide {
+  position: absolute;
+  width: 90%; /* Caja más pequeña que el contenedor */
+  max-width: 800px;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Imagen izquierda, texto derecha */
+  opacity: 0;
+  transition: opacity 1s ease-in-out, transform 0.5s ease-out;
+  background: var(--glass);
+  border: 2px solid var(--neon-green);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+  transform: translateX(50px); /* Efecto de entrada */
+  pointer-events: none;
+}
+
+.slide.active { 
+  opacity: 1; 
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* Imagen a la izquierda (Neuro-Marketing) */
+.img-slide {
+  width: 40%;
+  height: 100%;
+  object-fit: contain; /* No recorta la imagen, la ajusta */
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+
+/* Texto y Acciones a la derecha */
+.slide-content {
+  width: 55%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.slide-content h2 { 
+  font-family: var(--font-brand); 
+  color: var(--amber); 
+  margin: 0; 
+  font-size: 0.9rem; 
+  letter-spacing: 2px;
+}
+
+.slide-content h1 { 
+  font-family: var(--font-brand); 
+  font-size: 1.8rem; 
+  color: white; 
+  margin: 5px 0 15px 0; 
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.slide-content p {
+  color: #ccc;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+/* Botón de compra rápido en el Banner */
+.btn-banner-buy {
+  background: var(--neon-green);
+  color: black;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-family: var(--font-brand);
+  font-weight: bold;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-banner-buy:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+/* CONTROLES DE NAVEGACIÓN (FLECHAS) */
+.slider-prev, .slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: var(--cian);
+  border: 1px solid var(--cian);
+  font-size: 1.5rem;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 100;
+  transition: 0.3s;
+}
+
+.slider-prev:hover, .slider-next:hover {
+  background: var(--cian);
+  color: black;
+}
+
+.slider-prev { left: 10px; }
+.slider-next { right: 10px; }
+
+/* MOBILE FIX */
+@media (max-width: 768px) {
+  .slider-container { height: 520px; padding: 10px; }
+  .slide { flex-direction: column; height: 96%; padding: 15px; justify-content: flex-start; gap: 5px; left: 5%; pointer-events: none;}
+  .img-slide { width: auto; max-height: 180px; object-fit: contain; margin-bottom: 5px; flex-shrink: 0; }
+  .slide-content { width: 100%; text-align: center; }
+  .slide-content h1 { font-size: 1.2rem; margin: 5px 0; }
+  .slide-content p { font-size: 0.75rem; line-height: 1.2; margin-bottom: 10px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+  .slide-content h1 { font-size: 1.4rem; }
+  .slider-prev, .slider-next { font-size: 1rem; padding: 8px 12px; }
+}
+
+/* 6. CATEGORÍAS DINÁMICAS */
+.category-filter-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 25px;
+  background: rgba(0,0,0,0.4);
+}
+
+.cat-btn {
+  background: transparent;
+  border: 1px solid var(--cian);
+  color: var(--cian);
+  padding: 7px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font-brand);
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+
+.cat-btn:hover {
+  background: var(--cian);
+  color: black;
+  box-shadow: 0 0 15px var(--cian);
+}
+
+/* 7. VITRINA DE PRODUCTOS (GRID) */
+.content-wrapper { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 30px;
+}
+
+.product-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: var(--transition);
+}
+
+.product-card:hover {
+  border-color: var(--neon-green);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+.product-card img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.product-card:hover img { transform: scale(1.1); }
+
+.more-info-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--amber);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: var(--font-brand);
+  font-size: 0.65rem;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.product-card:hover .more-info-btn { opacity: 1; }
+
+.scarcity-label {
+  position: absolute;
+  top: 15px; left: 15px;
+  background: #e74c3c;
+  color: white;
+  padding: 3px 10px;
+  font-size: 0.6rem;
+  font-weight: bold;
+  border-radius: 3px;
+  z-index: 5;
+}
+
+.cart-sidebar {
+  position: fixed;
+  top: 0; right: -400px;
+  width: 380px;
+  height: 100dvh; /* FOCUS UX: Altura dinámica para evadir la barra de navegación del celular */
+  background: #08080a;
+  border-left: 1px solid var(--cian);
+  z-index: 100000;
+  transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* FOCUS UX: Permite hacer scroll a todo el panel si la pantalla es muy enana */
+}
+
+.cart-sidebar.active { right: 0; }
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--glass);
+  padding-bottom: 20px;
+}
+
+.cart-header h3 { font-family: var(--font-brand); margin: 0; letter-spacing: 2px; }
+
+.cart-items-container {
+  flex: 1;
+  overflow-y: auto;
+  margin: 25px 0;
+  min-height: 150px; 
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dotted rgba(255,255,255,0.1);
+}
+
+.btn-qty {
+  background: #222; border: 1px solid #444; color: white;
+  width: 25px; height: 25px; cursor: pointer; border-radius: 3px;
+}
+
+.btn-del {
+  background: none; border: none; color: #e74c3c; cursor: pointer; margin-left: 10px;
+}
+
+.cart-footer {
+  border-top: 1px solid var(--cian);
+  padding-top: 20px;
+  flex-shrink: 0; 
+}
+
+.cart-total-box {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-brand);
+  font-size: 1.3rem;
+  color: var(--amber);
+  margin-bottom: 20px;
+}
+
+.btn-checkout {
+  width: 100%;
+  padding: 18px;
+  background: var(--neon-green);
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-brand);
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-checkout:hover { background: white; transform: scale(1.02); }
+
+/* 9. MODAL DETALLE */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 99999 !important; /* Por encima de todo, incluso del carrito */
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0,0,0,0.8); /* Fondo oscuro para enfocar la mente */
+  backdrop-filter: blur(8px); /* Efecto neuro-relajante */
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--glass);
+  border: 1px solid var(--neon-green);
+  margin: auto;
+  padding: 25px;
+  width: 90%; /* Ocupa el 90% en móviles */
+  max-width: 500px; /* Pero nunca más de 500px en PC */
+  border-radius: 15px;
+  position: relative;
+  box-sizing: border-box; /* CRÍTICO: Evita que el padding empuje los bordes hacia afuera */
+}
+
+.modal-flex { display: flex; gap: 40px; flex-wrap: wrap; }
+.modal-img { width: 350px; border-radius: 15px; }
+
+.price-box {
+  background: rgba(255,255,255,0.03);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.precio-old { text-decoration: line-through; opacity: 0.5; font-size: 1rem; margin-right: 15px; }
+.precio-promo { color: var(--amber); font-weight: bold; font-size: 1.8rem; font-family: var(--font-brand); }
+
+/* 10. WHATSAPP BUBBLE */
+.wa-bubble {
+  position: fixed;
+  bottom: 30px; right: 30px;
+  width: 65px; height: 65px;
+  z-index: 5500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.wa-bubble:hover { transform: scale(1.15) rotate(10deg); }
+.wa-bubble img { width: 100%; filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.4)); }
+
+/* 11. TOAST NOTIFICATION */
+.toast-notification {
+  position: fixed;
+  bottom: -60px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--neon-green);
+  color: black;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-family: var(--font-brand);
+  font-size: 0.8rem;
+  z-index: 200000 !important;
+  transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-notification.show { bottom: 110px; }
+
+@media (max-width: 768px) {
+  .top-bar-container { gap: 6px; }
+  .trust-card { font-size: 0.55rem; padding: 4px 8px; }
+  
+  /* FOCUS UX: Empuja el encabezado principal hacia abajo para que NO aplaste a Ubicación e Instagram */
+  .header-wrap { margin-top: 80px; }
+  
+  .main-logo { width: 130px; }
+  .nav-links { gap: 15px; font-size: 0.65rem; flex-wrap: wrap; justify-content: center; }
+  
+  .product-grid { grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+  
+  /* FOCUS UX: Redimensionamiento del Carrito para Móviles */
+  .cart-sidebar { 
+    width: 100%; 
+    right: -100%; 
+    padding: 15px 20px; /* Menos padding lateral para aprovechar la pantalla */
+  }
+  .cart-header h3 { font-size: 1.1rem; }
+  .cart-total-box { font-size: 1rem; margin-bottom: 15px; }
+  .cart-footer { padding-top: 15px; }
+  .btn-checkout { padding: 12px; font-size: 0.85rem; }
+  
+  .modal-img { width: 100%; }
+  .modal-content { margin: 10px; padding: 20px; }
+}
+
+.section-title {
+  text-align: center;
+  font-family: var(--font-brand);
+  color: var(--cian);
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  border-bottom: 2px solid var(--neon-green);
+  display: inline-block;
+  padding-bottom: 10px;
+  width: 100%;
+}
+/* DISEÑO QUIRÚRGICO DE LA NAVE */
+.nave-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(2, 2, 4, 0.9) !important;
+    backdrop-filter: blur(15px) !important;
+    z-index: 99999 !important;
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto; /* PERMITE SCROLL SI ALGO QUEDA ABAJO */
+    padding: 20px 0;
+}
+
+.login-card {
+    background: var(--glass);
+    border: 2px solid var(--cian);
+    padding: 30px;
+    border-radius: 20px;
+    width: 95%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+    position: relative;
+    margin: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    /* LÍNEAS DE CORRECCIÓN QUIRÚRGICA: */
+    display: flex;
+    flex-direction: column; /* Apila todo verticalmente */
+    align-items: center;    /* Centra inputs y botones */
+}
+
+.nave-logo { width: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--neon-green)); }
+.nave-title { font-family: var(--font-brand); font-size: 1.2rem; color: var(--amber); margin-bottom: 30px; letter-spacing: 2px; }
+
+.input-group {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+}
+
+.btn-nave-main {
+    width: 100%;
+    padding: 14px;
+    background: var(--neon-green);
+    color: black;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font-brand);
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-nave-main:hover { transform: scale(1.02); background: white; }
+
+/* 1. Enlaces del Login/Registro (Se mantienen compactos) */
+.nave-links { 
+    margin-top: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+.nave-links a { 
+    color: var(--cian); 
+    font-size: 0.75rem; 
+    text-decoration: none; 
+    opacity: 0.7; 
+    transition: 0.3s;
+}
+.nave-links a:hover { opacity: 1; text-decoration: underline; }
+
+/* 2. Botón VOLVER (Independiente y Ergonómico para el dedo) */
+.back-link { 
+    display: block;
+    margin-top: 35px;       /* Distancia generosa del botón de arriba */
+    padding: 12px;          /* Zona de toque ampliada para el celular */
+    color: var(--cian); 
+    font-size: 0.8rem; 
+    text-decoration: none; 
+    opacity: 0.7; 
+    font-family: var(--font-brand);
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.back-link:hover { 
+    opacity: 1; 
+    text-shadow: 0 0 8px var(--cian); 
+}
+
+/* 3. Textos informativos */
+.nave-text { font-size: 0.8rem; color: #ccc; margin-bottom: 20px; }
+
+
+.nave-input {
+    width: 100%;
+    align-self: stretch;
+    box-sizing: border-box; /* Evita que el padding "estire" el input hacia afuera */
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;        /* Evita el zoom automático en iPhones al clickear */
+    outline: none;
+}
+
+.dash-avatar {
+    width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--neon-green);
+    cursor: pointer; box-shadow: 0 0 15px var(--neon-green); transition: 0.3s;
+}
+
+.dash-avatar:hover { transform: scale(1.1); }
+
+.compras-grid {
+    display: flex; gap: 10px; overflow-x: auto; padding: 10px 0;
+}
+
+.compra-card {
+    min-width: 100px; background: rgba(255,255,255,0.05);
+    padding: 10px; border-radius: 10px; border: 1px solid var(--glass);
+    text-align: center; font-size: 0.6rem;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Se adapta solo */
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tool-btn {
+    background: var(--glass); border: 1px solid var(--cian); color: white;
+    padding: 15px 5px; border-radius: 8px; font-size: 0.6rem; cursor: pointer;
+}
+
+.avatar-opt { width: 100%; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.avatar-opt:hover { border-color: var(--amber); }
+
+.btn-logout { background: none; border: none; color: #ff4444; font-size: 0.7rem; cursor: pointer; }
+/* AJUSTES ESPECÍFICOS PARA MÓVILES (Pantallas menores a 600px) */
+@media (max-width: 600px) {
+    /* Ajustes de tarjetas y comunidad (Tu código original) */
+    .login-card {
+        padding: 20px 15px; /* Menos espacio interno para ganar pantalla */
+        border-radius: 15px;
+    }
+
+    .nave-title {
+        font-size: 1rem; /* Título un poco más pequeño */
+        margin-bottom: 20px;
+    }
+
+    .compra-card {
+        min-width: 120px; /* Tarjetas de compras un poco más cómodas para scroll */
+    }
+    
+    .tools-grid {
+        grid-template-columns: 1fr 1fr; /* 2 botones por fila en lugar de 3 si es muy angosto */
+    }
+
+    /* Ajuste táctil unificado para los botones de cierre en móviles */
+    .close, .close-nave, .close-cart, .modal-close {
+        top: 10px;
+        right: 10px;
+        width: 50px;
+        height: 50px;
+        font-size: 35px; /* X más grande para el pulgar */
+        background: rgba(0, 0, 0, 0.9);
+        border: 2px solid var(--neon-green);
+    }
+}
+.suggestions-box {
+    background: rgba(46, 204, 113, 0.05);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.sugerencia-item {
+    display: none; /* Se controlan por JS */
+    animation: fadeIn 0.5s ease;
+}
+
+.sugerencia-item.active { display: flex; gap: 15px; align-items: center; }
+
+.img-sug { width: 80px; height: 80px; object-fit: contain; background: white; border-radius: 10px; }
+
+.info-sug { text-align: left; flex: 1; }
+
+.badge-desc {
+    background: var(--amber); color: black; font-weight: bold;
+    font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+}
+
+.dots-container { display: flex; justify-content: center; gap: 5px; margin-top: 10px; }
+.dot { width: 8px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; }
+.dot.active { background: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+
+/* CONTROL DE AVATARES EN PERFIL */
+.avatar-grid {
+    display: grid;
+    /* Esto asegura que quepan varios avatares por línea según el ancho */
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); 
+    gap: 12px;
+    min-height: 90px;   /* ¡NUEVO! Espacio garantizado para una fila */
+    max-height: 180px;  /* Altura máxima para ver dos filas antes de hacer scroll */
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 12px;
+    width: 100%;
+    border: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.avatar-opt {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.avatar-opt:hover {
+    transform: scale(1.1);
+    border-color: var(--cian);
+}
+
+.avatar-opt.seleccionado {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+/* AJUSTE PARA EL SELECT (PREGUNTA) */
+select.nave-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+}
+
+.auspiciadores-container {
+  background: var(--glass);
+  border-top: 1px solid rgba(46, 204, 113, 0.2);
+  border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 8000;
+}
+
+.marquee-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.marquee-content {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  padding: 0 25px;
+}
+
+.marquee-content img {
+  height: 40px; /* Tamaño discreto */
+  width: auto;
+  filter: grayscale(100%) opacity(0.7);
+  transition: var(--transition);
+}
+
+.marquee-content img:hover {
+  filter: grayscale(0%) opacity(1);
+}
+
+/* Animación de giro infinito */
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.scrolling {
+  animation: scroll-marquee 25s linear infinite;
+}
+
+/* BURBUJA CARRITO FLOTANTE - INTEGRACIÓN ESPACIO WEED */
+.cart-float-bubble {
+  position: fixed;
+  bottom: 105px; /* Situada sobre la de WhatsApp (30px + 65px + 10px gap) */
+  right: 30px;
+  width: 65px;
+  height: 65px;
+  background: var(--cian); /* Color de acción de tu Nave */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+  z-index: 5400; /* Justo debajo de la de WhatsApp para jerarquía visual */
+  cursor: pointer;
+  transition: var(--transition);
+  color: black;
+  font-size: 1.6rem;
+}
+
+.cart-float-bubble:hover {
+  transform: scale(1.1);
+  background: white;
+}
+
+/* Forzar color negro constante en el ícono del canasto */
+.cart-float-bubble i {
+  color: #000000 !important;
+}
+
+.cart-badge-float {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #e74c3c; /* Rojo alerta para el contador */
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--bg-space);
+}
+
+/* Ajuste para que en móviles no tapen demasiado */
+@media (max-width: 768px) {
+  .wa-bubble, .cart-float-bubble {
+    right: 15px;
+    width: 46px; /* FOCUS UX: Burbujas más sutiles en celular */
+    height: 46px;
+  }
+  .wa-bubble { bottom: 15px; }
+  .cart-float-bubble { bottom: 75px; font-size: 1.1rem; }
+  
+  /* Ajuste de la alerta roja de cantidad */
+  .cart-badge-float { min-width: 18px; height: 18px; font-size: 0.65rem; }
+}
+
+/* ESTRUCTURA MODAL DETALLES BLINDADO */
+.modal-detalles-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* Altura máxima de la ventana */
+  overflow: hidden; /* Evita que el contenedor padre crezca */
+  background: var(--bg-space);
+  border: 1px solid var(--cian);
+  border-radius: 15px;
+}
+
+.modal-detalles-body {
+  flex: 1; /* Toma todo el espacio disponible */
+  overflow-y: auto; /* Solo esta parte tiene scroll */
+  padding: 20px;
+}
+
+.modal-detalles-footer {
+  padding: 15px 20px;
+  background: rgba(0,0,0,0.9);
+  border-top: 1px solid rgba(0,255,255,0.2);
+  text-align: center;
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,255,255,0.5);
+  border: none;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* VARIANTES */
+.variant-select {
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  border: 1px solid #333;
+  color: white;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+/* DISEÑO DE MODAL PROFESIONAL "BLINDADO" */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh; /* Evita que se salga de la pantalla */
+    padding: 0 !important; /* Quitamos padding para que el footer pegue abajo */
+    overflow: hidden;
+    background: #0b0f1a;
+    border: 1px solid var(--cian);
+}
+
+#detalle-body {
+    flex: 1; /* Esto permite que el cuerpo crezca y el footer se quede abajo */
+    overflow-y: auto; /* Solo el contenido tiene scroll */
+    padding: 20px;
+}
+
+.modal-footer-fixed {
+    padding: 15px;
+    background: rgba(0,0,0,0.9);
+    border-top: 1px solid rgba(0,255,255,0.2);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ESTILO CARRUSEL */
+.carousel-container {
+    position: relative;
+    width: 60%; /* Reducido del 100% al 60% para que no ocupe toda la pantalla */
+    margin: 0 auto 15px; /* Centra la imagen horizontalmente y da aire abajo */
+    aspect-ratio: 1/1; /* Mantiene el cuadrado perfecto */
+    background: rgba(0,0,0,0.3); /* Fondo sutil para que la imagen destaque */
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,255,255,0.1); /* Borde cian muy fino */
+}
+
+.carousel-img {
+    max-width: 95%; /* Pequeño margen interno para que no pegue al borde del cuadro */
+    max-height: 95%;
+    object-fit: contain; /* Evita que la imagen se estire feo */
+    border-radius: 8px;
+}
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,255,255,0.3);
+    border: none;
+    color: white;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.nav-btn:hover { background: var(--cian); color: black; }
+.prev { left: 10px; }
+.next { right: 10px; }
+/* ==========================================
+   ESTÉTICA UNIVERSAL: BOTONES DE CIERRE (X) 
+   ========================================== */
+.close, .close-nave, .close-cart, .modal-close, .close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-family: var(--font-brand);
+    color: var(--cian);
+    background: rgba(2, 2, 4, 0.95);
+    border: 1px solid var(--cian);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s all cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 100000;
+    line-height: 1;
+    user-select: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.close:hover, .close-nave:hover, .close-cart:hover, .modal-close:hover, .close-modal:hover {
+    background: var(--cian);
+    color: black !important;
+    box-shadow: 0 0 15px var(--cian);
+    transform: rotate(90deg) scale(1.1);
+    border-color: var(--cian);
+}
+
+.close:active, .close-nave:active, .close-cart:active, .modal-close:active, .close-modal:active {
+    transform: scale(0.95);
+    box-shadow: none;
+}
+/* --- MODAL DE UBICACIÓN (INTEGRADO AL TEMA) --- */
+.modal-overlay-ubic {
+    display: none; position: fixed; z-index: 150000; left: 0; top: 0;
+    width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px); align-items: center; justify-content: center;
+}
+
+.modal-box-ubic {
+    background-color: var(--bg-space); padding: 20px; border-radius: 15px;
+    width: 90%; max-width: 900px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+    border: 1px solid var(--cian); position: relative;
+    animation: aparecer 0.3s ease-out;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-header-ubic { 
+    margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; 
+}
+
+.modal-header-ubic h2 { 
+    margin: 0; font-size: 1.2rem; color: var(--cian); font-family: var(--font-brand); letter-spacing: 2px;
+}
+
+.modal-body-ubic { display: flex; flex-direction: column; gap: 20px; }
+.media-container-ubic { flex: 1; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+
+@keyframes aparecer { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@media (min-width: 768px) { .modal-body-ubic { flex-direction: row; } }
+/* --- AJUSTES QUIRÚRGICOS: VIDEO Y MAPA (CORREGIDO) --- */
+.parche-drive {
+    position: absolute; top: 0; right: 0; width: 50px; height: 50px;
+    background: #000; z-index: 10;
+}
+
+/* Restauramos el equilibrio 50/50 para evitar desproporciones */
+@media (min-width: 768px) {
+    .modal-body-ubic { 
+        flex-direction: row; 
+    }
+    .caja-mapa, .caja-video { 
+        flex: 1; /* Ambos toman el mismo espacio */
+        max-width: none; 
+        margin: 0;
+    }
+}
+/* ==========================================
+   ESTÉTICA FOCUS: UNIFICACIÓN IMÁGENES Y BOTONES
+   ========================================== */
+.product-card img {
+    width: 100% !important;
+    height: 200px !important; /* Altura estricta, adiós papelillos gigantes */
+    object-fit: contain !important; /* Ajusta sin recortar */
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: transparent;
+}
+
+.custom-file-upload {
+    border: 1px dashed var(--cian);
+    background: rgba(0, 255, 255, 0.05);
+    color: var(--cian);
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-brand);
+    font-size: 0.75rem;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.custom-file-upload:hover {
+    background: rgba(0, 255, 255, 0.2);
+    color: white;
+    border-style: solid;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+input[type="file"].hidden-file { display: none; }
+
+/* ==========================================
+   ESTÉTICA FOCUS: MARCA DE AGUA / FOOTER
+   ========================================== */
+.footer-watermark {
+    width: 100%;
+    text-align: center;
+    padding: 40px 20px 20px 20px;
+    margin-top: 50px;
+    background: linear-gradient(to top, rgba(0, 255, 255, 0.05), transparent);
+    border-top: 1px solid rgba(0, 255, 255, 0.1);
+    color: #666;
+    font-size: 0.75rem;
+    font-family: var(--font-main);
+    z-index: 10;
+    position: relative;
+}
+
+.footer-watermark p {
+    margin: 5px 0;
+    letter-spacing: 1px;
+}
+
+.footer-watermark .developer-tag {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    margin-top: 10px;
+}
+
+.footer-watermark .developer-tag a {
+    color: var(--cian);
+    text-decoration: none;
+    font-family: var(--font-brand);
+    letter-spacing: 2px;
+    transition: var(--transition);
+}
+
+.footer-watermark .developer-tag a:hover {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+    opacity: 1;
+}
+ 
+/* ==========================================
+   ESTÉTICA FOCUS: BOTÓN AÑADIR RÁPIDO
+   ========================================== */
+.btn-quick-add {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: var(--cian);
+  color: black;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+  transition: var(--transition);
+  z-index: 20; /* Para que quede sobre la foto */
+}
+
+.btn-quick-add:hover {
+  transform: scale(1.15) rotate(-10deg);
+  background: var(--neon-green);
+  box-shadow: 0 4px 20px rgba(46, 204, 113, 0.6);
+}

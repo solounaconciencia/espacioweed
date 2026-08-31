@@ -485,24 +485,12 @@ function vaciarCarrito() {
     console.log("Órbita despejada: Carrito vaciado con éxito.");
 }
 
-/**
- * CIERRE DE VENTA Y WHATSAPP
- */
 async function procesarCompra() {
   if (carrito.length === 0) return;
 
-  // 1. Identificar el método de pago seleccionado
-  const metodoInput = document.querySelector('input[name="metodo-pago"]:checked');
-  if (!metodoInput) {
-    mostrarToast("Por favor, selecciona un método de pago.");
-    return;
-  }
-  const metodo = metodoInput.value;
-
-  
   const btn = document.querySelector('.btn-checkout');
   const originalText = btn.innerHTML;
-  btn.innerText = "PROCESANDO...";
+  btn.innerText = "PREPARANDO DESPEGUE...";
   btn.disabled = true;
 
   const necesitaEnvio = document.getElementById('chk-envio').checked;
@@ -526,47 +514,24 @@ async function procesarCompra() {
     necesitaEnvio: necesitaEnvio,
     totalFinal: subtotal + envioVal,
     direccion: necesitaEnvio ? direccion : "Retiro en Local",
-    metodoPago: metodo,
-    cuponActivo: miCuponValidado ? miCuponValidado.codigo : null // <--- CONECTOR DE DESCUENTO FOCUS
+    metodoPago: "mercadopago",
+    cuponActivo: miCuponValidado ? miCuponValidado.codigo : null
   };
 
-  // 3. RAMIFICACIÓN DE LÓGICA (EVOLUCIONADA PARA GITHUB)
-  if (metodo === 'mercadopago') {
-    try {
-      const res = await ejecutarEnServidor("pagar", pedido);
-      if(res.success) {
-        mostrarToast("Redirigiendo a pago seguro...");
-        window.location.href = res.init_point;
-      } else {
-        mostrarToast("Error: " + res.msg);
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      }
-    } catch(err) {
-      mostrarToast("Falla de conexión.");
+  try {
+    const res = await ejecutarEnServidor("pagar", pedido);
+    if(res.success) {
+      mostrarToast("Redirigiendo a pago seguro...");
+      window.location.href = res.init_point;
+    } else {
+      mostrarToast("Error: " + res.msg);
       btn.innerHTML = originalText;
       btn.disabled = false;
     }
-  } else {
-    // FLUJO TRANSFERENCIA -> WhatsApp
-    try {
-      const res = await ejecutarEnServidor("registrarPedido", pedido);
-      if(res.success || res.id) {
-        const num = (configGlobal['WHATSAPP_ADMIN'] || '569').toString().replace(/\D/g, '');
-        const msg = `🚀 *NUEVO PEDIDO ESPACIO WEED*\n📌 *ID:* ${res.id}\n---\n🛒 *Productos:* ${pedido.resumenProductos}\n💰 *Total:* $${pedido.totalFinal.toLocaleString('es-CL')}\n🚚 *Envío:* ${pedido.direccion}\n💳 *Pago:* Transferencia/Efectivo\n\n*Por favor, confírmenme el stock.*`;
-        
-        window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(msg), '_blank');
-        
-        vaciarCarrito(); 
-        toggleCart();
-        mostrarToast("¡Pedido registrado! Enviando WhatsApp...");
-        setTimeout(() => { location.reload(); }, 2000); 
-      }
-    } catch(err) {
-      mostrarToast("Error de conexión al registrar.");
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    }
+  } catch(err) {
+    mostrarToast("Falla de conexión.");
+    btn.innerHTML = originalText;
+    btn.disabled = false;
   }
 }
 

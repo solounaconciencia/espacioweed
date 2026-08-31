@@ -102,62 +102,143 @@ document.addEventListener('DOMContentLoaded', async function() {
 /**
  * MOTOR DE BÚSQUEDA Y FILTRADO DINÁMICO
  */
-function filtrar() {
-  const term = document.getElementById('main-search').value.toLowerCase();
+/**
+ * MOTOR DE BÚSQUEDA PREDICTIVA (FOCUS UX)
+ */
+function filtrarPredictivo() {
+  const term = document.getElementById('main-search').value.toLowerCase().trim();
   const slider = document.getElementById('hero-slider');
-
-  // Si el usuario empieza a buscar, el slider se va
-  if (slider && term.length > 0) {
-    slider.style.display = 'none';
+  const predictiveBox = document.getElementById('search-predictive-box');
+  
+  // 1. Si el usuario borra todo, ocultamos la caja y restauramos la tienda
+  if (term.length === 0) {
+    if (predictiveBox) predictiveBox.style.display = 'none';
+    if (slider) slider.style.display = 'flex';
+    renderProductos(productosGlobal);
+    return;
   }
 
-  const filtrados = productosGlobal.filter(function(p) {
-    return (
-      p.NOMBRE.toString().toLowerCase().includes(term) || 
-      p.MARCA.toString().toLowerCase().includes(term) || 
-      p.CATEGORIA.toString().toLowerCase().includes(term)
-    );
-  });
+  // Ocultamos el slider al buscar
+  if (slider) slider.style.display = 'none';
+
+  // 2. Filtramos el catálogo global
+  const filtrados = productosGlobal.filter(p => 
+    (p.NOMBRE && p.NOMBRE.toString().toLowerCase().includes(term)) || 
+    (p.MARCA && p.MARCA.toString().toLowerCase().includes(term)) || 
+    (p.CATEGORIA && p.CATEGORIA.toString().toLowerCase().includes(term))
+  );
+
+  // Mantenemos el filtro visual original de la grilla
   renderProductos(filtrados);
+
+  // 3. Inyectamos los 6 mejores resultados en la caja predictiva
+  if (!predictiveBox) return;
+
+  if (filtrados.length > 0) {
+    predictiveBox.innerHTML = filtrados.slice(0, 6).map(p => {
+      // Extraemos la foto y calculamos precio con promo
+      const imgUrl = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : (p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
+      const precioMostrar = (p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ? (Number(p.PRECIO) - Number(p.DETALLE_PROMO)) : Number(p.PRECIO);
+      
+      return `
+        <div class="predictive-item" onclick="abrirDetallePredictivo('${p.SKU}')">
+          <img src="${imgUrl}" onerror="this.src='https://i.postimg.cc/hj6mws46/Logoew.png'">
+          <div class="predictive-info">
+            <div class="predictive-title">${p.NOMBRE}</div>
+            <div class="predictive-price">$${precioMostrar.toLocaleString('es-CL')}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    // Si hay más de 6 resultados, mostramos un aviso sutil
+    if (filtrados.length > 6) {
+        predictiveBox.innerHTML += `<div style="text-align:center; padding:10px; font-size:0.7rem; color:#888;">+ ${filtrados.length - 6} resultados más abajo</div>`;
+    }
+    
+    predictiveBox.style.display = 'block';
+  } else {
+    // Escudo por si no encuentra nada
+    predictiveBox.innerHTML = '<div style="padding:20px; color:#888; font-size:0.8rem; text-align:center;"><i class="fas fa-satellite-dish" style="font-size:1.5rem; margin-bottom:10px; opacity:0.5;"></i><br>No hay señales de ese producto...</div>';
+    predictiveBox.style.display = 'block';
+  }
 }
 
+// Función auxiliar para cerrar el buscador limpiamente tras hacer clic
+function abrirDetallePredictivo(sku) {
+  const predictiveBox = document.getElementById('search-predictive-box');
+  const searchInput = document.getElementById('main-search');
+  
+  if (predictiveBox) predictiveBox.style.display = 'none';
+  if (searchInput) searchInput.value = ''; // Limpiamos el texto
+  
+  abrirDetalle(sku); // Ejecuta el modal normal del producto
+}
+
+// Escudo para que si el cliente hace clic fuera del buscador, la caja desaparezca
+window.addEventListener('click', function(e) {
+  const predictiveBox = document.getElementById('search-predictive-box');
+  const searchInput = document.getElementById('main-search');
+  
+  if (predictiveBox && e.target !== searchInput && !predictiveBox.contains(e.target)) {
+    predictiveBox.style.display = 'none';
+  }
+});
+
 /**
- * EVOLUCIÓN: Generación de Menú Desplegable (Dropdown)
+ * EVOLUCIÓN FOCUS: Generación Dual (Dropdown PC + Píldoras Móvil)
  */
 function generarMenuCategorias(productos) {
-  // Extraemos categorías únicas del listado de productos
-  const categorias = [...new Set(productos.map(function(p) { return p.CATEGORIA; }))];
-  const dropdown = document.getElementById('category-list'); // Elemento dentro del li.dropdown
+  // Extraemos categorías únicas y evitamos celdas vacías
+  const categorias = [...new Set(productos.map(p => p.CATEGORIA))].filter(c => c);
   
-  if (!dropdown) return;
+  const dropdown = document.getElementById('category-list');
+  const catBar = document.getElementById('category-bar');
+  
+  if (!dropdown || !catBar) return;
 
-  // Link "VER TODO" para resetear filtros
-  let html = '<a href="#" onclick="filtrarPorCat(\'TODOS\', event)">VER TODO</a>';
+  // 1. Llenar Dropdown Clásico (Para uso en Escritorio)
+  let htmlDropdown = '<a href="#" onclick="filtrarPorCat(\'TODOS\', event)">VER TODO</a>';
+  htmlDropdown += categorias.map(cat => 
+    `<a href="#" onclick="filtrarPorCat('${cat}', event)">${cat.toUpperCase()}</a>`
+  ).join('');
+  dropdown.innerHTML = htmlDropdown;
+
+  // 2. Llenar Barra Deslizable Táctil (Píldoras)
+  let htmlPills = `<button class="cat-btn active" onclick="filtrarPorCat('TODOS', event, this)">TODO</button>`;
+  htmlPills += categorias.map(cat => 
+    `<button class="cat-btn" onclick="filtrarPorCat('${cat}', event, this)">${cat.toUpperCase()}</button>`
+  ).join('');
   
-  // Generación dinámica de los links del dropdown
-  html += categorias.map(function(cat) {
-    return '<a href="#" onclick="filtrarPorCat(\'' + cat + '\', event)">' + cat.toUpperCase() + '</a>';
-  }).join('');
-  
-  dropdown.innerHTML = html;
+  catBar.innerHTML = htmlPills;
+  catBar.style.display = 'flex'; // Encendemos el radar visual
 }
 
 /**
- * EVOLUCIÓN: Lógica de Filtrado con ocultación de Slider
+ * EVOLUCIÓN FOCUS: Filtrado Inteligente con Feedback Visual
  */
-function filtrarPorCat(cat, e) {
+function filtrarPorCat(cat, e, btnElement = null) {
   if (e) e.preventDefault();
   const slider = document.getElementById('hero-slider');
   
-  // Regla FOCUS: Cualquier filtro (incluyendo TODOS) oculta el slider
-  if (slider) {
-    slider.style.display = 'none'; 
+  // Ocultamos el slider si empezamos a filtrar
+  if (slider) slider.style.display = 'none';
+
+  // Feedback Visual: Iluminamos la píldora tocada
+  if (btnElement) {
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+  } else if (cat === 'TODOS') {
+    // Si viene del menú de arriba en "VER TODO", reiniciamos la primera píldora
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+    const primerBoton = document.querySelector('.cat-btn');
+    if (primerBoton) primerBoton.classList.add('active');
   }
 
   if (cat === 'TODOS') {
     renderProductos(productosGlobal);
   } else {
-    const filtrados = productosGlobal.filter(function(p) { return p.CATEGORIA === cat; });
+    const filtrados = productosGlobal.filter(p => p.CATEGORIA === cat);
     renderProductos(filtrados);
   }
   

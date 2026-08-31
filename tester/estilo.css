@@ -453,11 +453,11 @@ body {
   z-index: 5;
 }
 
-/* 8. CARRITO SIDEBAR */
 .cart-sidebar {
   position: fixed;
   top: 0; right: -400px;
-  width: 380px; height: 100%;
+  width: 380px;
+  height: 100dvh; /* FOCUS UX: Altura dinámica para evadir la barra de navegación del celular */
   background: #08080a;
   border-left: 1px solid var(--cian);
   z-index: 100000;
@@ -465,6 +465,7 @@ body {
   padding: 30px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* FOCUS UX: Permite hacer scroll a todo el panel si la pantalla es muy enana */
 }
 
 .cart-sidebar.active { right: 0; }
@@ -483,6 +484,7 @@ body {
   flex: 1;
   overflow-y: auto;
   margin: 25px 0;
+  min-height: 150px; 
 }
 
 .cart-item {
@@ -506,6 +508,7 @@ body {
 .cart-footer {
   border-top: 1px solid var(--cian);
   padding-top: 20px;
+  flex-shrink: 0; 
 }
 
 .cart-total-box {
@@ -603,7 +606,6 @@ body {
 
 .toast-notification.show { bottom: 110px; }
 
-/* 12. RESPONSIVE DESIGN (MOBILE) */
 @media (max-width: 768px) {
   .top-bar-container { gap: 6px; }
   .trust-card { font-size: 0.55rem; padding: 4px 8px; }
@@ -613,11 +615,21 @@ body {
   
   .product-grid { grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
   
-  .cart-sidebar { width: 100%; right: -100%; }
+  /* FOCUS UX: Redimensionamiento del Carrito para Móviles */
+  .cart-sidebar { 
+    width: 100%; 
+    right: -100%; 
+    padding: 15px 20px; /* Menos padding lateral para aprovechar la pantalla */
+  }
+  .cart-header h3 { font-size: 1.1rem; }
+  .cart-total-box { font-size: 1rem; margin-bottom: 15px; }
+  .cart-footer { padding-top: 15px; }
+  .btn-checkout { padding: 12px; font-size: 0.85rem; }
   
   .modal-img { width: 100%; }
   .modal-content { margin: 10px; padding: 20px; }
 }
+
 .section-title {
   text-align: center;
   font-family: var(--font-brand);

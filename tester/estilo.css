@@ -1287,3 +1287,31 @@ input[type="file"].hidden-file { display: none; }
     opacity: 1;
 }
  
+/* ==========================================
+   ESTÉTICA FOCUS: BOTÓN AÑADIR RÁPIDO
+   ========================================== */
+.btn-quick-add {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: var(--cian);
+  color: black;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+  transition: var(--transition);
+  z-index: 20; /* Para que quede sobre la foto */
+}
+
+.btn-quick-add:hover {
+  transform: scale(1.15) rotate(-10deg);
+  background: var(--neon-green);
+  box-shadow: 0 4px 20px rgba(46, 204, 113, 0.6);
+}

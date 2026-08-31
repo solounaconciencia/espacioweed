@@ -610,6 +610,9 @@ body {
   .top-bar-container { gap: 6px; }
   .trust-card { font-size: 0.55rem; padding: 4px 8px; }
   
+  /* FOCUS UX: Empuja el encabezado principal hacia abajo para que NO aplaste a Ubicación e Instagram */
+  .header-wrap { margin-top: 80px; }
+  
   .main-logo { width: 130px; }
   .nav-links { gap: 15px; font-size: 0.65rem; flex-wrap: wrap; justify-content: center; }
   
@@ -1002,12 +1005,15 @@ select.nave-input {
 /* Ajuste para que en móviles no tapen demasiado */
 @media (max-width: 768px) {
   .wa-bubble, .cart-float-bubble {
-    right: 20px;
-    width: 55px;
-    height: 55px;
+    right: 15px;
+    width: 46px; /* FOCUS UX: Burbujas más sutiles en celular */
+    height: 46px;
   }
-  .wa-bubble { bottom: 20px; }
-  .cart-float-bubble { bottom: 85px; font-size: 1.3rem; }
+  .wa-bubble { bottom: 15px; }
+  .cart-float-bubble { bottom: 75px; font-size: 1.1rem; }
+  
+  /* Ajuste de la alerta roja de cantidad */
+  .cart-badge-float { min-width: 18px; height: 18px; font-size: 0.65rem; }
 }
 
 /* ESTRUCTURA MODAL DETALLES BLINDADO */
@@ -1297,10 +1303,10 @@ input[type="file"].hidden-file { display: none; }
   background: var(--cian);
   color: black;
   border: none;
-  width: 45px;
-  height: 45px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  font-size: 1.2rem;
+  font-size: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;

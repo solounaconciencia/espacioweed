@@ -562,7 +562,31 @@ function actualizarTotalCarrito() {
   const direccionInput = document.getElementById('direccion-envio');
   if(direccionInput) direccionInput.style.display = necesitaEnvio ? 'block' : 'none';
   
-  document.getElementById('cart-total-value').innerText = '$' + (subtotal + costoEnvio).toLocaleString('es-CL');
+  const totalFinal = subtotal + costoEnvio;
+      document.getElementById('cart-total-value').innerText = '$' + totalFinal.toLocaleString('es-CL');
+
+      // FOCUS UX: BARRERA DE TRANSFERENCIA MÍNIMA
+      const metodoSeleccionado = document.querySelector('input[name="metodo-pago"]:checked');
+      const alertaMinimo = document.getElementById('alerta-minimo-transferencia');
+      const btnCheckout = document.querySelector('.btn-checkout');
+
+      if (metodoSeleccionado && metodoSeleccionado.value === 'transferencia' && totalFinal > 0 && totalFinal < 1000) {
+        if (alertaMinimo) alertaMinimo.style.display = 'block';
+        if (btnCheckout) {
+            btnCheckout.disabled = true;
+            btnCheckout.style.opacity = '0.4';
+            btnCheckout.style.cursor = 'not-allowed';
+            btnCheckout.innerHTML = '<i class="fas fa-lock"></i> MONTO INSUFICIENTE';
+        }
+      } else {
+        if (alertaMinimo) alertaMinimo.style.display = 'none';
+        if (btnCheckout) {
+            btnCheckout.disabled = false;
+            btnCheckout.style.opacity = '1';
+            btnCheckout.style.cursor = 'pointer';
+            btnCheckout.innerHTML = 'FINALIZAR PEDIDO <i class="fas fa-chevron-right"></i>';
+        }
+      }
 }
 
 function vaciarCarrito() {

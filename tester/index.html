@@ -782,14 +782,17 @@ async function aplicarCuponCarrito() {
 
     <div style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px;">
         
-        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--amber); border-radius: 8px; padding: 12px 15px; margin-bottom: 15px;">
-           <div style="text-align: left;">
+        <div style="display: flex; flex-direction: column; align-items: center; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--amber); border-radius: 8px; padding: 12px; margin-bottom: 15px; gap: 8px;">
+           <div style="text-align: center;">
                <p style="margin: 0; font-size: 0.65rem; color: #888;">ID PEDIDO</p>
-               <h3 id="mt-id-pedido" style="margin: 2px 0 0 0; color: white; font-family: var(--font-brand); font-size: 0.9rem;">EW-...</h3>
+               <h3 id="mt-id-pedido" style="margin: 2px 0 0 0; color: white; font-family: var(--font-brand); font-size: 0.95rem; letter-spacing: 1px;">EW-...</h3>
            </div>
-           <div style="text-align: right;">
+           
+           <div style="width: 80%; height: 1px; background: rgba(241, 196, 15, 0.3);"></div>
+           
+           <div style="text-align: center;">
                <p style="margin: 0; font-size: 0.65rem; color: #888;">A TRANSFERIR</p>
-               <h2 id="mt-total" style="margin: 2px 0 0 0; color: var(--amber); font-family: var(--font-brand); font-size: 1.4rem;">$0</h2>
+               <h2 id="mt-total" style="margin: 2px 0 0 0; color: var(--amber); font-family: var(--font-brand); font-size: 1.6rem;">$0</h2>
            </div>
         </div>
 

@@ -263,7 +263,7 @@
                 <iframe src="https://www.youtube.com/embed/HkXA_nkBC6A?autoplay=1&mute=1" style="width: 100%; height: 350px; border-radius: 10px; border: 1px solid var(--cian);"></iframe>
             </div>
             
-            <a href="https://maps.google.com" target="_blank" id="btn-abrir-mapa" class="btn-nave-main" style="background: var(--cian); color: black; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: 100%; max-width: 400px; margin: 0;">
+            <a href="https://maps.app.goo.gl/eLbixx6exJBzdWkd6" target="_blank" id="btn-abrir-mapa" class="btn-nave-main" style="background: var(--cian); color: black; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: 100%; max-width: 400px; margin: 0;">
                 <i class="fas fa-map-marked-alt" style="font-size: 1.2rem;"></i> ABRIR EN GOOGLE MAPS
             </a>
             
@@ -398,20 +398,7 @@ function aplicarEstilosDinamicos(config) {
     if (typeof encenderAtmosfera === "function") {
         encenderAtmosfera(config['ATMOSFERA'] || 'espacial');
     }
-    // 7. Inyectar Mapa Dinámico Automatizado (Google Maps Botón)
-    if (config['DIRECCION_TEXTO'] && config['DIRECCION_TEXTO'].trim() !== "") {
-        const btnMapa = document.getElementById('btn-abrir-mapa');
-        if (btnMapa) {
-            const direccion = config['DIRECCION_TEXTO'].trim();
-            // FOCUS UX: Si en el panel pegaste un link directo (https://...), lo usará directamente.
-            // Si pegaste texto (ej: "Avenida Siempreviva 123"), lo buscará automáticamente en Maps.
-            if(direccion.startsWith('http')) {
-                btnMapa.href = direccion;
-            } else {
-                btnMapa.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(direccion);
-            }
-        }
-    }
+    
 
     // 8. Inyectar Video Dinámico (Drive)
     if (config['VIDEO_DRIVE_ID'] && config['VIDEO_DRIVE_ID'].trim() !== "") {

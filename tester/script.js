@@ -1707,43 +1707,69 @@ async function enviarComprobanteYWhatsApp() {
     const fileInput = document.getElementById('mt-adjunto');
     const btn = document.getElementById('mt-btn-wa');
     
-    // Si el usuario no subió foto, abre WhatsApp directo (El cliente lo manda por el chat)
+    // 1. Si no hay foto, salta directo a WhatsApp
     if (!fileInput.files || fileInput.files.length === 0) {
         window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(window.tempWaMsg), '_blank');
         cerrarModalTransferenciaCheckoutYRecargar();
         return;
     }
 
-    // Si hay foto, bloqueamos el botón y la subimos al sistema
+    // 2. Bloqueamos el botón visualmente
     const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SUBIENDO AL SISTEMA...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> COMPRIMIENDO Y SUBIENDO...';
     btn.disabled = true;
 
     const file = fileInput.files[0];
     const reader = new FileReader();
     
-    reader.onload = async function(e) {
-        const fotoBase64 = e.target.result;
-       try {
-            const res = await ejecutarEnServidor("subirComprobanteTransferencia", {
-                idPedido: window.tempOrderId,
-                fotoBase64: fotoBase64
-            });
-            
-            if (res && res.success) {
-                // Si subió bien, sumamos el link de Google Drive al mensaje de WhatsApp
-                const nuevoMsj = window.tempWaMsg + `\n\n✅ *Comprobante adjuntado en el sistema.*\nPuedes verlo aquí: ${res.urlComprobante}`;
-                window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(nuevoMsj), '_blank');
-                cerrarModalTransferenciaCheckoutYRecargar();
-            } else {
-                throw new Error("Falla interna");
+    reader.onload = function(e) {
+        const img = new Image();
+        img.src = e.target.result;
+        
+        img.onload = async function() {
+            // ==========================================
+            // FOCUS: MOTOR DE COMPRESIÓN DE IMAGEN (Evita el bloqueo de 5MB de Google)
+            // ==========================================
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 800; // Ancho máximo
+            let width = img.width;
+            let height = img.height;
+
+            if (width > MAX_WIDTH) {
+                height = height * (MAX_WIDTH / width);
+                width = MAX_WIDTH;
             }
             
-        } catch(err) {
-            mostrarToast("Error al subir. Por favor envíalo directo por WhatsApp.");
-            btn.innerHTML = originalHtml;
-            btn.disabled = false;
-        }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Convertimos a JPEG calidad 70% (Baja el peso a ~150kb)
+            const fotoComprimida = canvas.toDataURL('image/jpeg', 0.7);
+
+            // ==========================================
+            // ENVÍO AL SERVIDOR
+            // ==========================================
+            try {
+                const res = await ejecutarEnServidor("subirComprobanteTransferencia", {
+                    idPedido: window.tempOrderId,
+                    fotoBase64: fotoComprimida
+                });
+                
+                if (res && res.success) {
+                    const nuevoMsj = window.tempWaMsg + `\n\n✅ *Comprobante adjuntado en el sistema.*\nPuedes verlo aquí: ${res.urlComprobante}`;
+                    window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(nuevoMsj), '_blank');
+                    cerrarModalTransferenciaCheckoutYRecargar();
+                } else {
+                    throw new Error("Falla interna del servidor");
+                }
+            } catch(err) {
+                mostrarToast("Error al subir. Por favor envíalo directo por WhatsApp.");
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        };
     };
     reader.readAsDataURL(file);
 }

@@ -800,9 +800,16 @@ async function aplicarCuponCarrito() {
       </div>
     </div>
 
-    <a href="#" id="mt-btn-wa" target="_blank" class="btn-nave-main" style="background: var(--neon-green); color: black; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;" onclick="cerrarModalTransferenciaCheckoutYRecargar()">
-      <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> ENVIAR COMPROBANTE
-    </a>
+    <div style="margin-bottom: 15px;">
+      <label for="mt-adjunto" class="custom-file-upload" id="lbl-mt-foto" style="border-color: var(--cian); color: var(--cian); width: 100%;">
+          <i class="fas fa-camera"></i> ADJUNTAR COMPROBANTE (Opcional)
+      </label>
+      <input type="file" id="mt-adjunto" accept="image/*" class="hidden-file" onchange="actualizarLabelComprobante(this)">
+    </div>
+
+    <button id="mt-btn-wa" class="btn-nave-main" style="background: var(--neon-green); color: black; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; border:none; margin-top:0;" onclick="enviarComprobanteYWhatsApp()">
+      <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> ENVIAR Y AVISAR
+    </button>
   </div>
 </div>
 

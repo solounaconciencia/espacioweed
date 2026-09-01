@@ -773,43 +773,57 @@ async function aplicarCuponCarrito() {
 <script src="/tester/script.js" defer></script>
 
     <div id="modal-transferencia-checkout" class="modal" style="display:none; z-index: 100000; align-items:center; justify-content:center;">
-  <div class="modal-content login-card" style="max-width: 450px; position: relative; padding: 30px 20px; border-color: var(--neon-green); box-shadow: 0 0 30px rgba(46, 204, 113, 0.2);">
-    <span class="close-nave" onclick="cerrarModalTransferenciaCheckout()">×</span>
+  <div class="modal-content login-card" style="max-width: 420px; width: 95%; position: relative; padding: 25px 20px 20px 20px; border-color: var(--neon-green); box-shadow: 0 0 30px rgba(46, 204, 113, 0.2); max-height: 90vh; display: flex; flex-direction: column;">
     
-    <h2 class="cian" style="margin-bottom: 5px; font-family: var(--font-brand); font-size: 1.5rem; color: var(--neon-green);">
-      <i class="fas fa-check-circle"></i> ¡PEDIDO RESERVADO!
-    </h2>
-    <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 20px;">Tu expedición está casi lista. Realiza la transferencia y envíanos el comprobante para despachar.</p>
+    <span class="close-nave" onclick="cerrarModalTransferenciaCheckout()" style="top: 10px; right: 10px;">×</span>
 
-    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid var(--amber); border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
-       <p style="margin: 0; font-size: 0.75rem; color: #888;">ID DE PEDIDO</p>
-       <h3 id="mt-id-pedido" style="margin: 5px 0; color: white; font-family: var(--font-brand);">EW-...</h3>
-       <p style="margin: 15px 0 0 0; font-size: 0.75rem; color: #888;">TOTAL A TRANSFERIR</p>
-       <h2 id="mt-total" style="margin: 5px 0; color: var(--amber); font-family: var(--font-brand); font-size: 1.8rem;">$0</h2>
+    <div style="flex-shrink: 0; text-align: center;">
+        <h2 class="cian" style="margin: 0 0 5px 0; font-family: var(--font-brand); font-size: 1.2rem; color: var(--neon-green);">
+          <i class="fas fa-check-circle"></i> ¡RESERVADO!
+        </h2>
+        <p style="color: #ccc; font-size: 0.75rem; margin: 0 0 15px 0; line-height: 1.3;">Transfiere y adjunta el comprobante para despachar.</p>
     </div>
 
-    <div style="text-align: left; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); padding: 15px; border-radius: 10px; margin-bottom: 25px;">
-      <h4 class="cian" style="margin-top: 0; font-size: 0.7rem; border-bottom: 1px solid var(--cian); padding-bottom: 5px;">
-        <i class="fas fa-university"></i> DATOS BANCARIOS
-      </h4>
-      <div style="font-size: 0.75rem; line-height: 1.6; color: #ccc; margin-top: 10px;">
-        <p style="margin: 3px 0;"><strong>BANCO:</strong> <span id="mt-banco"></span></p>
-        <p style="margin: 3px 0;"><strong>RUT:</strong> <span id="mt-rut"></span></p>
-        <p style="margin: 3px 0;"><strong>NÚMERO:</strong> <span id="mt-numero"></span></p>
-        <p style="margin: 3px 0;"><strong>CORREO:</strong> <span id="mt-email"></span></p>
-      </div>
+    <div style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--amber); border-radius: 8px; padding: 12px 15px; margin-bottom: 15px;">
+           <div style="text-align: left;">
+               <p style="margin: 0; font-size: 0.65rem; color: #888;">ID PEDIDO</p>
+               <h3 id="mt-id-pedido" style="margin: 2px 0 0 0; color: white; font-family: var(--font-brand); font-size: 0.9rem;">EW-...</h3>
+           </div>
+           <div style="text-align: right;">
+               <p style="margin: 0; font-size: 0.65rem; color: #888;">A TRANSFERIR</p>
+               <h2 id="mt-total" style="margin: 2px 0 0 0; color: var(--amber); font-family: var(--font-brand); font-size: 1.4rem;">$0</h2>
+           </div>
+        </div>
+
+        <div style="text-align: left; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); padding: 12px; border-radius: 8px;">
+          <h4 class="cian" style="margin: 0 0 8px 0; font-size: 0.7rem; border-bottom: 1px solid var(--cian); padding-bottom: 5px;">
+            <i class="fas fa-university"></i> DATOS BANCARIOS
+          </h4>
+          <div style="font-size: 0.7rem; line-height: 1.5; color: #ccc;">
+            <p style="margin: 2px 0;"><strong>BANCO:</strong> <span id="mt-banco"></span></p>
+            <p style="margin: 2px 0;"><strong>RUT:</strong> <span id="mt-rut"></span></p>
+            <p style="margin: 2px 0;"><strong>NÚMERO:</strong> <span id="mt-numero"></span></p>
+            <p style="margin: 2px 0;"><strong>CORREO:</strong> <span id="mt-email"></span></p>
+          </div>
+        </div>
     </div>
 
-    <div style="margin-bottom: 15px;">
-      <label for="mt-adjunto" class="custom-file-upload" id="lbl-mt-foto" style="border-color: var(--cian); color: var(--cian); width: 100%;">
-          <i class="fas fa-camera"></i> ADJUNTAR COMPROBANTE (Opcional)
-      </label>
-      <input type="file" id="mt-adjunto" accept="image/*" class="hidden-file" onchange="actualizarLabelComprobante(this)">
+    <div style="flex-shrink: 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+        
+        <div style="margin-bottom: 10px;">
+          <label for="mt-adjunto" class="custom-file-upload" id="lbl-mt-foto" style="border-color: var(--cian); color: var(--cian); width: 100%; padding: 10px; font-size: 0.7rem; margin: 0;">
+              <i class="fas fa-camera"></i> ADJUNTAR COMPROBANTE (Opcional)
+          </label>
+          <input type="file" id="mt-adjunto" accept="image/*" style="display:none;" onchange="actualizarLabelComprobante(this)">
+        </div>
+
+        <button id="mt-btn-wa" class="btn-nave-main" style="background: var(--neon-green); color: black; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border:none; margin: 0; padding: 12px; font-size: 0.85rem;" onclick="enviarComprobanteYWhatsApp()">
+          <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> ENVIAR Y AVISAR
+        </button>
     </div>
 
-    <button id="mt-btn-wa" class="btn-nave-main" style="background: var(--neon-green); color: black; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; border:none; margin-top:0;" onclick="enviarComprobanteYWhatsApp()">
-      <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> ENVIAR Y AVISAR
-    </button>
   </div>
 </div>
 

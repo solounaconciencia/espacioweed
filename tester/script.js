@@ -1724,16 +1724,20 @@ async function enviarComprobanteYWhatsApp() {
     
     reader.onload = async function(e) {
         const fotoBase64 = e.target.result;
-        try {
-            await ejecutarEnServidor("subirComprobanteTransferencia", {
+       try {
+            const res = await ejecutarEnServidor("subirComprobanteTransferencia", {
                 idPedido: window.tempOrderId,
                 fotoBase64: fotoBase64
             });
             
-            // Si subió bien, cambiamos el mensaje de WhatsApp
-            const nuevoMsj = window.tempWaMsg + "\n\n*He adjuntado mi comprobante directamente en el sistema.*";
-            window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(nuevoMsj), '_blank');
-            cerrarModalTransferenciaCheckoutYRecargar();
+            if (res && res.success) {
+                // Si subió bien, sumamos el link de Google Drive al mensaje de WhatsApp
+                const nuevoMsj = window.tempWaMsg + `\n\n✅ *Comprobante adjuntado en el sistema.*\nPuedes verlo aquí: ${res.urlComprobante}`;
+                window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(nuevoMsj), '_blank');
+                cerrarModalTransferenciaCheckoutYRecargar();
+            } else {
+                throw new Error("Falla interna");
+            }
             
         } catch(err) {
             mostrarToast("Error al subir. Por favor envíalo directo por WhatsApp.");

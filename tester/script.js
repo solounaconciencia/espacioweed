@@ -662,8 +662,10 @@ async function procesarCompra() {
         document.getElementById('mt-numero').innerText = configGlobal['BANCO_NUMERO'] || '---';
         document.getElementById('mt-email').innerText = configGlobal['BANCO_CORREO'] || '---';
         
-        // 2. Preparamos el link de WhatsApp en el botón verde
-        document.getElementById('mt-btn-wa').href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+        // 2. FOCUS: Guardamos las variables temporalmente para que el nuevo botón inteligente las use
+        window.tempWaNum = num;
+        window.tempWaMsg = msg;
+        window.tempOrderId = res.id;
 
         // 3. Vaciamos el carrito y ocultamos la barra lateral silenciosamente
         vaciarCarrito(); 
@@ -1682,4 +1684,62 @@ async function dispararComponenteLegal(accionServidor, e) {
   } catch(err) {
     contenedor.innerHTML = '<p style="color:var(--amber); text-align:center; font-size:0.8rem;">Falla de conexión de red.</p>';
   }
+}
+
+
+// ==========================================
+// MOTOR FOCUS: SUBIDA DE COMPROBANTE TRANSFERENCIA
+// ==========================================
+function actualizarLabelComprobante(input) {
+    const label = document.getElementById('lbl-mt-foto');
+    if (input.files && input.files.length > 0) {
+        label.innerHTML = '<i class="fas fa-check"></i> LISTO: ' + input.files[0].name;
+        label.style.borderColor = 'var(--neon-green)';
+        label.style.color = 'var(--neon-green)';
+    } else {
+        label.innerHTML = '<i class="fas fa-camera"></i> ADJUNTAR COMPROBANTE (Opcional)';
+        label.style.borderColor = 'var(--cian)';
+        label.style.color = 'var(--cian)';
+    }
+}
+
+async function enviarComprobanteYWhatsApp() {
+    const fileInput = document.getElementById('mt-adjunto');
+    const btn = document.getElementById('mt-btn-wa');
+    
+    // Si el usuario no subió foto, abre WhatsApp directo (El cliente lo manda por el chat)
+    if (!fileInput.files || fileInput.files.length === 0) {
+        window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(window.tempWaMsg), '_blank');
+        cerrarModalTransferenciaCheckoutYRecargar();
+        return;
+    }
+
+    // Si hay foto, bloqueamos el botón y la subimos al sistema
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SUBIENDO AL SISTEMA...';
+    btn.disabled = true;
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = async function(e) {
+        const fotoBase64 = e.target.result;
+        try {
+            await ejecutarEnServidor("subirComprobanteTransferencia", {
+                idPedido: window.tempOrderId,
+                fotoBase64: fotoBase64
+            });
+            
+            // Si subió bien, cambiamos el mensaje de WhatsApp
+            const nuevoMsj = window.tempWaMsg + "\n\n*He adjuntado mi comprobante directamente en el sistema.*";
+            window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(nuevoMsj), '_blank');
+            cerrarModalTransferenciaCheckoutYRecargar();
+            
+        } catch(err) {
+            mostrarToast("Error al subir. Por favor envíalo directo por WhatsApp.");
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+        }
+    };
+    reader.readAsDataURL(file);
 }

@@ -158,15 +158,14 @@ function filtrarPorCat(cat, e, btnElement = null) {
   if (e) e.preventDefault();
   const slider = document.getElementById('hero-slider');
   
-  // Ocultamos el slider si empezamos a filtrar
-  if (slider) slider.style.display = 'none';
+  // FOCUS: Registrar búsqueda de categoría
+  registrarClicRadar('Categoría: ' + cat);
 
-  // Feedback Visual: Iluminamos la píldora tocada
+  if (slider) slider.style.display = 'none';
   if (btnElement) {
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
   } else if (cat === 'TODOS') {
-    // Si viene del menú de arriba en "VER TODO", reiniciamos la primera píldora
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
     const primerBoton = document.querySelector('.cat-btn');
     if (primerBoton) primerBoton.classList.add('active');
@@ -369,6 +368,8 @@ function agregarAlCarrito(sku, variantes = "") {
   
   // Seguro FOCUS: si no encuentra el producto, aborta para no romper la web
   if (!p) return;
+
+  registrarClicRadar('Añadir Carro: ' + sku + ' - ' + p.NOMBRE); // FOCUS: Registro automático
 
   // FOCUS: Buscamos si ya existe el mismo producto CON LA MISMA VARIANTE exacta
   const itemExistente = carrito.find(function(item) { 
@@ -592,6 +593,7 @@ async function procesarCompra() {
 }
 
 function irWhatsApp() {
+  registrarClicRadar('Clic Botón WhatsApp Flotante'); // FOCUS: Registro
   const num = (configGlobal['WHATSAPP_ADMIN'] || '56984569569').toString().replace(/\D/g, '');
   const url = 'https://wa.me/' + num + '?text=' + encodeURIComponent('Hola Espacio Weed, necesito información sobre un productos.');
   window.open(url, '_blank');
@@ -749,10 +751,7 @@ async function ejecutarLogin() {
 }
 
 async function ejecutarRegistro() {
-  // FOCUS: Escudo Anti-Bot
   if (document.getElementById('trampa-bot-registro').value !== "") return;
-
-  // FOCUS: Validación de Consentimiento Expreso (Ley 21.719)
   if (!document.getElementById('reg-acepto-terminos').checked) {
       mostrarToast("Debes aceptar las políticas de privacidad para unirte.");
       return;
@@ -770,10 +769,12 @@ async function ejecutarRegistro() {
   if (!datos.nombre || !datos.email || !datos.pass) {
     return mostrarToast("Faltan datos en el radar.");
   }
-
   if(datos.pass !== datos.passConf) {
     return mostrarToast("Las claves no coinciden.");
   }
+
+  // FOCUS: Registro de intento
+  registrarClicRadar('Intento Registro: ' + datos.email);
 
   mostrarToast("Inyectando datos a la Comunidad...");
 

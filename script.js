@@ -419,18 +419,15 @@ function agregarAlCarrito(sku, variantes = "") {
 
 function actualizarUI() {
   const totalItems = carrito.reduce(function(sum, item) { return sum + item.cantidad; }, 0);
-  
-  // 1. Actualiza contador del menú superior
   document.getElementById('cart-count').innerText = totalItems;
   
-  // 2. Sincroniza burbuja flotante (Novedad FOCUS)
   const countBubble = document.getElementById('cart-count-bubble');
   if(countBubble) {
     countBubble.innerText = totalItems;
-    // Ocultar si está vacío para no generar "ruido visual" innecesario
     countBubble.style.display = totalItems > 0 ? 'flex' : 'none';
   }
   
+  // FOCUS: Primero calculamos el volumen y el ahorro, luego dibujamos el HTML
   actualizarTotalCarrito();
   renderCarrito();
 }
@@ -443,11 +440,20 @@ function renderCarrito() {
   }
 
   container.innerHTML = carrito.map(function(item, index) {
+    // FOCUS: Tacha el precio si hay una rebaja
+    let tachado = "";
+    if (item.precioOriginal && item.precioOriginal > item.precio && !item.sku.includes("-REGALO")) {
+        tachado = `<span style="text-decoration: line-through; color: #888; font-size: 0.7rem; margin-right: 5px;">$${item.precioOriginal.toLocaleString('es-CL')}</span>`;
+    }
+    
+    let subInfo = `<small style="color:var(--cian);">${tachado}$${item.precio.toLocaleString('es-CL')}</small>`;
+    if(item.sku.includes("-REGALO")) subInfo = `<small style="color:var(--neon-green);"><i class="fas fa-gift"></i> GRATIS</small>`;
+
     return `
       <div class="cart-item">
         <div style="flex:1;">
           <div style="font-weight:600; font-size:0.85rem; color:white;">${item.nombre}</div>
-          <small style="color:var(--cian);">$${item.precio.toLocaleString('es-CL')}</small>
+          ${subInfo}
         </div>
         <div class="cart-item-actions" style="display:flex; align-items:center; gap:8px;">
           <button class="btn-qty" onclick="cambiarCantidad(${index}, -1)">-</button>
@@ -476,48 +482,88 @@ function eliminarDelCarrito(index) {
 
 function actualizarTotalCarrito() {
   let subtotal = 0;
+  let totalOriginal = 0; // Para medir cuánto costaría sin descuentos
 
-  // FOCUS: Recálculo Dinámico por Volumen
+  // FOCUS: Recálculo Dinámico por Volumen y Ahorro
   carrito.forEach(item => {
       const pData = productosGlobal.find(p => p.SKU === item.sku.replace("-REGALO", ""));
-      if(pData && pData.TIPO_PROMO === 'Volumen' && pData.DETALLE_PROMO) {
-          const umbrales = pData.DETALLE_PROMO.split(',').map(u => {
+      
+      let precioBase = 0;
+      if (pData) {
+          precioBase = Number(pData.PRECIO);
+          item.precioOriginal = precioBase; // Guardamos el original para el HTML
+      }
+
+      let precioCalculado = precioBase;
+      const promoType = pData ? String(pData.TIPO_PROMO || '').trim().toUpperCase() : '';
+
+      if (promoType === 'DESCUENTO' && pData.DETALLE_PROMO) {
+          precioCalculado = precioBase - Number(pData.DETALLE_PROMO);
+      } else if (promoType === 'VOLUMEN' && pData.DETALLE_PROMO) {
+          // Calculamos si aplica volumen (Ej: 10:10000,5:6500)
+          const umbrales = String(pData.DETALLE_PROMO).split(',').map(u => {
               const partes = u.split(':');
               return { cant: parseInt(partes[0]), precioTotal: parseInt(partes[1]) };
           }).sort((a,b) => b.cant - a.cant); 
           
-          let precioUnitario = Number(pData.PRECIO); 
           for(let u of umbrales) {
               if(item.cantidad >= u.cant) {
-                  precioUnitario = u.precioTotal / u.cant; 
+                  precioCalculado = u.precioTotal / u.cant; // Genera el nuevo precio unitario
                   break;
               }
           }
-          item.precio = precioUnitario; 
       }
+      
+      if(item.sku.includes("-REGALO")) precioCalculado = 0;
+
+      item.precio = precioCalculado; // Fijamos el precio final de la unidad
       subtotal += (item.precio * item.cantidad);
+      totalOriginal += (precioBase * item.cantidad);
   });
 
-  // FOCUS: MOTOR DE DESCUENTO
+  // FOCUS: MOTOR DE DESCUENTO (CUPÓN)
+  let descuentoCupon = 0;
   if (miCuponValidado && miCuponValidado.pct > 0) {
-      let descuento = 0;
       if (miCuponValidado.sku === "TODOS" || !miCuponValidado.sku) {
-          descuento = subtotal * (miCuponValidado.pct / 100);
+          descuentoCupon = subtotal * (miCuponValidado.pct / 100);
       } else {
           carrito.forEach(item => {
               if (item.sku.startsWith(miCuponValidado.sku)) {
-                  descuento += (item.precio * item.cantidad) * (miCuponValidado.pct / 100);
+                  descuentoCupon += (item.precio * item.cantidad) * (miCuponValidado.pct / 100);
               }
           });
       }
-      subtotal = subtotal - Math.round(descuento);
+      subtotal = subtotal - Math.round(descuentoCupon);
   }
+
+  // Cálculo del ahorro global
+  let ahorroFinal = (totalOriginal - subtotal);
+  if(ahorroFinal < 0) ahorroFinal = 0;
 
   const necesitaEnvio = document.getElementById('chk-envio').checked;
   const costoEnvio = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
   
   const direccionInput = document.getElementById('direccion-envio');
   if(direccionInput) direccionInput.style.display = necesitaEnvio ? 'block' : 'none';
+  
+  // FOCUS: Inyección del texto de Ahorro "Efecto Supermercado"
+  let msjAhorro = document.getElementById('cart-ahorro-label');
+  if(!msjAhorro) {
+      const totalBox = document.querySelector('.cart-total-box');
+      if(totalBox) {
+          totalBox.insertAdjacentHTML('beforebegin', `<div id="cart-ahorro-label" style="text-align: right; color: var(--neon-green); font-size: 0.85rem; font-family: var(--font-brand); margin-bottom: 5px; display: none;"></div>`);
+          msjAhorro = document.getElementById('cart-ahorro-label');
+      }
+  }
+
+  if(msjAhorro) {
+      if(ahorroFinal > 0) {
+          msjAhorro.innerHTML = `<i class="fas fa-tags"></i> HAS AHORRADO: $${ahorroFinal.toLocaleString('es-CL')}`;
+          msjAhorro.style.display = 'block';
+      } else {
+          msjAhorro.style.display = 'none';
+      }
+  }
   
   document.getElementById('cart-total-value').innerText = '$' + (subtotal + costoEnvio).toLocaleString('es-CL');
 }

@@ -470,16 +470,35 @@ function eliminarDelCarrito(index) {
 }
 
 function actualizarTotalCarrito() {
-  let subtotal = carrito.reduce(function(sum, item) { return sum + (item.precio * item.cantidad); }, 0);
-  
+  let subtotal = 0;
+
+  // FOCUS: Recálculo Dinámico por Volumen
+  carrito.forEach(item => {
+      const pData = productosGlobal.find(p => p.SKU === item.sku.replace("-REGALO", ""));
+      if(pData && pData.TIPO_PROMO === 'Volumen' && pData.DETALLE_PROMO) {
+          const umbrales = pData.DETALLE_PROMO.split(',').map(u => {
+              const partes = u.split(':');
+              return { cant: parseInt(partes[0]), precioTotal: parseInt(partes[1]) };
+          }).sort((a,b) => b.cant - a.cant); 
+          
+          let precioUnitario = Number(pData.PRECIO); 
+          for(let u of umbrales) {
+              if(item.cantidad >= u.cant) {
+                  precioUnitario = u.precioTotal / u.cant; 
+                  break;
+              }
+          }
+          item.precio = precioUnitario; 
+      }
+      subtotal += (item.precio * item.cantidad);
+  });
+
   // FOCUS: MOTOR DE DESCUENTO
   if (miCuponValidado && miCuponValidado.pct > 0) {
       let descuento = 0;
       if (miCuponValidado.sku === "TODOS" || !miCuponValidado.sku) {
-          // Descuento a todo el carro
           descuento = subtotal * (miCuponValidado.pct / 100);
       } else {
-          // Descuento solo a productos de un SKU específico
           carrito.forEach(item => {
               if (item.sku.startsWith(miCuponValidado.sku)) {
                   descuento += (item.precio * item.cantidad) * (miCuponValidado.pct / 100);
@@ -507,6 +526,13 @@ function vaciarCarrito() {
 async function procesarCompra() {
   if (carrito.length === 0) return;
 
+  // FOCUS: Barrera +18
+  const chkEdad = document.getElementById('chk-mayor-edad');
+  if(chkEdad && !chkEdad.checked) {
+      mostrarToast("Debes confirmar que eres mayor de 18 años.");
+      return;
+  }
+
   const btn = document.querySelector('.btn-checkout');
   const originalText = btn.innerHTML;
   btn.innerText = "PREPARANDO DESPEGUE...";
@@ -514,9 +540,9 @@ async function procesarCompra() {
 
   const necesitaEnvio = document.getElementById('chk-envio').checked;
   const subtotal = calcularSubtotal(); 
-  const envioVal = necesitaEnvio ? 3500 : 0;
-  const direccion = document.getElementById('direccion-envio').value;
-
+  const envioVal = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
+  const direccion = document.getElementById('direccion-envio') ? document.getElementById('direccion-envio').value : "";
+  
   if (necesitaEnvio && !direccion) {
     alert("Por favor, ingresa tu dirección para el envío.");
     btn.innerHTML = originalText;
@@ -538,6 +564,18 @@ async function procesarCompra() {
   };
 
   try {
+    // FOCUS: Si es el código secreto del Admin, enviamos al servidor de Efectivo
+    if(miCuponValidado && miCuponValidado.especial === 'EFECTIVO') {
+        const res = await ejecutarEnServidor("registrarVentaEfectivoDirecta", pedido);
+        if(res.success) {
+            vaciarCarrito();
+            mostrarToast("VENTA EFECTIVO REGISTRADA");
+            setTimeout(() => { window.location.href = "exito.html?payment_id=EFECTIVO&external_reference=" + res.id; }, 1500);
+        } else { throw new Error(res.msg); }
+        return;
+    }
+
+    // Ruta Normal: MercadoPago
     const res = await ejecutarEnServidor("pagar", pedido);
     if(res.success) {
       mostrarToast("Redirigiendo a pago seguro...");
@@ -548,7 +586,7 @@ async function procesarCompra() {
       btn.disabled = false;
     }
   } catch(err) {
-    mostrarToast("Falla de conexión.");
+    mostrarToast("Falla de conexión: " + err.message);
     btn.innerHTML = originalText;
     btn.disabled = false;
   }
@@ -767,17 +805,25 @@ async function cargarDashboard() {
     console.log("¡Rango Admin Detectado!");
     let btnAdmin = document.getElementById('btn-admin-portal');
     if(!btnAdmin) {
+      // Botón 1: Admin
       btnAdmin = document.createElement('button');
       btnAdmin.id = 'btn-admin-portal';
       btnAdmin.className = 'tool-btn';
       btnAdmin.style.borderColor = 'var(--amber)';
       btnAdmin.style.color = 'var(--amber)';
       btnAdmin.innerHTML = '<i class="fas fa-user-shield"></i> PANEL ADMIN';
-      btnAdmin.onclick = function() {
-        // CORRECCIÓN GITHUB: Ahora abre tu archivo admin.html físico
-        window.open("admin.html", "_blank"); 
-      };
+      btnAdmin.onclick = function() { window.open("admin.html", "_blank"); };
       toolsGrid.appendChild(btnAdmin);
+
+      // Botón 2: Inventario Directo
+      let btnInv = document.createElement('button');
+      btnInv.id = 'btn-admin-inventario';
+      btnInv.className = 'tool-btn';
+      btnInv.style.borderColor = 'var(--neon-green)';
+      btnInv.style.color = 'var(--neon-green)';
+      btnInv.innerHTML = '<i class="fas fa-box"></i> INVENTARIO';
+      btnInv.onclick = function() { window.open("admin.html?tab=productos_manager", "_blank"); };
+      toolsGrid.appendChild(btnInv);
     }
   }
 
@@ -1538,4 +1584,45 @@ async function dispararComponenteLegal(accionServidor, e) {
   } catch(err) {
     contenedor.innerHTML = '<p style="color:var(--amber); text-align:center; font-size:0.8rem;">Falla de conexión de red.</p>';
   }
+}
+
+
+async function aplicarCuponCarrito() {
+    const cod = document.getElementById('input-cupon').value.trim().toUpperCase();
+    const msj = document.getElementById('msj-cupon');
+    if(!cod) return;
+    
+    // FOCUS: Bypass de Admin (Venta en Efectivo/Transferencia Directa)
+    if(cod === 'ADMINWEED') {
+        if(!sessionUser || sessionUser.rol !== 'Admin') {
+            msj.style.color = "#ff4444";
+            msj.innerText = "Código clasificado. Acceso denegado.";
+            return;
+        }
+        miCuponValidado = { codigo: 'ADMINWEED', pct: 0, sku: 'TODOS', especial: 'EFECTIVO' };
+        msj.style.color = "var(--neon-green)";
+        msj.innerText = "🚀 MODO ADMIN: Venta por Caja Fuerte (Efectivo/Transferencia)";
+        actualizarTotalCarrito();
+        return;
+    }
+
+    msj.style.color = "var(--amber)";
+    msj.innerText = "Validando...";
+
+    try {
+        const res = await ejecutarEnServidor("validarCuponCliente", {codigo: cod});
+        if(res.success) {
+            miCuponValidado = { codigo: cod, pct: res.porcentaje, sku: res.aplicaSku };
+            msj.style.color = "var(--neon-green)";
+            msj.innerText = `¡Cupón ${res.porcentaje}% aplicado con éxito!`;
+            actualizarTotalCarrito();
+        } else {
+            miCuponValidado = null;
+            msj.style.color = "#ff4444";
+            msj.innerText = res.msg;
+            actualizarTotalCarrito();
+        }
+    } catch(e) {
+        msj.innerText = "Falla de red al validar.";
+    }
 }

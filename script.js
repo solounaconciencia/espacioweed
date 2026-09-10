@@ -247,6 +247,7 @@ function abrirDetalle(sku) {
     if (!p) return;
 
     registrarInteresRadar(sku); // Activamos radar de favoritos
+    registrarClicRadar('Ver Producto: ' + sku);
     
     // Preparar imágenes
     currentImages = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL : [p.IMAGEN_URL];
@@ -391,8 +392,6 @@ function agregarAlCarrito(sku, variantes = "") {
       cantidad: 1
     });
 
-    // LÓGICA DE REGALO (Faltaba en tu función)
-    // Busca el producto regalado y lo añade a precio $0
     if (p.TIPO_PROMO === 'Regalo' && p.DETALLE_PROMO) {
       const regalo = productosGlobal.find(function(it) { return it.SKU === p.DETALLE_PROMO; });
       if (regalo) {
@@ -1625,4 +1624,10 @@ async function aplicarCuponCarrito() {
     } catch(e) {
         msj.innerText = "Falla de red al validar.";
     }
+}
+
+function registrarClicRadar(elementoTarget) {
+    // Se ejecuta en segundo plano para no interrumpir al usuario
+    ejecutarEnServidor("registrarClicMetrica", { elemento: elementoTarget })
+        .catch(e => console.log("Clic no registrado (Red o Bloqueador)"));
 }

@@ -1256,6 +1256,56 @@ input[type="file"].hidden-file { display: none; }
     border-radius: 8px;
     margin-bottom: 10px;
 }
+
+/* ==========================================
+   ESTÉTICA FOCUS: RESPONSIVE ADMIN MÓVIL
+   ========================================== */
+.home-cards-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+    gap: 20px; 
+}
+.home-card-item { 
+    background: var(--glass-admin); 
+    border-radius: 10px; 
+    padding: 25px 15px; 
+    text-align: center; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    border: 1px solid var(--glass); 
+    border-bottom: 4px solid; 
+}
+.home-card-item:hover { 
+    transform: translateY(-5px); 
+    background: rgba(255,255,255,0.05); 
+}
+
+@media (max-width: 768px) {
+    /* 1. HOME CARDS COMPACTAS (6 por pantalla) */
+    .home-cards-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .home-card-item { padding: 15px 10px !important; }
+    .home-card-item i { font-size: 2rem !important; margin-bottom: 10px !important; }
+    .home-card-item h3 { font-size: 0.75rem !important; margin: 0 !important;}
+    .home-card-item p { display: none; } /* Ocultamos el texto secundario para ahorrar espacio */
+
+    /* 2. REESTRUCTURACIÓN DE TABLA INVENTARIO */
+    .admin-table thead { display: none; } /* Ocultamos las cabeceras */
+    .admin-table tbody tr {
+        display: flex; flex-wrap: wrap; align-items: flex-start;
+        background: rgba(255,255,255,0.02); margin-bottom: 15px;
+        border-radius: 12px; padding: 12px; border: 1px solid var(--glass);
+        position: relative;
+    }
+    .admin-table tbody td { border: none; padding: 5px; display: block; }
+    
+    /* Posiciones relativas exactas */
+    .admin-table tbody td:nth-child(1) { width: 10%; position: absolute; top: 10px; left: 10px; } /* Checkbox */
+    .admin-table tbody td:nth-child(2) { width: 25%; margin-left: 10%; text-align: center; } /* Foto */
+    .admin-table tbody td:nth-child(3) { width: 65%; font-size: 0.9rem; } /* SKU/Nombre */
+    .admin-table tbody td:nth-child(4) { width: 100%; font-size: 0.75rem; color: var(--amber); margin-top: -10px; padding-left: 35%; } /* Categoría */
+    .admin-table tbody td:nth-child(5) { width: 50%; display: flex; gap: 5px; margin-top: 10px; } /* Precio/Stock */
+    .admin-table tbody td:nth-child(6) { width: 50%; margin-top: 10px; display: flex; gap:5px;} /* Botones Guardar/Detalles */
+}
 </style>    
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1408,12 +1458,13 @@ to { transform: translateX(0); opacity: 1; }
 </head>
 <body>
 
-<div class="admin-nav">
-        <button class="tab-btn active" onclick="showSection('dash', this)"><i class="fas fa-chart-line"></i> MÉTRICAS</button>
-        <button class="tab-btn" onclick="showSection('productos_manager', this)"><i class="fas fa-box-open"></i> PRODUCTOS</button>
-        <button class="tab-btn" onclick="showSection('buzon', this)"><i class="fas fa-envelope"></i> BUZÓN</button>
-        <button class="tab-btn" onclick="showSection('config', this)"><i class="fas fa-cog"></i> AJUSTES</button>
-        <button class="tab-btn" onclick="showSection('estilo', this)"><i class="fas fa-palette"></i> ESTILO</button>
+<div class="admin-nav" id="main-admin-nav" style="display: none;">
+        <button class="tab-btn" onclick="showSection('home_admin', this)" style="color: var(--amber); border-color: var(--amber);"><i class="fas fa-home"></i> VOLVER AL INICIO</button>
+        <button class="tab-btn" id="btn-tab-dash" onclick="showSection('dash', this)"><i class="fas fa-chart-line"></i> MÉTRICAS</button>
+        <button class="tab-btn" id="btn-tab-prod" onclick="showSection('productos_manager', this)"><i class="fas fa-box-open"></i> PRODUCTOS</button>
+        <button class="tab-btn" id="btn-tab-buzon" onclick="showSection('buzon', this)"><i class="fas fa-envelope"></i> BUZÓN</button>
+        <button class="tab-btn" id="btn-tab-config" onclick="showSection('config', this)"><i class="fas fa-cog"></i> AJUSTES</button>
+        <button class="tab-btn" id="btn-tab-estilo" onclick="showSection('estilo', this)"><i class="fas fa-palette"></i> ESTILO</button>
     </div>
 
   <div class="admin-container">
@@ -1421,23 +1472,35 @@ to { transform: translateX(0); opacity: 1; }
     <div id="home_admin" class="section active">
       <h2 class="cian" style="text-align: center; font-size: 2rem; margin-bottom: 40px; text-shadow: 0 0 15px var(--cian);"><i class="fas fa-rocket"></i> SALA DE CONTROL</h2>
       
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-          <div class="metric-card" style="cursor: pointer; text-align: center; border-color: var(--neon-green); transition: 0.3s;" onclick="showSection('dash', document.querySelector('.tab-btn:nth-child(1)'))" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-              <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--neon-green); margin-bottom: 15px;"></i>
-              <h3 style="color: white;">MÉTRICAS Y VENTAS</h3>
+      <div class="home-cards-grid">
+          <div class="home-card-item" style="border-bottom-color: var(--neon-green);" onclick="showSection('dash', document.getElementById('btn-tab-dash'))">
+              <i class="fas fa-chart-line" style="color: var(--neon-green); font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">MÉTRICAS</h3>
               <p style="font-size: 0.8rem; color: #888;">Gráficos, caja diaria y reportes.</p>
           </div>
           
-          <div class="metric-card" style="cursor: pointer; text-align: center; border-color: var(--amber); transition: 0.3s;" onclick="showSection('productos_manager', document.querySelector('.tab-btn:nth-child(2)'))" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-              <i class="fas fa-box-open" style="font-size: 3rem; color: var(--amber); margin-bottom: 15px;"></i>
-              <h3 style="color: white;">INVENTARIO Y PRODUCTOS</h3>
-              <p style="font-size: 0.8rem; color: #888;">Gestión de stock, promociones y destacados.</p>
+          <div class="home-card-item" style="border-bottom-color: var(--amber);" onclick="showSection('productos_manager', document.getElementById('btn-tab-prod'))">
+              <i class="fas fa-box-open" style="color: var(--amber); font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">INVENTARIO</h3>
+              <p style="font-size: 0.8rem; color: #888;">Gestión de stock y destacados.</p>
           </div>
 
-          <div class="metric-card" style="cursor: pointer; text-align: center; border-color: var(--cian); transition: 0.3s;" onclick="showSection('buzon', document.querySelector('.tab-btn:nth-child(3)'))" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-              <i class="fas fa-envelope" style="font-size: 3rem; color: var(--cian); margin-bottom: 15px;"></i>
-              <h3 style="color: white;">BUZÓN DE CLIENTES</h3>
-              <p style="font-size: 0.8rem; color: #888;">Soporte técnico y mensajes de la comunidad.</p>
+          <div class="home-card-item" style="border-bottom-color: var(--cian);" onclick="showSection('buzon', document.getElementById('btn-tab-buzon'))">
+              <i class="fas fa-envelope" style="color: var(--cian); font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">BUZÓN</h3>
+              <p style="font-size: 0.8rem; color: #888;">Soporte técnico y mensajes.</p>
+          </div>
+
+          <div class="home-card-item" style="border-bottom-color: #e1306c;" onclick="showSection('config', document.getElementById('btn-tab-config'))">
+              <i class="fas fa-cogs" style="color: #e1306c; font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">AJUSTES</h3>
+              <p style="font-size: 0.8rem; color: #888;">Tienda, envíos y datos bancarios.</p>
+          </div>
+
+          <div class="home-card-item" style="border-bottom-color: #9b59b6;" onclick="showSection('estilo', document.getElementById('btn-tab-estilo'))">
+              <i class="fas fa-palette" style="color: #9b59b6; font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">ESTILOS</h3>
+              <p style="font-size: 0.8rem; color: #888;">Colores, fuentes y diseño visual.</p>
           </div>
       </div>
     </div>
@@ -2272,12 +2335,12 @@ window.addEventListener('load', () => {
     const params = new URLSearchParams(window.location.search);
     const tab = params.get('tab');
     if(tab) {
-        document.getElementById('home_admin').classList.remove('active');
-        const element = document.getElementById(tab);
-        if(element) { 
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            element.classList.add('active'); 
-        }
+        // Ejecutamos la navegación inteligente
+        const btn = document.getElementById('btn-tab-' + tab.split('_')[0]); 
+        showSection(tab, btn);
+    } else {
+        // Entra por defecto a las tarjetas
+        showSection('home_admin');
     }
 });
 }
@@ -2390,12 +2453,23 @@ async function actualizarGrafico() {
 function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
+  
+  const element = document.getElementById(id);
+  if(element) element.classList.add('active');
+  if(btn) btn.classList.add('active');
+
+  // FOCUS: Ocultar barra superior en el Home
+  const nav = document.getElementById('main-admin-nav');
+  if(nav) {
+      if (id === 'home_admin') {
+          nav.style.display = 'none';
+      } else {
+          nav.style.display = 'flex';
+      }
+  }
 
   if (id === 'buzon') cargarBuzon();
   if (id === 'config') cargarAjustesPanel();
-  if (id === 'estilo') cargarEstilosPanel();
   if (id === 'estilo') cargarEstilosPanel();
 }
 

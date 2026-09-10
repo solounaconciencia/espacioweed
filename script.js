@@ -1627,8 +1627,8 @@ async function aplicarCuponCarrito() {
     }
 }
 
+
 function registrarClicRadar(elementoTarget) {
-    // Se ejecuta en segundo plano para no interrumpir al usuario
     ejecutarEnServidor("registrarClicMetrica", { elemento: elementoTarget })
         .catch(e => console.log("Clic no registrado (Red o Bloqueador)"));
 }

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MANDO CENTRAL | Espacio Weed</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/7ZHhnxmj/Logoew.png">
+    
     
 <style>
 
@@ -1267,7 +1269,8 @@ input[type="file"].hidden-file { display: none; }
     .tab-btn { background: transparent; border: 1px solid #333; color: #888; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: bold; font-family: 'Orbitron'; font-size: 0.7rem; transition: 0.3s; white-space: nowrap; }
     .tab-btn.active { border-color: var(--cian); color: var(--cian); box-shadow: 0 0 10px rgba(0,255,255,0.2); }
     .admin-container { padding: 20px; max-width: 1000px; margin: auto; }
-    .metric-card { background: var(--glass-admin); border-left: 4px solid var(--cian); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+    .metric-card { background: var(--glass-admin); border-left: 4px solid var(--cian); padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    .metric-card:hover { background: rgba(0, 255, 255, 0.05); } /* Feedback visual sutil */
     .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .admin-table th { text-align: left; color: var(--amber); padding: 10px; border-bottom: 1px solid #333; }
     .admin-table td { padding: 10px; border-bottom: 1px solid #111; }
@@ -1414,7 +1417,32 @@ to { transform: translateX(0); opacity: 1; }
     </div>
 
   <div class="admin-container">
-    <div id="dash" class="section active">
+    
+    <div id="home_admin" class="section active">
+      <h2 class="cian" style="text-align: center; font-size: 2rem; margin-bottom: 40px; text-shadow: 0 0 15px var(--cian);"><i class="fas fa-rocket"></i> SALA DE CONTROL</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+          <div class="metric-card" style="cursor: pointer; text-align: center; border-color: var(--neon-green); transition: 0.3s;" onclick="showSection('dash', document.querySelector('.tab-btn:nth-child(1)'))" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--neon-green); margin-bottom: 15px;"></i>
+              <h3 style="color: white;">MÉTRICAS Y VENTAS</h3>
+              <p style="font-size: 0.8rem; color: #888;">Gráficos, caja diaria y reportes.</p>
+          </div>
+          
+          <div class="metric-card" style="cursor: pointer; text-align: center; border-color: var(--amber); transition: 0.3s;" onclick="showSection('productos_manager', document.querySelector('.tab-btn:nth-child(2)'))" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              <i class="fas fa-box-open" style="font-size: 3rem; color: var(--amber); margin-bottom: 15px;"></i>
+              <h3 style="color: white;">INVENTARIO Y PRODUCTOS</h3>
+              <p style="font-size: 0.8rem; color: #888;">Gestión de stock, promociones y destacados.</p>
+          </div>
+
+          <div class="metric-card" style="cursor: pointer; text-align: center; border-color: var(--cian); transition: 0.3s;" onclick="showSection('buzon', document.querySelector('.tab-btn:nth-child(3)'))" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              <i class="fas fa-envelope" style="font-size: 3rem; color: var(--cian); margin-bottom: 15px;"></i>
+              <h3 style="color: white;">BUZÓN DE CLIENTES</h3>
+              <p style="font-size: 0.8rem; color: #888;">Soporte técnico y mensajes de la comunidad.</p>
+          </div>
+      </div>
+    </div>
+
+    <div id="dash" class="section">
       <h2 class="cian">CONTROL DE CAJA</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
         <div class="metric-card"><h3>HOY</h3><p id="ventas-hoy" class="cian" style="font-size: 1.5rem;">$0</p></div>
@@ -2044,6 +2072,7 @@ to { transform: translateX(0); opacity: 1; }
                         <option value="Ninguna">SIN PROMO / NORMAL</option>
                         <option value="Descuento">DESCUENTO DIRECTO ($)</option>
                         <option value="Regalo">REGALO POR COMPRA (SKU)</option>
+                        <option value="Volumen">VOLUMEN (X unds por $Y)</option>
                     </select>
                     
                     <div style="display:flex; gap:5px; margin-top:5px;">
@@ -2206,6 +2235,20 @@ function inicializarAdmin(res) {
     actualizarGrafico(); // Esto dispara la carga de los 30 días
   }
   if(res.destacados) destacadosActivos = res.destacados;
+
+  // FOCUS: Leer la URL para abrir secciones directamente (Ej: ?tab=productos_manager)
+window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if(tab) {
+        document.getElementById('home_admin').classList.remove('active');
+        const element = document.getElementById(tab);
+        if(element) { 
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            element.classList.add('active'); 
+        }
+    }
+});
 }
 
 // --- SECCIÓN INVENTARIO ---

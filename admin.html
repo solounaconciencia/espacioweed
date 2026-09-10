@@ -3591,6 +3591,48 @@ async function confirmarEliminacionMasa() {
     }
   }
 }
+
+// FOCUS: Motor de alternancia de Métricas
+function alternarMetricas(vista) {
+    const btnVentas = document.getElementById('btn-vista-ventas');
+    const btnClics = document.getElementById('btn-vista-clics');
+    const contVentas = document.getElementById('contenedor-metricas-ventas');
+    const contClics = document.getElementById('contenedor-metricas-clics');
+
+    if (vista === 'ventas') {
+        btnVentas.style.borderColor = 'var(--neon-green)'; btnVentas.style.color = 'var(--neon-green)';
+        btnClics.style.borderColor = 'var(--cian)'; btnClics.style.color = 'white';
+        contVentas.style.display = 'block';
+        contClics.style.display = 'none';
+    } else {
+        btnClics.style.borderColor = 'var(--neon-green)'; btnClics.style.color = 'var(--neon-green)';
+        btnVentas.style.borderColor = 'var(--cian)'; btnVentas.style.color = 'white';
+        contVentas.style.display = 'none';
+        contClics.style.display = 'block';
+        cargarMetricasClics(); // Llama al servidor
+    }
+}
+
+async function cargarMetricasClics() {
+    const contenedor = document.getElementById('lista-clics-admin');
+    contenedor.innerHTML = '<p style="color: #666; font-size: 0.8rem;"><i class="fas fa-spinner fa-spin"></i> Escaneando el radar...</p>';
+    
+    try {
+        const res = await ejecutarEnServidor("obtenerMetricasClics");
+        if (res.success && res.datos.length > 0) {
+            contenedor.innerHTML = res.datos.map(d => `
+                <div style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--glass);">
+                    <span style="color: white; font-size: 0.85rem;">${d.nombre}</span>
+                    <span style="color: var(--amber); font-weight: bold; font-family: var(--font-brand);">${d.clics} <i class="fas fa-mouse-pointer" style="font-size: 0.6rem; margin-left: 5px;"></i></span>
+                </div>
+            `).join('');
+        } else {
+            contenedor.innerHTML = '<p style="color: #666; font-size: 0.8rem;">El radar está limpio. Aún no hay interacciones registradas.</p>';
+        }
+    } catch(e) {
+        contenedor.innerHTML = '<p style="color: var(--amber); font-size: 0.8rem;">Error de conexión con el satélite.</p>';
+    }
+}
     </script>
 
 <div id="modal-patrocinadores" class="modal" style="display:none; align-items:center; justify-content:center; z-index: 150000;">

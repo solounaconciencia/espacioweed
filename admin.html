@@ -1443,27 +1443,58 @@ to { transform: translateX(0); opacity: 1; }
     </div>
 
     <div id="dash" class="section">
-      <h2 class="cian">CONTROL DE CAJA</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        <div class="metric-card"><h3>HOY</h3><p id="ventas-hoy" class="cian" style="font-size: 1.5rem;">$0</p></div>
-        <div class="metric-card"><h3>ESTE MES</h3><p id="ventas-mes" class="amber" style="font-size: 1.5rem;">$0</p></div>
-      </div>
-      <button class="btn-nave-main" onclick="abrirVentaManual()">+ INFORMAR VENTA PRESENCIAL</button>
-      <div style="margin-top:20px; display:flex; align-items:center; gap:10px;">
-        <label style="font-size:0.7rem; color:var(--cian);">PERIODO:</label>
-        <select id="periodo-selector" class="nave-input" style="width:auto; margin:0;" onchange="actualizarGrafico()">
-          <option value="0" selected>MES EN CURSO</option>
-          <option value="3">Últimos 3 Meses</option>
-          <option value="6">Últimos 6 Meses</option>
-          <option value="12" selected>Último Año</option>
-        </select>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+        <h2 class="cian" style="margin: 0;"><i class="fas fa-chart-line"></i> CONTROL DE MÉTRICAS</h2>
+        <div style="display: flex; gap: 10px;">
+            <button class="tool-btn active" id="btn-vista-ventas" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="alternarMetricas('ventas')">💰 VENTAS</button>
+            <button class="tool-btn" id="btn-vista-clics" onclick="alternarMetricas('clics')">🖱️ TRÁFICO Y CLICS</button>
+        </div>
       </div>
 
-      <div class="metric-card" style="margin-top:15px; padding:10px; height:300px;">
-        <canvas id="ventasChart"></canvas>
+      <div id="contenedor-metricas-ventas">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+          <div class="metric-card"><h3>HOY</h3><p id="ventas-hoy" class="cian" style="font-size: 1.5rem;">$0</p></div>
+          <div class="metric-card"><h3>ESTE MES</h3><p id="ventas-mes" class="amber" style="font-size: 1.5rem;">$0</p></div>
+        </div>
+        <button class="btn-nave-main" onclick="abrirVentaManual()">+ INFORMAR VENTA PRESENCIAL</button>
+        <div style="margin-top:20px; display:flex; align-items:center; gap:10px;">
+          <label style="font-size:0.7rem; color:var(--cian);">PERIODO:</label>
+          <select id="periodo-selector" class="nave-input" style="width:auto; margin:0;" onchange="actualizarGrafico()">
+            <option value="0" selected>MES EN CURSO</option>
+            <option value="3">Últimos 3 Meses</option>
+            <option value="6">Últimos 6 Meses</option>
+            <option value="12" selected>Último Año</option>
+          </select>
+        </div>
+
+        <div class="metric-card" style="margin-top:15px; padding:10px; height:300px;">
+          <canvas id="ventasChart"></canvas>
+        </div>
+      </div>
+
+      <div id="contenedor-metricas-clics" style="display: none;">
+        
+        <div class="metric-card" style="border-color: var(--amber);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 class="amber" style="margin: 0;"><i class="fas fa-trophy"></i> TOP 7 PRODUCTOS/ELEMENTOS</h3>
+                <button class="btn-nave-main" style="width: auto; padding: 5px 15px; margin: 0; background: transparent; border: 1px solid var(--amber); color: var(--amber);" onclick="document.getElementById('top7-list').classList.toggle('active-list')">VER TOP 7</button>
+            </div>
+            <style>
+                #top7-list { display: none; }
+                #top7-list.active-list { display: block; }
+                .clic-item:hover { background: rgba(0,255,255,0.1) !important; cursor: pointer; }
+            </style>
+            <div id="top7-list" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="metric-card">
+            <h3 class="cian"><i class="fas fa-mouse-pointer"></i> REGISTRO GENERAL</h3>
+            <div id="lista-clics-admin" style="margin-top: 15px; max-height: 400px; overflow-y: auto;">
+                <p style="color: #666; font-size: 0.8rem;">Cargando métricas de tráfico...</p>
+            </div>
+        </div>
       </div>
     </div>
-
     <div id="buzon" class="section">
       <h2 class="cian"><i class="fas fa-comments"></i> BUZÓN MAESTRO</h2>
       
@@ -3631,6 +3662,77 @@ async function cargarMetricasClics() {
         }
     } catch(e) {
         contenedor.innerHTML = '<p style="color: var(--amber); font-size: 0.8rem;">Error de conexión con el satélite.</p>';
+    }
+}
+
+// ==========================================
+// MOTOR FOCUS: ALTERNANCIA Y TOP 7 METRICAS
+// ==========================================
+function alternarMetricas(vista) {
+    const btnVentas = document.getElementById('btn-vista-ventas');
+    const btnClics = document.getElementById('btn-vista-clics');
+    const contVentas = document.getElementById('contenedor-metricas-ventas');
+    const contClics = document.getElementById('contenedor-metricas-clics');
+
+    if (vista === 'ventas') {
+        btnVentas.style.borderColor = 'var(--neon-green)'; btnVentas.style.color = 'var(--neon-green)';
+        btnClics.style.borderColor = 'var(--cian)'; btnClics.style.color = 'white';
+        contVentas.style.display = 'block';
+        contClics.style.display = 'none';
+    } else {
+        btnClics.style.borderColor = 'var(--neon-green)'; btnClics.style.color = 'var(--neon-green)';
+        btnVentas.style.borderColor = 'var(--cian)'; btnVentas.style.color = 'white';
+        contVentas.style.display = 'none';
+        contClics.style.display = 'block';
+        cargarMetricasClics(); 
+    }
+}
+
+async function cargarMetricasClics() {
+    const contenedorTop = document.getElementById('top7-list');
+    const contenedorGral = document.getElementById('lista-clics-admin');
+    
+    contenedorGral.innerHTML = '<p style="color: #666; font-size: 0.8rem;"><i class="fas fa-spinner fa-spin"></i> Escaneando el radar...</p>';
+    contenedorTop.innerHTML = '';
+
+    try {
+        const res = await ejecutarEnServidor("obtenerMetricasClics");
+        if (res.success && res.datos.length > 0) {
+            
+            const renderItem = (d, isTop) => `
+                <div class="clic-item" onclick="editarDesdeMetrica('${d.nombre}')" style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid ${isTop ? 'var(--amber)' : 'var(--glass)'};">
+                    <span style="color: white; font-size: 0.85rem;">${d.nombre}</span>
+                    <span style="color: ${isTop ? 'var(--amber)' : 'var(--cian)'}; font-weight: bold; font-family: var(--font-brand);">${d.clics} <i class="fas fa-mouse-pointer" style="font-size: 0.6rem; margin-left: 5px;"></i></span>
+                </div>
+            `;
+
+            // TOP 7
+            const top7 = res.datos.slice(0, 7);
+            contenedorTop.innerHTML = top7.map(d => renderItem(d, true)).join('');
+            
+            // EL RESTO
+            const resto = res.datos.slice(7);
+            if (resto.length > 0) {
+                contenedorGral.innerHTML = resto.map(d => renderItem(d, false)).join('');
+            } else {
+                contenedorGral.innerHTML = '<p style="color: #666; font-size: 0.8rem;">No hay más elementos en el radar.</p>';
+            }
+        } else {
+            contenedorGral.innerHTML = '<p style="color: #666; font-size: 0.8rem;">El radar está limpio. Aún no hay interacciones registradas.</p>';
+        }
+    } catch(e) {
+        contenedorGral.innerHTML = '<p style="color: var(--amber); font-size: 0.8rem;">Error de conexión con el satélite.</p>';
+    }
+}
+
+// FOCUS: Extractor Inteligente para Editar Productos desde el Clic
+function editarDesdeMetrica(nombre) {
+    // Si la cadena contiene un SKU (que empiece con EW-), lo extrae y abre el modal
+    const match = nombre.match(/EW-[A-Z0-9\-]+/);
+    if (match) {
+        abrirModalEdicion(match[0]);
+    } else {
+        alert("El elemento [" + nombre + "] no es un producto o no se puede editar directamente.");
     }
 }
     </script>

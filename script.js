@@ -274,6 +274,11 @@ ${(p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ?
 }
 </p>
 ${p.TIPO_PROMO === 'Regalo' ? `<p style="color:var(--cian); font-size:0.8rem; margin-top:-10px; margin-bottom:15px;"><i class="fas fa-gift"></i> Incluye regalo por tu compra</p>` : ''}
+${p.TIPO_PROMO === 'Volumen' && p.DETALLE_PROMO ? 
+    `<div style="background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--amber); color: var(--amber); padding: 10px; border-radius: 5px; font-size: 0.75rem; margin-top: -5px; margin-bottom: 15px;">
+        <strong style="display:block; margin-bottom:5px;"><i class="fas fa-tags"></i> PRECIO MAYORISTA AUTOMÁTICO:</strong>
+        ${p.DETALLE_PROMO.split(',').map(u => `Si llevas <b>${u.split(':')[0]}</b> te quedan a <b>$${Number(u.split(':')[1] / u.split(':')[0]).toLocaleString('es-CL')}</b> c/u`).join('<br>')}
+    </div>` : ''}
 
         <div class="variantes-container" style="margin-bottom:20px;">
             ${crearSelectorVariante('SABOR', p.SABOR)}
@@ -426,8 +431,8 @@ function actualizarUI() {
     countBubble.style.display = totalItems > 0 ? 'flex' : 'none';
   }
   
-  renderCarrito();
   actualizarTotalCarrito();
+  renderCarrito();
 }
 
 function renderCarrito() {

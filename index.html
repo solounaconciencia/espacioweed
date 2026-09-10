@@ -536,31 +536,6 @@ function renderizarAtmosfera(tipo, colorBg, colorNeon) {
     document.head.appendChild(style);
 }
 
-async function aplicarCuponCarrito() {
-    const cod = document.getElementById('input-cupon').value.trim();
-    const msj = document.getElementById('msj-cupon');
-    if(!cod) return;
-    
-    msj.style.color = "var(--amber)";
-    msj.innerText = "Validando...";
-
-    try {
-        const res = await ejecutarEnServidor("validarCuponCliente", {codigo: cod});
-        if(res.success) {
-            miCuponValidado = { codigo: cod, pct: res.porcentaje, sku: res.aplicaSku };
-            msj.style.color = "var(--neon-green)";
-            msj.innerText = `¡Cupón ${res.porcentaje}% aplicado con éxito!`;
-            actualizarUI(); // FOCUS: Función corregida
-        } else {
-            miCuponValidado = null;
-            msj.style.color = "#ff4444";
-            msj.innerText = res.msg;
-            actualizarUI(); // FOCUS: Función corregida
-        }
-    } catch(e) {
-        msj.innerText = "Falla de red al validar.";
-    }
-}
 </script>
     
 <div id="comunidad-portal" class="nave-container">
@@ -766,7 +741,7 @@ async function aplicarCuponCarrito() {
   </div>
 </div>
 
-<script src="/tester/script.js" defer></script>
+<script src="/tester/script.js?v=777" defer></script>
 
     <div id="modal-transferencia-checkout" class="modal" style="display:none; z-index: 100000; align-items:center; justify-content:center;">
   <div class="modal-content login-card" style="max-width: 450px; position: relative; padding: 30px 20px; border-color: var(--neon-green); box-shadow: 0 0 30px rgba(46, 204, 113, 0.2);">

@@ -89,9 +89,8 @@
     </ul>
 
     <div class="search-container">
-        <input type="text" id="main-search" placeholder="Busca tu producto o marca..." onkeyup="filtrarPredictivo()">
+        <input type="text" id="main-search" placeholder="Busca tu producto o marca..." onkeyup="filtrar()">
         <i class="fas fa-search search-icon"></i>
-        <div id="search-predictive-box" class="predictive-box"></div>
     </div>
 </nav>
     </header>
@@ -171,21 +170,18 @@
             </div>
             <div style="margin-bottom: 20px; border-bottom: 1px solid var(--glass); padding-bottom: 15px;">
               <p style="font-size: 0.7rem; color: var(--cian); margin-bottom: 10px; font-family: var(--font-brand);">MÉTODO DE PAGO:</p>
-              
-              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; margin-bottom: 12px; cursor: pointer;">
-                <input type="radio" name="metodo-pago" value="transferencia" checked style="accent-color: var(--neon-green);" onchange="actualizarTotalCarrito()">
-                <span>Transferencia Directa (Coordinar vía WhatsApp)</span>
-              </label>
-
               <label style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; cursor: pointer;">
-                <input type="radio" name="metodo-pago" value="mercadopago" style="accent-color: var(--neon-green);" onchange="actualizarTotalCarrito()">
-                <span>Mercado Pago (Tarjetas de Crédito/Débito)</span>
+                <input type="radio" name="metodo-pago" value="mercadopago" checked style="accent-color: var(--neon-green);">
+                <span>Mercado Pago (Débito, Crédito y Transferencia)</span>
               </label>
+        </div>
 
-              <div id="alerta-minimo-transferencia" style="display:none; color: #e74c3c; font-size: 0.65rem; margin-top: 12px; font-weight: bold; background: rgba(231, 76, 60, 0.1); padding: 8px; border-radius: 5px;">
-                <i class="fas fa-exclamation-triangle"></i> Tu banco exige un mínimo de $1.000 para transferir. Agrega un accesorio o usa Mercado Pago.
-              </div>
-            </div>
+            <div style="margin-bottom: 20px; padding-top: 10px;">
+            <label class="custom-checkbox" style="display: flex; align-items: center; gap: 10px; font-size: 0.75rem; color: #ccc; cursor: pointer;">
+                <input type="checkbox" id="chk-mayor-edad" style="accent-color: var(--neon-green); width: 18px; height: 18px;"> 
+                <span>Confirmo que <strong>soy mayor de 18 años</strong> y acepto los <a href="#" onclick="dispararComponenteLegal('obtenerTerminosCondicionesDinamicos', event)" style="color: var(--cian);">Términos y Condiciones</a>.</span>
+            </label>
+        </div>
 
             <button class="btn-checkout" onclick="procesarCompra()">
                 FINALIZAR PEDIDO <i class="fas fa-chevron-right"></i>
@@ -256,17 +252,14 @@
         <div class="modal-header-ubic">
             <h2><i class="fas fa-map-marker-alt"></i> NUESTRA UBICACIÓN</h2>
         </div>
-        <div class="modal-body-ubic" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-            
-            <div class="media-container-ubic caja-video" style="position: relative; width: 100%; max-width: 400px; margin: 0 auto;">
-                <div class="parche-drive"></div>
-                <iframe src="https://www.youtube.com/embed/HkXA_nkBC6A?autoplay=1&mute=1" style="width: 100%; height: 350px; border-radius: 10px; border: 1px solid var(--cian);"></iframe>
+        <div class="modal-body-ubic">
+            <div class="media-container-ubic caja-mapa">
+             <iframe src="https://maps.app.goo.gl/9CzeTreWq4sfvUxM6" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
-            
-            <a href="https://maps.app.goo.gl/eLbixx6exJBzdWkd6" target="_blank" id="btn-abrir-mapa" class="btn-nave-main" style="background: var(--cian); color: black; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: 100%; max-width: 400px; margin: 0;">
-                <i class="fas fa-map-marked-alt" style="font-size: 1.2rem;"></i> ABRIR EN GOOGLE MAPS
-            </a>
-            
+            <div class="media-container-ubic caja-video" style="position: relative;">
+                <div class="parche-drive"></div>
+                <iframe src="https://www.youtube.com/embed/HkXA_nkBC6A?autoplay=1&mute=1"></iframe>
+            </div>
         </div>
     </div>
 </div>
@@ -398,7 +391,14 @@ function aplicarEstilosDinamicos(config) {
     if (typeof encenderAtmosfera === "function") {
         encenderAtmosfera(config['ATMOSFERA'] || 'espacial');
     }
-    
+    // 7. Inyectar Mapa Dinámico Automatizado (Google Maps)
+    if (config['DIRECCION_TEXTO'] && config['DIRECCION_TEXTO'].trim() !== "") {
+        const iframeMapa = document.querySelector('.caja-mapa iframe');
+        if (iframeMapa) {
+            const direccionCodificada = encodeURIComponent(config['DIRECCION_TEXTO'].trim());
+            iframeMapa.src = "https://maps.google.com/maps?q=" + direccionCodificada + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
+        }
+    }
 
     // 8. Inyectar Video Dinámico (Drive)
     if (config['VIDEO_DRIVE_ID'] && config['VIDEO_DRIVE_ID'].trim() !== "") {
@@ -536,31 +536,6 @@ function renderizarAtmosfera(tipo, colorBg, colorNeon) {
     document.head.appendChild(style);
 }
 
-async function aplicarCuponCarrito() {
-    const cod = document.getElementById('input-cupon').value.trim();
-    const msj = document.getElementById('msj-cupon');
-    if(!cod) return;
-    
-    msj.style.color = "var(--amber)";
-    msj.innerText = "Validando...";
-
-    try {
-        const res = await ejecutarEnServidor("validarCuponCliente", {codigo: cod});
-        if(res.success) {
-            miCuponValidado = { codigo: cod, pct: res.porcentaje, sku: res.aplicaSku };
-            msj.style.color = "var(--neon-green)";
-            msj.innerText = `¡Cupón ${res.porcentaje}% aplicado con éxito!`;
-            actualizarUI(); // FOCUS: Función corregida
-        } else {
-            miCuponValidado = null;
-            msj.style.color = "#ff4444";
-            msj.innerText = res.msg;
-            actualizarUI(); // FOCUS: Función corregida
-        }
-    } catch(e) {
-        msj.innerText = "Falla de red al validar.";
-    }
-}
 </script>
     
 <div id="comunidad-portal" class="nave-container">
@@ -766,63 +741,39 @@ async function aplicarCuponCarrito() {
   </div>
 </div>
 
-<script src="/tester/script.js" defer></script>
+<script src="/tester/script.js?v=777" defer></script>
 
     <div id="modal-transferencia-checkout" class="modal" style="display:none; z-index: 100000; align-items:center; justify-content:center;">
-  <div class="modal-content login-card" style="max-width: 420px; width: 95%; position: relative; padding: 25px 20px 20px 20px; border-color: var(--neon-green); box-shadow: 0 0 30px rgba(46, 204, 113, 0.2); max-height: 90vh; display: flex; flex-direction: column;">
+  <div class="modal-content login-card" style="max-width: 450px; position: relative; padding: 30px 20px; border-color: var(--neon-green); box-shadow: 0 0 30px rgba(46, 204, 113, 0.2);">
+    <span class="close-nave" onclick="cerrarModalTransferenciaCheckout()">×</span>
     
-    <span class="close-nave" onclick="cerrarModalTransferenciaCheckout()" style="top: 10px; right: 10px;">×</span>
+    <h2 class="cian" style="margin-bottom: 5px; font-family: var(--font-brand); font-size: 1.5rem; color: var(--neon-green);">
+      <i class="fas fa-check-circle"></i> ¡PEDIDO RESERVADO!
+    </h2>
+    <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 20px;">Tu expedición está casi lista. Realiza la transferencia y envíanos el comprobante para despachar.</p>
 
-    <div style="flex-shrink: 0; text-align: center;">
-        <h2 class="cian" style="margin: 0 0 5px 0; font-family: var(--font-brand); font-size: 1.2rem; color: var(--neon-green);">
-          <i class="fas fa-check-circle"></i> ¡RESERVADO!
-        </h2>
-        <p style="color: #ccc; font-size: 0.75rem; margin: 0 0 15px 0; line-height: 1.3;">Transfiere y adjunta el comprobante para despachar.</p>
+    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid var(--amber); border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
+       <p style="margin: 0; font-size: 0.75rem; color: #888;">ID DE PEDIDO</p>
+       <h3 id="mt-id-pedido" style="margin: 5px 0; color: white; font-family: var(--font-brand);">EW-...</h3>
+       <p style="margin: 15px 0 0 0; font-size: 0.75rem; color: #888;">TOTAL A TRANSFERIR</p>
+       <h2 id="mt-total" style="margin: 5px 0; color: var(--amber); font-family: var(--font-brand); font-size: 1.8rem;">$0</h2>
     </div>
 
-    <div style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px;">
-        
-        <div style="display: flex; flex-direction: column; align-items: center; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--amber); border-radius: 8px; padding: 12px; margin-bottom: 15px; gap: 8px;">
-           <div style="text-align: center;">
-               <p style="margin: 0; font-size: 0.65rem; color: #888;">ID PEDIDO</p>
-               <h3 id="mt-id-pedido" style="margin: 2px 0 0 0; color: white; font-family: var(--font-brand); font-size: 0.95rem; letter-spacing: 1px;">EW-...</h3>
-           </div>
-           
-           <div style="width: 80%; height: 1px; background: rgba(241, 196, 15, 0.3);"></div>
-           
-           <div style="text-align: center;">
-               <p style="margin: 0; font-size: 0.65rem; color: #888;">A TRANSFERIR</p>
-               <h2 id="mt-total" style="margin: 2px 0 0 0; color: var(--amber); font-family: var(--font-brand); font-size: 1.6rem;">$0</h2>
-           </div>
-        </div>
-
-        <div style="text-align: left; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); padding: 12px; border-radius: 8px;">
-          <h4 class="cian" style="margin: 0 0 8px 0; font-size: 0.7rem; border-bottom: 1px solid var(--cian); padding-bottom: 5px;">
-            <i class="fas fa-university"></i> DATOS BANCARIOS
-          </h4>
-          <div style="font-size: 0.7rem; line-height: 1.5; color: #ccc;">
-            <p style="margin: 2px 0;"><strong>BANCO:</strong> <span id="mt-banco"></span></p>
-            <p style="margin: 2px 0;"><strong>RUT:</strong> <span id="mt-rut"></span></p>
-            <p style="margin: 2px 0;"><strong>NÚMERO:</strong> <span id="mt-numero"></span></p>
-            <p style="margin: 2px 0;"><strong>CORREO:</strong> <span id="mt-email"></span></p>
-          </div>
-        </div>
+    <div style="text-align: left; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); padding: 15px; border-radius: 10px; margin-bottom: 25px;">
+      <h4 class="cian" style="margin-top: 0; font-size: 0.7rem; border-bottom: 1px solid var(--cian); padding-bottom: 5px;">
+        <i class="fas fa-university"></i> DATOS BANCARIOS
+      </h4>
+      <div style="font-size: 0.75rem; line-height: 1.6; color: #ccc; margin-top: 10px;">
+        <p style="margin: 3px 0;"><strong>BANCO:</strong> <span id="mt-banco"></span></p>
+        <p style="margin: 3px 0;"><strong>RUT:</strong> <span id="mt-rut"></span></p>
+        <p style="margin: 3px 0;"><strong>NÚMERO:</strong> <span id="mt-numero"></span></p>
+        <p style="margin: 3px 0;"><strong>CORREO:</strong> <span id="mt-email"></span></p>
+      </div>
     </div>
 
-    <div style="flex-shrink: 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-        
-        <div style="margin-bottom: 10px;">
-          <label for="mt-adjunto" class="custom-file-upload" id="lbl-mt-foto" style="border-color: var(--cian); color: var(--cian); width: 100%; padding: 10px; font-size: 0.7rem; margin: 0;">
-              <i class="fas fa-camera"></i> ADJUNTAR COMPROBANTE
-          </label>
-          <input type="file" id="mt-adjunto" accept="image/*" style="display:none;" onchange="actualizarLabelComprobante(this)">
-        </div>
-
-        <button id="mt-btn-wa" class="btn-nave-main" style="background: var(--neon-green); color: black; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border:none; margin: 0; padding: 12px; font-size: 0.85rem;" onclick="enviarComprobanteYWhatsApp()">
-          <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> ENVIAR Y AVISAR
-        </button>
-    </div>
-
+    <a href="#" id="mt-btn-wa" target="_blank" class="btn-nave-main" style="background: var(--neon-green); color: black; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;" onclick="cerrarModalTransferenciaCheckoutYRecargar()">
+      <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> ENVIAR COMPROBANTE
+    </a>
   </div>
 </div>
 

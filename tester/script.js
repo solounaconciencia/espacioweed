@@ -102,88 +102,25 @@ document.addEventListener('DOMContentLoaded', async function() {
 /**
  * MOTOR DE BÚSQUEDA Y FILTRADO DINÁMICO
  */
-/**
- * MOTOR DE BÚSQUEDA PREDICTIVA (FOCUS UX)
- */
-function filtrarPredictivo() {
-  const term = document.getElementById('main-search').value.toLowerCase().trim();
+function filtrar() {
+  const term = document.getElementById('main-search').value.toLowerCase();
   const slider = document.getElementById('hero-slider');
-  const predictiveBox = document.getElementById('search-predictive-box');
-  
-  // 1. Si el usuario borra todo, ocultamos la caja y restauramos la tienda
-  if (term.length === 0) {
-    if (predictiveBox) predictiveBox.style.display = 'none';
-    if (slider) slider.style.display = 'flex';
-    renderProductos(productosGlobal);
-    return;
+
+  // Si el usuario empieza a buscar, el slider se va
+  if (slider && term.length > 0) {
+    slider.style.display = 'none';
   }
 
-  // Ocultamos el slider al buscar
-  if (slider) slider.style.display = 'none';
-
-  // 2. Filtramos el catálogo global
-  const filtrados = productosGlobal.filter(p => 
-    (p.NOMBRE && p.NOMBRE.toString().toLowerCase().includes(term)) || 
-    (p.MARCA && p.MARCA.toString().toLowerCase().includes(term)) || 
-    (p.CATEGORIA && p.CATEGORIA.toString().toLowerCase().includes(term))
-  );
-
-  // Mantenemos el filtro visual original de la grilla
+  const filtrados = productosGlobal.filter(function(p) {
+    return (
+      p.NOMBRE.toString().toLowerCase().includes(term) || 
+      p.MARCA.toString().toLowerCase().includes(term) || 
+      p.CATEGORIA.toString().toLowerCase().includes(term)
+    );
+  });
   renderProductos(filtrados);
-
-  // 3. Inyectamos los 6 mejores resultados en la caja predictiva
-  if (!predictiveBox) return;
-
-  if (filtrados.length > 0) {
-    predictiveBox.innerHTML = filtrados.slice(0, 6).map(p => {
-      // Extraemos la foto y calculamos precio con promo
-      const imgUrl = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : (p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
-      const precioMostrar = (p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ? (Number(p.PRECIO) - Number(p.DETALLE_PROMO)) : Number(p.PRECIO);
-      
-      return `
-        <div class="predictive-item" onclick="abrirDetallePredictivo('${p.SKU}')">
-          <img src="${imgUrl}" onerror="this.src='https://i.postimg.cc/hj6mws46/Logoew.png'">
-          <div class="predictive-info">
-            <div class="predictive-title">${p.NOMBRE}</div>
-            <div class="predictive-price">$${precioMostrar.toLocaleString('es-CL')}</div>
-          </div>
-        </div>
-      `;
-    }).join('');
-    
-    // Si hay más de 6 resultados, mostramos un aviso sutil
-    if (filtrados.length > 6) {
-        predictiveBox.innerHTML += `<div style="text-align:center; padding:10px; font-size:0.7rem; color:#888;">+ ${filtrados.length - 6} resultados más abajo</div>`;
-    }
-    
-    predictiveBox.style.display = 'block';
-  } else {
-    // Escudo por si no encuentra nada
-    predictiveBox.innerHTML = '<div style="padding:20px; color:#888; font-size:0.8rem; text-align:center;"><i class="fas fa-satellite-dish" style="font-size:1.5rem; margin-bottom:10px; opacity:0.5;"></i><br>No hay señales de ese producto...</div>';
-    predictiveBox.style.display = 'block';
-  }
 }
 
-// Función auxiliar para cerrar el buscador limpiamente tras hacer clic
-function abrirDetallePredictivo(sku) {
-  const predictiveBox = document.getElementById('search-predictive-box');
-  const searchInput = document.getElementById('main-search');
-  
-  if (predictiveBox) predictiveBox.style.display = 'none';
-  if (searchInput) searchInput.value = ''; // Limpiamos el texto
-  
-  abrirDetalle(sku); // Ejecuta el modal normal del producto
-}
-
-// Escudo para que si el cliente hace clic fuera del buscador, la caja desaparezca
-window.addEventListener('click', function(e) {
-  const predictiveBox = document.getElementById('search-predictive-box');
-  const searchInput = document.getElementById('main-search');
-  
-  if (predictiveBox && e.target !== searchInput && !predictiveBox.contains(e.target)) {
-    predictiveBox.style.display = 'none';
-  }
-});
 
 /**
  * EVOLUCIÓN FOCUS: Generación Dual (Dropdown PC + Píldoras Móvil)
@@ -221,15 +158,14 @@ function filtrarPorCat(cat, e, btnElement = null) {
   if (e) e.preventDefault();
   const slider = document.getElementById('hero-slider');
   
-  // Ocultamos el slider si empezamos a filtrar
-  if (slider) slider.style.display = 'none';
+  // FOCUS: Registrar búsqueda de categoría
+  registrarClicRadar('Categoría: ' + cat);
 
-  // Feedback Visual: Iluminamos la píldora tocada
+  if (slider) slider.style.display = 'none';
   if (btnElement) {
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
   } else if (cat === 'TODOS') {
-    // Si viene del menú de arriba en "VER TODO", reiniciamos la primera píldora
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
     const primerBoton = document.querySelector('.cat-btn');
     if (primerBoton) primerBoton.classList.add('active');
@@ -244,6 +180,7 @@ function filtrarPorCat(cat, e, btnElement = null) {
   
   document.getElementById('grid-productos').scrollIntoView({ behavior: 'smooth' });
 }
+
 
 // Función auxiliar para móviles (clic en la palabra Categorías)
 function abrirCategorias() {
@@ -309,6 +246,7 @@ function abrirDetalle(sku) {
     if (!p) return;
 
     registrarInteresRadar(sku); // Activamos radar de favoritos
+    registrarClicRadar('Ver Producto: ' + sku);
     
     // Preparar imágenes
     currentImages = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL : [p.IMAGEN_URL];
@@ -327,8 +265,20 @@ function abrirDetalle(sku) {
             ` : ''}
         </div>
 
-        <h2 class="cian" style="margin-bottom:5px; line-height: 1.2;">${p.NOMBRE}</h2>
-        ${p.TIPO_PROMO === 'Regalo' ? `<p style="color:var(--cian); font-size:0.8rem; margin-top:5px; margin-bottom:15px;"><i class="fas fa-gift"></i> Incluye regalo por tu compra</p>` : ''}
+        <h2 class="cian" style="margin-bottom:5px;">${p.NOMBRE}</h2>
+<p style="color:var(--amber); font-weight:bold; font-size:1.2rem; margin-bottom:15px;">
+${(p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ? 
+    `<span class="precio-old" style="text-decoration:line-through; color:#888; font-size:0.9rem; margin-right:10px;">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>
+     <span class="precio-promo">$${(Number(p.PRECIO) - Number(p.DETALLE_PROMO)).toLocaleString('es-CL')}</span>` : 
+    `<span class="precio-promo">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>`
+}
+</p>
+${p.TIPO_PROMO === 'Regalo' ? `<p style="color:var(--cian); font-size:0.8rem; margin-top:-10px; margin-bottom:15px;"><i class="fas fa-gift"></i> Incluye regalo por tu compra</p>` : ''}
+${p.TIPO_PROMO === 'Volumen' && p.DETALLE_PROMO ? 
+    `<div style="background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--amber); color: var(--amber); padding: 10px; border-radius: 5px; font-size: 0.75rem; margin-top: -5px; margin-bottom: 15px;">
+        <strong style="display:block; margin-bottom:5px;"><i class="fas fa-tags"></i> PRECIO MAYORISTA AUTOMÁTICO:</strong>
+        ${p.DETALLE_PROMO.split(',').map(u => `Si llevas <b>${u.split(':')[0]}</b> te quedan a <b>$${Number(u.split(':')[1] / u.split(':')[0]).toLocaleString('es-CL')}</b> c/u`).join('<br>')}
+    </div>` : ''}
 
         <div class="variantes-container" style="margin-bottom:20px;">
             ${crearSelectorVariante('SABOR', p.SABOR)}
@@ -348,23 +298,11 @@ function abrirDetalle(sku) {
     const oldFooter = modal.querySelector('.modal-footer-fixed');
     if (oldFooter) oldFooter.remove();
 
-    // FOCUS UX: Calculamos el bloque de precio para inyectarlo en el Footer Pegajoso
-    const htmlPrecioFooter = (p.TIPO_PROMO === 'Descuento' && p.DETALLE_PROMO) ? 
-        `<div style="display:flex; flex-direction:column; line-height:1;">
-           <span style="text-decoration:line-through; color:#888; font-size:0.75rem;">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>
-           <span style="color:var(--neon-green); font-weight:bold; font-size:1.4rem; font-family:var(--font-brand); text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);">$${(Number(p.PRECIO) - Number(p.DETALLE_PROMO)).toLocaleString('es-CL')}</span>
-         </div>` : 
-        `<span style="color:var(--neon-green); font-weight:bold; font-size:1.4rem; font-family:var(--font-brand); text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);">$${Number(p.PRECIO).toLocaleString('es-CL')}</span>`;
-
     const footer = document.createElement('div');
     footer.className = 'modal-footer-fixed';
     footer.innerHTML = `
-        <div style="flex: 1; text-align: left;">
-            <span style="font-size: 0.65rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px;">Precio Final</span><br>
-            ${htmlPrecioFooter}
-        </div>
-        <button class="btn-checkout" onclick="agregarConVariantes('${p.SKU}')" style="flex: 1.2; margin:0; padding: 14px 10px; font-size: 0.85rem; display:flex; align-items:center; justify-content:center; gap:8px;">
-            <i class="fas fa-shopping-basket"></i> AÑADIR
+        <button class="btn-checkout" onclick="agregarConVariantes('${p.SKU}')" style="width:100%; margin:0;">
+            AÑADIR A CARRO
         </button>
     `;
     modal.querySelector('.modal-content').appendChild(footer);
@@ -436,6 +374,8 @@ function agregarAlCarrito(sku, variantes = "") {
   // Seguro FOCUS: si no encuentra el producto, aborta para no romper la web
   if (!p) return;
 
+  registrarClicRadar('Añadir Carro: ' + sku + ' - ' + p.NOMBRE); // FOCUS: Registro automático
+
   // FOCUS: Buscamos si ya existe el mismo producto CON LA MISMA VARIANTE exacta
   const itemExistente = carrito.find(function(item) { 
       return item.sku === sku && item.variantes === variantes; 
@@ -458,8 +398,6 @@ function agregarAlCarrito(sku, variantes = "") {
       cantidad: 1
     });
 
-    // LÓGICA DE REGALO (Faltaba en tu función)
-    // Busca el producto regalado y lo añade a precio $0
     if (p.TIPO_PROMO === 'Regalo' && p.DETALLE_PROMO) {
       const regalo = productosGlobal.find(function(it) { return it.SKU === p.DETALLE_PROMO; });
       if (regalo) {
@@ -481,20 +419,17 @@ function agregarAlCarrito(sku, variantes = "") {
 
 function actualizarUI() {
   const totalItems = carrito.reduce(function(sum, item) { return sum + item.cantidad; }, 0);
-  
-  // 1. Actualiza contador del menú superior
   document.getElementById('cart-count').innerText = totalItems;
   
-  // 2. Sincroniza burbuja flotante (Novedad FOCUS)
   const countBubble = document.getElementById('cart-count-bubble');
   if(countBubble) {
     countBubble.innerText = totalItems;
-    // Ocultar si está vacío para no generar "ruido visual" innecesario
     countBubble.style.display = totalItems > 0 ? 'flex' : 'none';
   }
   
-  renderCarrito();
+  // FOCUS: Primero calculamos el volumen y el ahorro, luego dibujamos el HTML
   actualizarTotalCarrito();
+  renderCarrito();
 }
 
 function renderCarrito() {
@@ -505,11 +440,20 @@ function renderCarrito() {
   }
 
   container.innerHTML = carrito.map(function(item, index) {
+    // FOCUS: Tacha el precio si hay una rebaja
+    let tachado = "";
+    if (item.precioOriginal && item.precioOriginal > item.precio && !item.sku.includes("-REGALO")) {
+        tachado = `<span style="text-decoration: line-through; color: #888; font-size: 0.7rem; margin-right: 5px;">$${item.precioOriginal.toLocaleString('es-CL')}</span>`;
+    }
+    
+    let subInfo = `<small style="color:var(--cian);">${tachado}$${item.precio.toLocaleString('es-CL')}</small>`;
+    if(item.sku.includes("-REGALO")) subInfo = `<small style="color:var(--neon-green);"><i class="fas fa-gift"></i> GRATIS</small>`;
+
     return `
       <div class="cart-item">
         <div style="flex:1;">
           <div style="font-weight:600; font-size:0.85rem; color:white;">${item.nombre}</div>
-          <small style="color:var(--cian);">$${item.precio.toLocaleString('es-CL')}</small>
+          ${subInfo}
         </div>
         <div class="cart-item-actions" style="display:flex; align-items:center; gap:8px;">
           <button class="btn-qty" onclick="cambiarCantidad(${index}, -1)">-</button>
@@ -537,24 +481,64 @@ function eliminarDelCarrito(index) {
 }
 
 function actualizarTotalCarrito() {
-  let subtotal = carrito.reduce(function(sum, item) { return sum + (item.precio * item.cantidad); }, 0);
-  
-  // FOCUS: MOTOR DE DESCUENTO
+  let subtotal = 0;
+  let totalOriginal = 0; // Para medir cuánto costaría sin descuentos
+
+  // FOCUS: Recálculo Dinámico por Volumen y Ahorro
+  carrito.forEach(item => {
+      const pData = productosGlobal.find(p => p.SKU === item.sku.replace("-REGALO", ""));
+      
+      let precioBase = 0;
+      if (pData) {
+          precioBase = Number(pData.PRECIO);
+          item.precioOriginal = precioBase; // Guardamos el original para el HTML
+      }
+
+      let precioCalculado = precioBase;
+      const promoType = pData ? String(pData.TIPO_PROMO || '').trim().toUpperCase() : '';
+
+      if (promoType === 'DESCUENTO' && pData.DETALLE_PROMO) {
+          precioCalculado = precioBase - Number(pData.DETALLE_PROMO);
+      } else if (promoType === 'VOLUMEN' && pData.DETALLE_PROMO) {
+          // Calculamos si aplica volumen (Ej: 10:10000,5:6500)
+          const umbrales = String(pData.DETALLE_PROMO).split(',').map(u => {
+              const partes = u.split(':');
+              return { cant: parseInt(partes[0]), precioTotal: parseInt(partes[1]) };
+          }).sort((a,b) => b.cant - a.cant); 
+          
+          for(let u of umbrales) {
+              if(item.cantidad >= u.cant) {
+                  precioCalculado = u.precioTotal / u.cant; // Genera el nuevo precio unitario
+                  break;
+              }
+          }
+      }
+      
+      if(item.sku.includes("-REGALO")) precioCalculado = 0;
+
+      item.precio = precioCalculado; // Fijamos el precio final de la unidad
+      subtotal += (item.precio * item.cantidad);
+      totalOriginal += (precioBase * item.cantidad);
+  });
+
+  // FOCUS: MOTOR DE DESCUENTO (CUPÓN)
+  let descuentoCupon = 0;
   if (miCuponValidado && miCuponValidado.pct > 0) {
-      let descuento = 0;
       if (miCuponValidado.sku === "TODOS" || !miCuponValidado.sku) {
-          // Descuento a todo el carro
-          descuento = subtotal * (miCuponValidado.pct / 100);
+          descuentoCupon = subtotal * (miCuponValidado.pct / 100);
       } else {
-          // Descuento solo a productos de un SKU específico
           carrito.forEach(item => {
               if (item.sku.startsWith(miCuponValidado.sku)) {
-                  descuento += (item.precio * item.cantidad) * (miCuponValidado.pct / 100);
+                  descuentoCupon += (item.precio * item.cantidad) * (miCuponValidado.pct / 100);
               }
           });
       }
-      subtotal = subtotal - Math.round(descuento);
+      subtotal = subtotal - Math.round(descuentoCupon);
   }
+
+  // Cálculo del ahorro global
+  let ahorroFinal = (totalOriginal - subtotal);
+  if(ahorroFinal < 0) ahorroFinal = 0;
 
   const necesitaEnvio = document.getElementById('chk-envio').checked;
   const costoEnvio = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
@@ -562,31 +546,26 @@ function actualizarTotalCarrito() {
   const direccionInput = document.getElementById('direccion-envio');
   if(direccionInput) direccionInput.style.display = necesitaEnvio ? 'block' : 'none';
   
-  const totalFinal = subtotal + costoEnvio;
-      document.getElementById('cart-total-value').innerText = '$' + totalFinal.toLocaleString('es-CL');
-
-      // FOCUS UX: BARRERA DE TRANSFERENCIA MÍNIMA
-      const metodoSeleccionado = document.querySelector('input[name="metodo-pago"]:checked');
-      const alertaMinimo = document.getElementById('alerta-minimo-transferencia');
-      const btnCheckout = document.querySelector('.btn-checkout');
-
-      if (metodoSeleccionado && metodoSeleccionado.value === 'transferencia' && totalFinal > 0 && totalFinal < 1000) {
-        if (alertaMinimo) alertaMinimo.style.display = 'block';
-        if (btnCheckout) {
-            btnCheckout.disabled = true;
-            btnCheckout.style.opacity = '0.4';
-            btnCheckout.style.cursor = 'not-allowed';
-            btnCheckout.innerHTML = '<i class="fas fa-lock"></i> MONTO INSUFICIENTE';
-        }
-      } else {
-        if (alertaMinimo) alertaMinimo.style.display = 'none';
-        if (btnCheckout) {
-            btnCheckout.disabled = false;
-            btnCheckout.style.opacity = '1';
-            btnCheckout.style.cursor = 'pointer';
-            btnCheckout.innerHTML = 'FINALIZAR PEDIDO <i class="fas fa-chevron-right"></i>';
-        }
+  // FOCUS: Inyección del texto de Ahorro "Efecto Supermercado"
+  let msjAhorro = document.getElementById('cart-ahorro-label');
+  if(!msjAhorro) {
+      const totalBox = document.querySelector('.cart-total-box');
+      if(totalBox) {
+          totalBox.insertAdjacentHTML('beforebegin', `<div id="cart-ahorro-label" style="text-align: right; color: var(--neon-green); font-size: 0.85rem; font-family: var(--font-brand); margin-bottom: 5px; display: none;"></div>`);
+          msjAhorro = document.getElementById('cart-ahorro-label');
       }
+  }
+
+  if(msjAhorro) {
+      if(ahorroFinal > 0) {
+          msjAhorro.innerHTML = `<i class="fas fa-tags"></i> HAS AHORRADO: $${ahorroFinal.toLocaleString('es-CL')}`;
+          msjAhorro.style.display = 'block';
+      } else {
+          msjAhorro.style.display = 'none';
+      }
+  }
+  
+  document.getElementById('cart-total-value').innerText = '$' + (subtotal + costoEnvio).toLocaleString('es-CL');
 }
 
 function vaciarCarrito() {
@@ -598,9 +577,12 @@ function vaciarCarrito() {
 async function procesarCompra() {
   if (carrito.length === 0) return;
 
-  const metodoInput = document.querySelector('input[name="metodo-pago"]:checked');
-  if (!metodoInput) return mostrarToast("Por favor, selecciona un método de pago.");
-  const metodo = metodoInput.value;
+  // FOCUS: Barrera +18
+  const chkEdad = document.getElementById('chk-mayor-edad');
+  if(chkEdad && !chkEdad.checked) {
+      mostrarToast("Debes confirmar que eres mayor de 18 años.");
+      return;
+  }
 
   const btn = document.querySelector('.btn-checkout');
   const originalText = btn.innerHTML;
@@ -609,9 +591,9 @@ async function procesarCompra() {
 
   const necesitaEnvio = document.getElementById('chk-envio').checked;
   const subtotal = calcularSubtotal(); 
-  const envioVal = necesitaEnvio ? 3500 : 0;
-  const direccion = document.getElementById('direccion-envio').value;
-
+  const envioVal = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
+  const direccion = document.getElementById('direccion-envio') ? document.getElementById('direccion-envio').value : "";
+  
   if (necesitaEnvio && !direccion) {
     alert("Por favor, ingresa tu dirección para el envío.");
     btn.innerHTML = originalText;
@@ -628,79 +610,41 @@ async function procesarCompra() {
     necesitaEnvio: necesitaEnvio,
     totalFinal: subtotal + envioVal,
     direccion: necesitaEnvio ? direccion : "Retiro en Local",
-    metodoPago: metodo,
+    metodoPago: "mercadopago",
     cuponActivo: miCuponValidado ? miCuponValidado.codigo : null
   };
 
   try {
-    if (metodo === 'mercadopago') {
-      const res = await ejecutarEnServidor("pagar", pedido);
-      if(res.success) {
-        mostrarToast("Redirigiendo a pago seguro...");
-        window.location.href = res.init_point;
-      } else {
-        mostrarToast("Error MP: " + res.msg);
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      }
-    } 
-    else {
-      // --- NUEVO FLUJO UX PARA TRANSFERENCIAS ---
-      const res = await ejecutarEnServidor("registrarPedido", pedido);
-      
-      if(res.success || res.id) {
-        const num = (configGlobal['WHATSAPP_ADMIN'] || '569').toString().replace(/\D/g, '');
-        const msg = `🚀 *NUEVO PEDIDO ESPACIO WEED*\n📌 *ID:* ${res.id || 'N/A'}\n---\n🛒 *Productos:* ${pedido.resumenProductos}\n💰 *Total a Transferir:* $${pedido.totalFinal.toLocaleString('es-CL')}\n🚚 *Envío:* ${pedido.direccion}\n\n*Hola, aquí está el comprobante de mi transferencia.*`;
-        
-        // 1. Llenamos los datos del modal dinámicamente desde la Configuración
-        document.getElementById('mt-id-pedido').innerText = res.id || 'N/A';
-        document.getElementById('mt-total').innerText = "$" + pedido.totalFinal.toLocaleString('es-CL');
-        
-        const bancoCompleto = (configGlobal['BANCO_NOMBRE'] || '---') + " (" + (configGlobal['BANCO_TIPO'] || '---') + ")";
-        document.getElementById('mt-banco').innerText = bancoCompleto;
-        document.getElementById('mt-rut').innerText = configGlobal['BANCO_RUT'] || '---';
-        document.getElementById('mt-numero').innerText = configGlobal['BANCO_NUMERO'] || '---';
-        document.getElementById('mt-email').innerText = configGlobal['BANCO_CORREO'] || '---';
-        
-        // 2. FOCUS: Guardamos las variables temporalmente para que el nuevo botón inteligente las use
-        window.tempWaNum = num;
-        window.tempWaMsg = msg;
-        window.tempOrderId = res.id;
+    // FOCUS: Si es el código secreto del Admin, enviamos al servidor de Efectivo
+    if(miCuponValidado && miCuponValidado.especial === 'EFECTIVO') {
+        const res = await ejecutarEnServidor("registrarVentaEfectivoDirecta", pedido);
+        if(res.success) {
+            vaciarCarrito();
+            mostrarToast("VENTA EFECTIVO REGISTRADA");
+            setTimeout(() => { window.location.href = "exito.html?payment_id=EFECTIVO&external_reference=" + res.id; }, 1500);
+        } else { throw new Error(res.msg); }
+        return;
+    }
 
-        // 3. Vaciamos el carrito y ocultamos la barra lateral silenciosamente
-        vaciarCarrito(); 
-        document.getElementById('cart-drawer').classList.remove('active');
-        
-        // 4. Mostramos la obra de arte (El nuevo Modal)
-        document.getElementById('modal-transferencia-checkout').style.display = 'flex';
-        
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      } else {
-        mostrarToast("Error BD: " + (res.mensaje || "Falla al registrar."));
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      }
+    // Ruta Normal: MercadoPago
+    const res = await ejecutarEnServidor("pagar", pedido);
+    if(res.success) {
+      mostrarToast("Redirigiendo a pago seguro...");
+      window.location.href = res.init_point;
+    } else {
+      mostrarToast("Error: " + res.msg);
+      btn.innerHTML = originalText;
+      btn.disabled = false;
     }
   } catch(err) {
-    mostrarToast("Falla de conexión con el servidor.");
+    mostrarToast("Falla de conexión: " + err.message);
     btn.innerHTML = originalText;
     btn.disabled = false;
   }
 }
 
-// Controladores del nuevo Modal de Transferencia
-function cerrarModalTransferenciaCheckout() {
-    document.getElementById('modal-transferencia-checkout').style.display = 'none';
-    location.reload(); // Recarga limpia al cerrar
-}
-
-function cerrarModalTransferenciaCheckoutYRecargar() {
-    // Le da 1 segundo al navegador para abrir la pestaña de WhatsApp antes de recargar la tienda
-    setTimeout(() => { location.reload(); }, 1000);
-}
-
 function irWhatsApp() {
+  registrarClicRadar('Clic Botón WhatsApp Flotante'); // FOCUS: Registro
   const num = (configGlobal['WHATSAPP_ADMIN'] || '56984569569').toString().replace(/\D/g, '');
   const url = 'https://wa.me/' + num + '?text=' + encodeURIComponent('Hola Espacio Weed, necesito información sobre un productos.');
   window.open(url, '_blank');
@@ -858,10 +802,7 @@ async function ejecutarLogin() {
 }
 
 async function ejecutarRegistro() {
-  // FOCUS: Escudo Anti-Bot
   if (document.getElementById('trampa-bot-registro').value !== "") return;
-
-  // FOCUS: Validación de Consentimiento Expreso (Ley 21.719)
   if (!document.getElementById('reg-acepto-terminos').checked) {
       mostrarToast("Debes aceptar las políticas de privacidad para unirte.");
       return;
@@ -879,10 +820,12 @@ async function ejecutarRegistro() {
   if (!datos.nombre || !datos.email || !datos.pass) {
     return mostrarToast("Faltan datos en el radar.");
   }
-
   if(datos.pass !== datos.passConf) {
     return mostrarToast("Las claves no coinciden.");
   }
+
+  // FOCUS: Registro de intento
+  registrarClicRadar('Intento Registro: ' + datos.email);
 
   mostrarToast("Inyectando datos a la Comunidad...");
 
@@ -913,17 +856,25 @@ async function cargarDashboard() {
     console.log("¡Rango Admin Detectado!");
     let btnAdmin = document.getElementById('btn-admin-portal');
     if(!btnAdmin) {
+      // Botón 1: Admin
       btnAdmin = document.createElement('button');
       btnAdmin.id = 'btn-admin-portal';
       btnAdmin.className = 'tool-btn';
       btnAdmin.style.borderColor = 'var(--amber)';
       btnAdmin.style.color = 'var(--amber)';
       btnAdmin.innerHTML = '<i class="fas fa-user-shield"></i> PANEL ADMIN';
-      btnAdmin.onclick = function() {
-        // CORRECCIÓN GITHUB: Ahora abre tu archivo admin.html físico
-        window.open("admin.html", "_blank"); 
-      };
+      btnAdmin.onclick = function() { window.open("admin.html", "_blank"); };
       toolsGrid.appendChild(btnAdmin);
+
+      // Botón 2: Inventario Directo
+      let btnInv = document.createElement('button');
+      btnInv.id = 'btn-admin-inventario';
+      btnInv.className = 'tool-btn';
+      btnInv.style.borderColor = 'var(--neon-green)';
+      btnInv.style.color = 'var(--neon-green)';
+      btnInv.innerHTML = '<i class="fas fa-box"></i> INVENTARIO';
+      btnInv.onclick = function() { window.open("admin.html?tab=productos_manager", "_blank"); };
+      toolsGrid.appendChild(btnInv);
     }
   }
 
@@ -1687,89 +1638,48 @@ async function dispararComponenteLegal(accionServidor, e) {
 }
 
 
-// ==========================================
-// MOTOR FOCUS: SUBIDA DE COMPROBANTE TRANSFERENCIA
-// ==========================================
-function actualizarLabelComprobante(input) {
-    const label = document.getElementById('lbl-mt-foto');
-    if (input.files && input.files.length > 0) {
-        label.innerHTML = '<i class="fas fa-check"></i> LISTO: ' + input.files[0].name;
-        label.style.borderColor = 'var(--neon-green)';
-        label.style.color = 'var(--neon-green)';
-    } else {
-        label.innerHTML = '<i class="fas fa-camera"></i> ADJUNTAR COMPROBANTE (Opcional)';
-        label.style.borderColor = 'var(--cian)';
-        label.style.color = 'var(--cian)';
-    }
-}
-
-async function enviarComprobanteYWhatsApp() {
-    const fileInput = document.getElementById('mt-adjunto');
-    const btn = document.getElementById('mt-btn-wa');
+async function aplicarCuponCarrito() {
+    const cod = document.getElementById('input-cupon').value.trim().toUpperCase();
+    const msj = document.getElementById('msj-cupon');
+    if(!cod) return;
     
-    // 1. Si no hay foto, salta directo a WhatsApp
-    if (!fileInput.files || fileInput.files.length === 0) {
-        window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(window.tempWaMsg), '_blank');
-        cerrarModalTransferenciaCheckoutYRecargar();
+    // FOCUS: Bypass de Admin (Venta en Efectivo/Transferencia Directa)
+    if(cod === 'ADMINWEED') {
+        if(!sessionUser || sessionUser.rol !== 'Admin') {
+            msj.style.color = "#ff4444";
+            msj.innerText = "Código clasificado. Acceso denegado.";
+            return;
+        }
+        miCuponValidado = { codigo: 'ADMINWEED', pct: 0, sku: 'TODOS', especial: 'EFECTIVO' };
+        msj.style.color = "var(--neon-green)";
+        msj.innerText = "🚀 MODO ADMIN: Venta por Caja Fuerte (Efectivo/Transferencia)";
+        actualizarTotalCarrito();
         return;
     }
 
-    // 2. Bloqueamos el botón visualmente
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> COMPRIMIENDO Y SUBIENDO...';
-    btn.disabled = true;
+    msj.style.color = "var(--amber)";
+    msj.innerText = "Validando...";
 
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-        const img = new Image();
-        img.src = e.target.result;
-        
-        img.onload = async function() {
-            // ==========================================
-            // FOCUS: MOTOR DE COMPRESIÓN DE IMAGEN (Evita el bloqueo de 5MB de Google)
-            // ==========================================
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 800; // Ancho máximo
-            let width = img.width;
-            let height = img.height;
+    try {
+        const res = await ejecutarEnServidor("validarCuponCliente", {codigo: cod});
+        if(res.success) {
+            miCuponValidado = { codigo: cod, pct: res.porcentaje, sku: res.aplicaSku };
+            msj.style.color = "var(--neon-green)";
+            msj.innerText = `¡Cupón ${res.porcentaje}% aplicado con éxito!`;
+            actualizarTotalCarrito();
+        } else {
+            miCuponValidado = null;
+            msj.style.color = "#ff4444";
+            msj.innerText = res.msg;
+            actualizarTotalCarrito();
+        }
+    } catch(e) {
+        msj.innerText = "Falla de red al validar.";
+    }
+}
 
-            if (width > MAX_WIDTH) {
-                height = height * (MAX_WIDTH / width);
-                width = MAX_WIDTH;
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // Convertimos a JPEG calidad 70% (Baja el peso a ~150kb)
-            const fotoComprimida = canvas.toDataURL('image/jpeg', 0.7);
 
-            // ==========================================
-            // ENVÍO AL SERVIDOR
-            // ==========================================
-            try {
-                const res = await ejecutarEnServidor("subirComprobanteTransferencia", {
-                    idPedido: window.tempOrderId,
-                    fotoBase64: fotoComprimida
-                });
-                
-                if (res && res.success) {
-                    const nuevoMsj = window.tempWaMsg + `\n\n✅ *Comprobante adjuntado en el sistema.*\nPuedes verlo aquí: ${res.urlComprobante}`;
-                    window.open('https://wa.me/' + window.tempWaNum + '?text=' + encodeURIComponent(nuevoMsj), '_blank');
-                    cerrarModalTransferenciaCheckoutYRecargar();
-                } else {
-                    throw new Error("Falla interna del servidor");
-                }
-            } catch(err) {
-                mostrarToast("Error al subir. Por favor envíalo directo por WhatsApp.");
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-            }
-        };
-    };
-    reader.readAsDataURL(file);
+function registrarClicRadar(elementoTarget) {
+    ejecutarEnServidor("registrarClicMetrica", { elemento: elementoTarget })
+        .catch(e => console.log("Clic no registrado (Red o Bloqueador)"));
 }

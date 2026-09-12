@@ -400,7 +400,6 @@ body {
   color: black;
   box-shadow: 0 0 15px var(--cian);
 }
-
 /* 7. VITRINA DE PRODUCTOS (GRID) */
 .content-wrapper { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
 
@@ -1093,19 +1092,11 @@ select.nave-input {
 }
 
 .modal-footer-fixed {
-    padding: 15px 20px;
-    background: rgba(10, 15, 26, 0.98);
-    border-top: 1px solid rgba(0, 255, 255, 0.2);
+    padding: 15px;
+    background: rgba(0,0,0,0.9);
+    border-top: 1px solid rgba(0,255,255,0.2);
     width: 100%;
     box-sizing: border-box;
-    /* FOCUS UX: Flexbox para alinear Precio a la izq y Botón a la derecha */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    z-index: 10;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
-    backdrop-filter: blur(15px);
 }
 
 /* ESTILO CARRUSEL */
@@ -1338,67 +1329,4 @@ input[type="file"].hidden-file { display: none; }
   transform: scale(1.15) rotate(-10deg);
   background: var(--neon-green);
   box-shadow: 0 4px 20px rgba(46, 204, 113, 0.6);
-}
-
-
-/* ==========================================
-   ESTÉTICA FOCUS: BUSCADOR PREDICTIVO
-   ========================================== */
-.predictive-box {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background: rgba(10, 15, 26, 0.98);
-  border: 1px solid var(--cian);
-  border-radius: 15px;
-  margin-top: 10px;
-  max-height: 350px;
-  overflow-y: auto;
-  z-index: 100000;
-  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
-  backdrop-filter: blur(15px);
-}
-
-.predictive-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 12px 15px;
-  border-bottom: 1px dotted rgba(255,255,255,0.1);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.predictive-item:hover {
-  background: rgba(0, 255, 255, 0.1);
-  border-left: 3px solid var(--neon-green);
-}
-
-.predictive-item img {
-  width: 45px;
-  height: 45px;
-  object-fit: contain;
-  border-radius: 8px;
-  background: white;
-}
-
-.predictive-info {
-  flex: 1;
-  text-align: left;
-}
-
-.predictive-title {
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 3px;
-  line-height: 1.2;
-}
-
-.predictive-price {
-  font-size: 0.85rem;
-  color: var(--neon-green);
-  font-family: var(--font-brand);
 }

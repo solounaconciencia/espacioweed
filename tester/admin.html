@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MANDO CENTRAL | Espacio Weed</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/7ZHhnxmj/Logoew.png">
+    
     
 <style>
 
@@ -1254,6 +1256,56 @@ input[type="file"].hidden-file { display: none; }
     border-radius: 8px;
     margin-bottom: 10px;
 }
+
+/* ==========================================
+   ESTÉTICA FOCUS: RESPONSIVE ADMIN MÓVIL
+   ========================================== */
+.home-cards-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+    gap: 20px; 
+}
+.home-card-item { 
+    background: var(--glass-admin); 
+    border-radius: 10px; 
+    padding: 25px 15px; 
+    text-align: center; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    border: 1px solid var(--glass); 
+    border-bottom: 4px solid; 
+}
+.home-card-item:hover { 
+    transform: translateY(-5px); 
+    background: rgba(255,255,255,0.05); 
+}
+
+@media (max-width: 768px) {
+    /* 1. HOME CARDS COMPACTAS (6 por pantalla) */
+    .home-cards-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .home-card-item { padding: 15px 10px !important; }
+    .home-card-item i { font-size: 2rem !important; margin-bottom: 10px !important; }
+    .home-card-item h3 { font-size: 0.75rem !important; margin: 0 !important;}
+    .home-card-item p { display: none; } /* Ocultamos el texto secundario para ahorrar espacio */
+
+    /* 2. REESTRUCTURACIÓN DE TABLA INVENTARIO */
+    .admin-table thead { display: none; } /* Ocultamos las cabeceras */
+    .admin-table tbody tr {
+        display: flex; flex-wrap: wrap; align-items: flex-start;
+        background: rgba(255,255,255,0.02); margin-bottom: 15px;
+        border-radius: 12px; padding: 12px; border: 1px solid var(--glass);
+        position: relative;
+    }
+    .admin-table tbody td { border: none; padding: 5px; display: block; }
+    
+    /* Posiciones relativas exactas */
+    .admin-table tbody td:nth-child(1) { width: 10%; position: absolute; top: 10px; left: 10px; } /* Checkbox */
+    .admin-table tbody td:nth-child(2) { width: 25%; margin-left: 10%; text-align: center; } /* Foto */
+    .admin-table tbody td:nth-child(3) { width: 65%; font-size: 0.9rem; } /* SKU/Nombre */
+    .admin-table tbody td:nth-child(4) { width: 100%; font-size: 0.75rem; color: var(--amber); margin-top: -10px; padding-left: 35%; } /* Categoría */
+    .admin-table tbody td:nth-child(5) { width: 50%; display: flex; gap: 5px; margin-top: 10px; } /* Precio/Stock */
+    .admin-table tbody td:nth-child(6) { width: 50%; margin-top: 10px; display: flex; gap:5px;} /* Botones Guardar/Detalles */
+}
 </style>    
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1267,7 +1319,8 @@ input[type="file"].hidden-file { display: none; }
     .tab-btn { background: transparent; border: 1px solid #333; color: #888; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: bold; font-family: 'Orbitron'; font-size: 0.7rem; transition: 0.3s; white-space: nowrap; }
     .tab-btn.active { border-color: var(--cian); color: var(--cian); box-shadow: 0 0 10px rgba(0,255,255,0.2); }
     .admin-container { padding: 20px; max-width: 1000px; margin: auto; }
-    .metric-card { background: var(--glass-admin); border-left: 4px solid var(--cian); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+    .metric-card { background: var(--glass-admin); border-left: 4px solid var(--cian); padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    .metric-card:hover { background: rgba(0, 255, 255, 0.05); } /* Feedback visual sutil */
     .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .admin-table th { text-align: left; color: var(--amber); padding: 10px; border-bottom: 1px solid #333; }
     .admin-table td { padding: 10px; border-bottom: 1px solid #111; }
@@ -1405,37 +1458,106 @@ to { transform: translateX(0); opacity: 1; }
 </head>
 <body>
 
-<div class="admin-nav">
-        <button class="tab-btn active" onclick="showSection('dash', this)"><i class="fas fa-chart-line"></i> MÉTRICAS</button>
-        <button class="tab-btn" onclick="showSection('productos_manager', this)"><i class="fas fa-box-open"></i> PRODUCTOS</button>
-        <button class="tab-btn" onclick="showSection('buzon', this)"><i class="fas fa-envelope"></i> BUZÓN</button>
-        <button class="tab-btn" onclick="showSection('config', this)"><i class="fas fa-cog"></i> AJUSTES</button>
-        <button class="tab-btn" onclick="showSection('estilo', this)"><i class="fas fa-palette"></i> ESTILO</button>
+<div class="admin-nav" id="main-admin-nav" style="display: none;">
+        <button class="tab-btn" onclick="showSection('home_admin', this)" style="color: var(--amber); border-color: var(--amber);"><i class="fas fa-home"></i> VOLVER AL INICIO</button>
+        <button class="tab-btn" id="btn-tab-dash" onclick="showSection('dash', this)"><i class="fas fa-chart-line"></i> MÉTRICAS</button>
+        <button class="tab-btn" id="btn-tab-prod" onclick="showSection('productos_manager', this)"><i class="fas fa-box-open"></i> PRODUCTOS</button>
+        <button class="tab-btn" id="btn-tab-buzon" onclick="showSection('buzon', this)"><i class="fas fa-envelope"></i> BUZÓN</button>
+        <button class="tab-btn" id="btn-tab-config" onclick="showSection('config', this)"><i class="fas fa-cog"></i> AJUSTES</button>
+        <button class="tab-btn" id="btn-tab-estilo" onclick="showSection('estilo', this)"><i class="fas fa-palette"></i> ESTILO</button>
     </div>
 
   <div class="admin-container">
-    <div id="dash" class="section active">
-      <h2 class="cian">CONTROL DE CAJA</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        <div class="metric-card"><h3>HOY</h3><p id="ventas-hoy" class="cian" style="font-size: 1.5rem;">$0</p></div>
-        <div class="metric-card"><h3>ESTE MES</h3><p id="ventas-mes" class="amber" style="font-size: 1.5rem;">$0</p></div>
-      </div>
-      <button class="btn-nave-main" onclick="abrirVentaManual()">+ INFORMAR VENTA PRESENCIAL</button>
-      <div style="margin-top:20px; display:flex; align-items:center; gap:10px;">
-        <label style="font-size:0.7rem; color:var(--cian);">PERIODO:</label>
-        <select id="periodo-selector" class="nave-input" style="width:auto; margin:0;" onchange="actualizarGrafico()">
-          <option value="0" selected>MES EN CURSO</option>
-          <option value="3">Últimos 3 Meses</option>
-          <option value="6">Últimos 6 Meses</option>
-          <option value="12" selected>Último Año</option>
-        </select>
-      </div>
+    
+    <div id="home_admin" class="section active">
+      <h2 class="cian" style="text-align: center; font-size: 2rem; margin-bottom: 40px; text-shadow: 0 0 15px var(--cian);"><i class="fas fa-rocket"></i> SALA DE CONTROL</h2>
+      
+      <div class="home-cards-grid">
+          <div class="home-card-item" style="border-bottom-color: var(--neon-green);" onclick="showSection('dash', document.getElementById('btn-tab-dash'))">
+              <i class="fas fa-chart-line" style="color: var(--neon-green); font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">MÉTRICAS</h3>
+              <p style="font-size: 0.8rem; color: #888;">Gráficos, caja diaria y reportes.</p>
+          </div>
+          
+          <div class="home-card-item" style="border-bottom-color: var(--amber);" onclick="showSection('productos_manager', document.getElementById('btn-tab-prod'))">
+              <i class="fas fa-box-open" style="color: var(--amber); font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">INVENTARIO</h3>
+              <p style="font-size: 0.8rem; color: #888;">Gestión de stock y destacados.</p>
+          </div>
 
-      <div class="metric-card" style="margin-top:15px; padding:10px; height:300px;">
-        <canvas id="ventasChart"></canvas>
+          <div class="home-card-item" style="border-bottom-color: var(--cian);" onclick="showSection('buzon', document.getElementById('btn-tab-buzon'))">
+              <i class="fas fa-envelope" style="color: var(--cian); font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">BUZÓN</h3>
+              <p style="font-size: 0.8rem; color: #888;">Soporte técnico y mensajes.</p>
+          </div>
+
+          <div class="home-card-item" style="border-bottom-color: #e1306c;" onclick="showSection('config', document.getElementById('btn-tab-config'))">
+              <i class="fas fa-cogs" style="color: #e1306c; font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">AJUSTES</h3>
+              <p style="font-size: 0.8rem; color: #888;">Tienda, envíos y datos bancarios.</p>
+          </div>
+
+          <div class="home-card-item" style="border-bottom-color: #9b59b6;" onclick="showSection('estilo', document.getElementById('btn-tab-estilo'))">
+              <i class="fas fa-palette" style="color: #9b59b6; font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">ESTILOS</h3>
+              <p style="font-size: 0.8rem; color: #888;">Colores, fuentes y diseño visual.</p>
+          </div>
       </div>
     </div>
 
+    <div id="dash" class="section">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+        <h2 class="cian" style="margin: 0;"><i class="fas fa-chart-line"></i> CONTROL DE MÉTRICAS</h2>
+        <div style="display: flex; gap: 10px;">
+            <button class="tool-btn active" id="btn-vista-ventas" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="alternarMetricas('ventas')">💰 VENTAS</button>
+            <button class="tool-btn" id="btn-vista-clics" onclick="alternarMetricas('clics')">🖱️ TRÁFICO Y CLICS</button>
+        </div>
+      </div>
+
+      <div id="contenedor-metricas-ventas">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+          <div class="metric-card"><h3>HOY</h3><p id="ventas-hoy" class="cian" style="font-size: 1.5rem;">$0</p></div>
+          <div class="metric-card"><h3>ESTE MES</h3><p id="ventas-mes" class="amber" style="font-size: 1.5rem;">$0</p></div>
+        </div>
+        <button class="btn-nave-main" onclick="abrirVentaManual()">+ INFORMAR VENTA PRESENCIAL</button>
+        <div style="margin-top:20px; display:flex; align-items:center; gap:10px;">
+          <label style="font-size:0.7rem; color:var(--cian);">PERIODO:</label>
+          <select id="periodo-selector" class="nave-input" style="width:auto; margin:0;" onchange="actualizarGrafico()">
+            <option value="0" selected>MES EN CURSO</option>
+            <option value="3">Últimos 3 Meses</option>
+            <option value="6">Últimos 6 Meses</option>
+            <option value="12" selected>Último Año</option>
+          </select>
+        </div>
+
+        <div class="metric-card" style="margin-top:15px; padding:10px; height:300px;">
+          <canvas id="ventasChart"></canvas>
+        </div>
+      </div>
+
+      <div id="contenedor-metricas-clics" style="display: none;">
+        
+        <div class="metric-card" style="border-color: var(--amber);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 class="amber" style="margin: 0;"><i class="fas fa-trophy"></i> TOP 7 PRODUCTOS/ELEMENTOS</h3>
+                <button class="btn-nave-main" style="width: auto; padding: 5px 15px; margin: 0; background: transparent; border: 1px solid var(--amber); color: var(--amber);" onclick="document.getElementById('top7-list').classList.toggle('active-list')">VER TOP 7</button>
+            </div>
+            <style>
+                #top7-list { display: none; }
+                #top7-list.active-list { display: block; }
+                .clic-item:hover { background: rgba(0,255,255,0.1) !important; cursor: pointer; }
+            </style>
+            <div id="top7-list" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="metric-card">
+            <h3 class="cian"><i class="fas fa-mouse-pointer"></i> REGISTRO GENERAL</h3>
+            <div id="lista-clics-admin" style="margin-top: 15px; max-height: 400px; overflow-y: auto;">
+                <p style="color: #666; font-size: 0.8rem;">Cargando métricas de tráfico...</p>
+            </div>
+        </div>
+      </div>
+    </div>
     <div id="buzon" class="section">
       <h2 class="cian"><i class="fas fa-comments"></i> BUZÓN MAESTRO</h2>
       
@@ -2044,6 +2166,7 @@ to { transform: translateX(0); opacity: 1; }
                         <option value="Ninguna">SIN PROMO / NORMAL</option>
                         <option value="Descuento">DESCUENTO DIRECTO ($)</option>
                         <option value="Regalo">REGALO POR COMPRA (SKU)</option>
+                        <option value="Volumen">VOLUMEN (X unds por $Y)</option>
                     </select>
                     
                     <div style="display:flex; gap:5px; margin-top:5px;">
@@ -2206,6 +2329,20 @@ function inicializarAdmin(res) {
     actualizarGrafico(); // Esto dispara la carga de los 30 días
   }
   if(res.destacados) destacadosActivos = res.destacados;
+
+  // FOCUS: Leer la URL para abrir secciones directamente (Ej: ?tab=productos_manager)
+window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if(tab) {
+        // Ejecutamos la navegación inteligente
+        const btn = document.getElementById('btn-tab-' + tab.split('_')[0]); 
+        showSection(tab, btn);
+    } else {
+        // Entra por defecto a las tarjetas
+        showSection('home_admin');
+    }
+});
 }
 
 // --- SECCIÓN INVENTARIO ---
@@ -2316,12 +2453,23 @@ async function actualizarGrafico() {
 function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
+  
+  const element = document.getElementById(id);
+  if(element) element.classList.add('active');
+  if(btn) btn.classList.add('active');
+
+  // FOCUS: Ocultar barra superior en el Home
+  const nav = document.getElementById('main-admin-nav');
+  if(nav) {
+      if (id === 'home_admin') {
+          nav.style.display = 'none';
+      } else {
+          nav.style.display = 'flex';
+      }
+  }
 
   if (id === 'buzon') cargarBuzon();
   if (id === 'config') cargarAjustesPanel();
-  if (id === 'estilo') cargarEstilosPanel();
   if (id === 'estilo') cargarEstilosPanel();
 }
 
@@ -3547,6 +3695,119 @@ async function confirmarEliminacionMasa() {
       refrescarBotonesMasa();
     }
   }
+}
+
+// FOCUS: Motor de alternancia de Métricas
+function alternarMetricas(vista) {
+    const btnVentas = document.getElementById('btn-vista-ventas');
+    const btnClics = document.getElementById('btn-vista-clics');
+    const contVentas = document.getElementById('contenedor-metricas-ventas');
+    const contClics = document.getElementById('contenedor-metricas-clics');
+
+    if (vista === 'ventas') {
+        btnVentas.style.borderColor = 'var(--neon-green)'; btnVentas.style.color = 'var(--neon-green)';
+        btnClics.style.borderColor = 'var(--cian)'; btnClics.style.color = 'white';
+        contVentas.style.display = 'block';
+        contClics.style.display = 'none';
+    } else {
+        btnClics.style.borderColor = 'var(--neon-green)'; btnClics.style.color = 'var(--neon-green)';
+        btnVentas.style.borderColor = 'var(--cian)'; btnVentas.style.color = 'white';
+        contVentas.style.display = 'none';
+        contClics.style.display = 'block';
+        cargarMetricasClics(); // Llama al servidor
+    }
+}
+
+async function cargarMetricasClics() {
+    const contenedor = document.getElementById('lista-clics-admin');
+    contenedor.innerHTML = '<p style="color: #666; font-size: 0.8rem;"><i class="fas fa-spinner fa-spin"></i> Escaneando el radar...</p>';
+    
+    try {
+        const res = await ejecutarEnServidor("obtenerMetricasClics");
+        if (res.success && res.datos.length > 0) {
+            contenedor.innerHTML = res.datos.map(d => `
+                <div style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--glass);">
+                    <span style="color: white; font-size: 0.85rem;">${d.nombre}</span>
+                    <span style="color: var(--amber); font-weight: bold; font-family: var(--font-brand);">${d.clics} <i class="fas fa-mouse-pointer" style="font-size: 0.6rem; margin-left: 5px;"></i></span>
+                </div>
+            `).join('');
+        } else {
+            contenedor.innerHTML = '<p style="color: #666; font-size: 0.8rem;">El radar está limpio. Aún no hay interacciones registradas.</p>';
+        }
+    } catch(e) {
+        contenedor.innerHTML = '<p style="color: var(--amber); font-size: 0.8rem;">Error de conexión con el satélite.</p>';
+    }
+}
+
+// ==========================================
+// MOTOR FOCUS: ALTERNANCIA Y TOP 7 METRICAS
+// ==========================================
+function alternarMetricas(vista) {
+    const btnVentas = document.getElementById('btn-vista-ventas');
+    const btnClics = document.getElementById('btn-vista-clics');
+    const contVentas = document.getElementById('contenedor-metricas-ventas');
+    const contClics = document.getElementById('contenedor-metricas-clics');
+
+    if (vista === 'ventas') {
+        btnVentas.style.borderColor = 'var(--neon-green)'; btnVentas.style.color = 'var(--neon-green)';
+        btnClics.style.borderColor = 'var(--cian)'; btnClics.style.color = 'white';
+        contVentas.style.display = 'block';
+        contClics.style.display = 'none';
+    } else {
+        btnClics.style.borderColor = 'var(--neon-green)'; btnClics.style.color = 'var(--neon-green)';
+        btnVentas.style.borderColor = 'var(--cian)'; btnVentas.style.color = 'white';
+        contVentas.style.display = 'none';
+        contClics.style.display = 'block';
+        cargarMetricasClics(); 
+    }
+}
+
+async function cargarMetricasClics() {
+    const contenedorTop = document.getElementById('top7-list');
+    const contenedorGral = document.getElementById('lista-clics-admin');
+    
+    contenedorGral.innerHTML = '<p style="color: #666; font-size: 0.8rem;"><i class="fas fa-spinner fa-spin"></i> Escaneando el radar...</p>';
+    contenedorTop.innerHTML = '';
+
+    try {
+        const res = await ejecutarEnServidor("obtenerMetricasClics");
+        if (res.success && res.datos.length > 0) {
+            
+            const renderItem = (d, isTop) => `
+                <div class="clic-item" onclick="editarDesdeMetrica('${d.nombre}')" style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid ${isTop ? 'var(--amber)' : 'var(--glass)'};">
+                    <span style="color: white; font-size: 0.85rem;">${d.nombre}</span>
+                    <span style="color: ${isTop ? 'var(--amber)' : 'var(--cian)'}; font-weight: bold; font-family: var(--font-brand);">${d.clics} <i class="fas fa-mouse-pointer" style="font-size: 0.6rem; margin-left: 5px;"></i></span>
+                </div>
+            `;
+
+            // TOP 7
+            const top7 = res.datos.slice(0, 7);
+            contenedorTop.innerHTML = top7.map(d => renderItem(d, true)).join('');
+            
+            // EL RESTO
+            const resto = res.datos.slice(7);
+            if (resto.length > 0) {
+                contenedorGral.innerHTML = resto.map(d => renderItem(d, false)).join('');
+            } else {
+                contenedorGral.innerHTML = '<p style="color: #666; font-size: 0.8rem;">No hay más elementos en el radar.</p>';
+            }
+        } else {
+            contenedorGral.innerHTML = '<p style="color: #666; font-size: 0.8rem;">El radar está limpio. Aún no hay interacciones registradas.</p>';
+        }
+    } catch(e) {
+        contenedorGral.innerHTML = '<p style="color: var(--amber); font-size: 0.8rem;">Error de conexión con el satélite.</p>';
+    }
+}
+
+// FOCUS: Extractor Inteligente para Editar Productos desde el Clic
+function editarDesdeMetrica(nombre) {
+    // Si la cadena contiene un SKU (que empiece con EW-), lo extrae y abre el modal
+    const match = nombre.match(/EW-[A-Z0-9\-]+/);
+    if (match) {
+        abrirModalEdicion(match[0]);
+    } else {
+        alert("El elemento [" + nombre + "] no es un producto o no se puede editar directamente.");
+    }
 }
     </script>
 

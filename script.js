@@ -576,6 +576,7 @@ function vaciarCarrito() {
 
 async function procesarCompra() {
   if (carrito.length === 0) return;
+  localStorage.setItem('weed_last_cart', JSON.stringify(carrito));
 
   // FOCUS: Barrera +18
   const chkEdad = document.getElementById('chk-mayor-edad');
@@ -1638,43 +1639,51 @@ async function dispararComponenteLegal(accionServidor, e) {
 }
 
 
-// ==========================================
-// MOTOR FOCUS: CARRITO Y CAJA FUERTE (ADMINWEED)
-// ==========================================
 async function aplicarCuponCarrito() {
-    const cod = document.getElementById('input-cupon').value.trim().toUpperCase();
+    const inputElement = document.getElementById('input-cupon');
+    if(!inputElement) return;
+    
+    const cod = inputElement.value.trim().toUpperCase();
     const msj = document.getElementById('msj-cupon');
     if(!cod) return;
     
-    // FOCUS: Bypass de Admin SIN RESTRICCIÓN DE LOGIN
+    // FOCUS: CAJA FUERTE Y BYPASS ADMIN
     if(cod === 'ADMINWEED') {
         miCuponValidado = { codigo: 'ADMINWEED', pct: 0, sku: 'TODOS', especial: 'EFECTIVO' };
-        msj.style.color = "var(--neon-green)";
-        msj.innerText = "🚀 MODO ADMIN: Venta Efectivo/Transferencia";
-        actualizarTotalCarrito(); // Refresca los precios al instante
+        if(msj) {
+            msj.style.color = "var(--neon-green)";
+            msj.innerText = "🚀 MODO ADMIN: Venta Efectivo / Transferencia Directa";
+        }
+        actualizarTotalCarrito();
+        mostrarToast("MODO ADMIN ACTIVADO: Venta Presencial / Efectivo");
         return;
     }
 
-    msj.style.color = "var(--amber)";
-    msj.innerText = "Validando...";
+    if(msj) {
+        msj.style.color = "var(--amber)";
+        msj.innerText = "Validando...";
+    }
 
     try {
         const res = await ejecutarEnServidor("validarCuponCliente", {codigo: cod});
         if(res.success) {
             miCuponValidado = { codigo: cod, pct: res.porcentaje, sku: res.aplicaSku };
-            msj.style.color = "var(--neon-green)";
-            msj.innerText = `¡Cupón ${res.porcentaje}% aplicado!`;
+            if(msj) {
+                msj.style.color = "var(--neon-green)";
+                msj.innerText = `¡Cupón ${res.porcentaje}% aplicado!`;
+            }
         } else {
             miCuponValidado = null;
-            msj.style.color = "#ff4444";
-            msj.innerText = res.msg;
+            if(msj) {
+                msj.style.color = "#ff4444";
+                msj.innerText = res.msg;
+            }
         }
         actualizarTotalCarrito(); 
     } catch(e) {
-        msj.innerText = "Falla de red al validar.";
+        if(msj) msj.innerText = "Falla de red al validar.";
     }
 }
-
 
 function registrarClicRadar(elementoTarget) {
     ejecutarEnServidor("registrarClicMetrica", { elemento: elementoTarget })

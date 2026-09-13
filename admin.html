@@ -2039,10 +2039,13 @@ to { transform: translateX(0); opacity: 1; }
                 <input type="text" id="np-marca" class="nave-input" value="EW">
                 
                 <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">ESTADO INICIAL:</label>
-                <select id="np-estado" class="nave-input">
+                <select id="np-estado" class="nave-input" onchange="if(this.value==='AFILIADO') document.getElementById('lbl-np-detalle').innerText='URL DE AFILIADO (Dropi/MercadoLibre):'; else document.getElementById('lbl-np-detalle').innerText='MONTO DESC. O SKU REGALO:';">
                     <option value="ACTIVO">ACTIVO</option>
                     <option value="PAUSA">PAUSADO / OCULTO</option>
+                    <option value="AFILIADO">AFILIADO (Link Externo)</option>
                 </select>
+                <label id="lbl-np-detalle" style="font-size:0.65rem; color:#ccc;">MONTO DESC. O SKU REGALO:</label>
+                <input type="text" id="np-detalle-promo" class="nave-input" placeholder="Ej: https://... o EW-001" autocomplete="off" data-lpignore="true">
             </div>
             
             <div>
@@ -2141,10 +2144,12 @@ to { transform: translateX(0); opacity: 1; }
                 <input type="text" id="ed-marca" class="nave-input">
                 
                 <label style="font-size:0.7rem; color:var(--cian); margin-top:5px; display:block;">ESTADO:</label>
-                <select id="ed-estado" class="nave-input">
+                <select id="ed-estado" class="nave-input" onchange="if(this.value==='AFILIADO') document.getElementById('lbl-ed-detalle').innerText='URL DE AFILIADO (Dropi/MercadoLibre):'; else document.getElementById('lbl-ed-detalle').innerText='MONTO DESC. O SKU REGALO:';">
                     <option value="ACTIVO">ACTIVO</option>
                     <option value="PAUSA">PAUSADO / OCULTO</option>
+                    <option value="AFILIADO">AFILIADO (Link Externo)</option>
                 </select>
+                <label id="lbl-ed-detalle" style="font-size:0.65rem; color:#ccc;">MONTO DESC. O SKU REGALO:</label>
             </div>
             
             <div>

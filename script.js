@@ -1638,22 +1638,20 @@ async function dispararComponenteLegal(accionServidor, e) {
 }
 
 
+// ==========================================
+// MOTOR FOCUS: CARRITO Y CAJA FUERTE (ADMINWEED)
+// ==========================================
 async function aplicarCuponCarrito() {
     const cod = document.getElementById('input-cupon').value.trim().toUpperCase();
     const msj = document.getElementById('msj-cupon');
     if(!cod) return;
     
-    // FOCUS: Bypass de Admin (Venta en Efectivo/Transferencia Directa)
+    // FOCUS: Bypass de Admin SIN RESTRICCIÓN DE LOGIN
     if(cod === 'ADMINWEED') {
-        if(!sessionUser || sessionUser.rol !== 'Admin') {
-            msj.style.color = "#ff4444";
-            msj.innerText = "Código clasificado. Acceso denegado.";
-            return;
-        }
         miCuponValidado = { codigo: 'ADMINWEED', pct: 0, sku: 'TODOS', especial: 'EFECTIVO' };
         msj.style.color = "var(--neon-green)";
-        msj.innerText = "🚀 MODO ADMIN: Venta por Caja Fuerte (Efectivo/Transferencia)";
-        actualizarTotalCarrito();
+        msj.innerText = "🚀 MODO ADMIN: Venta Efectivo/Transferencia";
+        actualizarUI(); // FOCUS: Refresca los precios y el diseño al instante
         return;
     }
 
@@ -1665,14 +1663,13 @@ async function aplicarCuponCarrito() {
         if(res.success) {
             miCuponValidado = { codigo: cod, pct: res.porcentaje, sku: res.aplicaSku };
             msj.style.color = "var(--neon-green)";
-            msj.innerText = `¡Cupón ${res.porcentaje}% aplicado con éxito!`;
-            actualizarTotalCarrito();
+            msj.innerText = `¡Cupón ${res.porcentaje}% aplicado!`;
         } else {
             miCuponValidado = null;
             msj.style.color = "#ff4444";
             msj.innerText = res.msg;
-            actualizarTotalCarrito();
         }
+        actualizarUI(); 
     } catch(e) {
         msj.innerText = "Falla de red al validar.";
     }

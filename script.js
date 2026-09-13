@@ -228,8 +228,10 @@ function renderProductos(lista) {
         <div class="more-info-btn">MÁS INFO</div>
         <div style="padding:15px; text-align:center;">
           <small style="color:var(--amber); font-weight:bold; letter-spacing: 1px;">${p.MARCA}</small>
-          <div style="font-family: var(--font-brand); font-size: 1.2rem; color: var(--neon-green); font-weight: bold; margin: 8px 0;">
-            $${precioMostrar.toLocaleString('es-CL')}
+          <div style="font-family: var(--font-brand); font-size: 1.1rem; color: var(--cian); font-weight: bold; margin: 8px 0;">
+            ${(precioMostrar <= 0 || p.ESTADO === 'AFILIADO') ? 
+              `<span style="font-size: 0.85rem; color: var(--amber); cursor: pointer;"><i class="fas fa-external-link-alt"></i> Consulta el valor Aquí</span>` : 
+              '$' + precioMostrar.toLocaleString('es-CL')}
           </div>
           <div style="font-size:0.85rem; font-weight:600; color:white; line-height: 1.3;">${p.NOMBRE}</div>
         </div>
@@ -300,11 +302,18 @@ ${p.TIPO_PROMO === 'Volumen' && p.DETALLE_PROMO ?
 
     const footer = document.createElement('div');
     footer.className = 'modal-footer-fixed';
-    footer.innerHTML = `
-        <button class="btn-checkout" onclick="agregarConVariantes('${p.SKU}')" style="width:100%; margin:0;">
-            AÑADIR A CARRO
-        </button>
-    `;
+    if (p.ESTADO === 'AFILIADO') {
+        const urlDestino = p.DETALLE_PROMO || '#';
+        footer.innerHTML = `
+            <button class="btn-checkout" onclick="window.open('${urlDestino}', '_blank')" style="width:100%; margin:0; background: var(--amber); color: black;">
+                VER OFERTA OFICIAL <i class="fas fa-external-link-alt"></i>
+            </button>`;
+    } else {
+        footer.innerHTML = `
+            <button class="btn-checkout" onclick="agregarConVariantes('${p.SKU}')" style="width:100%; margin:0;">
+                AÑADIR A CARRO
+            </button>`;
+    }
     modal.querySelector('.modal-content').appendChild(footer);
 
     modal.style.display = "flex";

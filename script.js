@@ -1651,7 +1651,7 @@ async function aplicarCuponCarrito() {
         miCuponValidado = { codigo: 'ADMINWEED', pct: 0, sku: 'TODOS', especial: 'EFECTIVO' };
         msj.style.color = "var(--neon-green)";
         msj.innerText = "🚀 MODO ADMIN: Venta Efectivo/Transferencia";
-        actualizarUI(); // FOCUS: Refresca los precios y el diseño al instante
+        actualizarTotalCarrito(); // Refresca los precios al instante
         return;
     }
 
@@ -1669,7 +1669,7 @@ async function aplicarCuponCarrito() {
             msj.style.color = "#ff4444";
             msj.innerText = res.msg;
         }
-        actualizarUI(); 
+        actualizarTotalCarrito(); 
     } catch(e) {
         msj.innerText = "Falla de red al validar.";
     }

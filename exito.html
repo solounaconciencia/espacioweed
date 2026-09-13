@@ -28,34 +28,51 @@
     </div>
 
     <script>
-        // 1. PEGA AQUÍ TU URL DE APPS SCRIPT
         const API_URL = "https://script.google.com/macros/s/AKfycbz4tyWIFGtnbdhoyBQg5ngicVxHrF88rUdNCaoG0o85G5Uf00WpiAC38OrTH3__RWa2LQ/exec";
 
         async function cargarPantallaExito() {
             const params = new URLSearchParams(window.location.search);
-            const numMP = params.get('payment_id') || 'N/A';
-            const numPedido = params.get('external_reference') || 'PENDIENTE';
+            const numMP = params.get('payment_id') || params.get('collection_id') || 'REGISTRADO';
+            const numPedido = params.get('external_reference') || 'EW-WEB';
             
-            let lista = "Consultar detalle";
+            let listaProductosTexto = "";
             try {
-                let car = localStorage.getItem('carritoWeed') || localStorage.getItem('carrito');
+                // Leemos el carrito que guardamos antes de pagar
+                let car = localStorage.getItem('weed_last_cart') || localStorage.getItem('carritoWeed') || localStorage.getItem('carrito');
                 if (car) {
                     let items = JSON.parse(car);
-                    lista = items.map(i => i.cantidad + "x " + (i.nombre || i.producto)).join("%0A- ");
-                    localStorage.removeItem('carrito'); localStorage.removeItem('carritoWeed');
+                    listaProductosTexto = items.map(i => `• ${i.cantidad}x ${i.nombre} ($${(i.precio * i.cantidad).toLocaleString('es-CL')})`).join('%0A');
                 }
-            } catch(e) { console.log(e); }
+            } catch(e) {
+                console.log("Error leyendo carrito guardado", e);
+            }
+
+            if (!listaProductosTexto) {
+                listaProductosTexto = "• Consulta de productos registrada en sistema";
+            }
 
             try {
-                const res = await fetch(API_URL + "?action=getInitialData");
-                const data = await res.json();
-                const wa = data.config['WHATSAPP_ADMIN'] || data.config['WHATSAPP'];
-                if(wa) {
-                    const num = wa.toString().replace(/\D/g, '');
-                    let msg = "¡Hola Espacio Weed! Pago confirmado. 🚀%0A%0A📦 *Pedido:* " + numPedido + "%0A💳 *Pago ID:* " + numMP + "%0A🛍️ *Items:*%0A- " + lista;
-                    document.getElementById('link-wa').href = "https://wa.me/" + num + "?text=" + msg;
-                }
-            } catch (err) { console.error(err); }
+                const res = await fetch(API_URL + "?action=getConfig");
+                const config = await res.json();
+                const wa = config['WHATSAPP_ADMIN'] || config['WHATSAPP'] || '56984569569';
+                const num = wa.toString().replace(/\D/g, '');
+
+                let msg = `¡Hola Espacio Weed! Acabo de realizar una compra exitosa. 🚀%0A%0A📌 *N° de Pedido:* ${numPedido}%0A💳 *Comprobante MP:* ${numMP}%0A🛍️ *Mis Productos:*%0A${listaProductosTexto}%0A%0A*Escribo para coordinar la entrega/despacho.*`;
+                
+                const linkWa = document.getElementById('link-wa');
+                linkWa.href = "https://wa.me/" + num + "?text=" + msg;
+                // FOCUS: Fuerza apertura en ventana/pestaña nueva sin cerrar la web
+                linkWa.target = "_blank";
+                linkWa.rel = "noopener noreferrer";
+
+                // Limpiamos el carrito guardado tras procesar
+                localStorage.removeItem('weed_last_cart');
+                localStorage.removeItem('carrito');
+                localStorage.removeItem('carritoWeed');
+
+            } catch (err) {
+                console.error("Error cargando WhatsApp:", err);
+            }
         }
         cargarPantallaExito();
     </script>

@@ -1705,3 +1705,64 @@ function registrarClicRadar(elementoTarget) {
     ejecutarEnServidor("registrarClicMetrica", { elemento: elementoTarget })
         .catch(e => console.log("Clic no registrado (Red o Bloqueador)"));
 }
+
+// ==========================================
+// MOTOR FOCUS: GENERACIÓN DE LEADS COACH 3D
+// ==========================================
+function abrirModalAgencia(e) {
+    if(e) e.preventDefault();
+    document.getElementById('modal-agencia').style.display = 'flex';
+    document.getElementById('form-agencia').style.display = 'block';
+    document.getElementById('success-agencia').style.display = 'none';
+}
+
+async function enviarLeadAgencia() {
+    const nombre = document.getElementById('ag-nombre').value.trim();
+    const correo = document.getElementById('ag-correo').value.trim();
+    const whatsapp = document.getElementById('ag-whatsapp').value.trim();
+    const servicio = document.getElementById('ag-servicio').value;
+    const btn = document.getElementById('btn-envio-agencia');
+
+    if(!nombre || !correo || !whatsapp || !servicio) {
+        return mostrarToast("Por favor, completa todos los campos del radar.");
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> TRANSMITIENDO...';
+
+    const payload = {
+        nombre: nombre,
+        correo: correo,
+        whatsapp: whatsapp,
+        servicio: servicio
+    };
+
+    try {
+        // Envia el correo a Coach3D usando la función que ya existe en el backend
+        const res = await ejecutarEnServidor("registrarLeadAgencia", payload);
+        
+        if(res.success) {
+            // Obtener el nombre de la tienda para el texto de WhatsApp
+            const nombreTienda = configGlobal['NOMBRE_TIENDA'] || "una tienda asociada";
+            
+            // ---> COLOCA EL NÚMERO DE WHATSAPP DE COACH 3D AQUÍ <---
+            const numDestino = "56900000000"; 
+            
+            const msgWa = `¡Hola Coach 3D Latam!%0A%0AVengo referido desde la tienda *${nombreTienda}*.%0A%0A*Mi Nombre:* ${nombre}%0A*Mi Solicitud:* ${servicio}%0A%0AMe gustaría coordinar para avanzar.`;
+            
+            const btnWa = document.getElementById('btn-wa-agencia');
+            btnWa.href = `https://wa.me/${numDestino}?text=${msgWa}`;
+            btnWa.target = "_blank";
+
+            document.getElementById('form-agencia').style.display = 'none';
+            document.getElementById('success-agencia').style.display = 'block';
+        } else {
+            mostrarToast("Error en transmisión.");
+        }
+    } catch(e) {
+        mostrarToast("Falla de red al conectar con Coach 3D.");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'SOLICITAR CONTACTO';
+    }
+}

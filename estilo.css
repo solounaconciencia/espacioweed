@@ -142,13 +142,13 @@ body {
 
 /* 4. HEADER Y NAVEGACIÓN */
 .header-wrap {
-  margin-top: 40px;
+  margin-top: 35px;
   padding: 20px 0;
   background: #000;
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(46, 204, 113, 0.2);
   position: sticky; /* FOCUS: Se queda pegado al bajar */
-  top: 30px; /* Queda justo debajo de la top-bar */
+  top: 35px; /* Queda justo debajo de la top-bar */
   z-index: 90000;
 }
 
@@ -590,7 +590,7 @@ body {
   position: fixed;
   bottom: 30px; right: 30px;
   width: 65px; height: 65px;
-  z-index: 5500;
+  z-index: 999999 !important;
   cursor: pointer;
   transition: var(--transition);
 }
@@ -620,10 +620,10 @@ body {
   .top-bar-container { gap: 6px; }
   .trust-card { font-size: 0.55rem; padding: 4px 8px; }
   
-  /* FOCUS UX: Empuja el encabezado hacia abajo para que la top-bar respire */
+  /* FOCUS UX: Evita que se esconda debajo de la barra top-bar */
   .header-wrap { 
       margin-top: 85px; 
-      top: 60px; /* Offset sticky para celulares */
+      top: 85px; /* FOCUS: Mismo nivel que el margin para encaje perfecto */
       padding: 15px 0;
   }
   
@@ -982,7 +982,7 @@ select.nave-input {
   justify-content: center;
   align-items: center;
   box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
-  z-index: 5400; /* Justo debajo de la de WhatsApp para jerarquía visual */
+  z-index: 999998 !important; /* Justo debajo de la de WhatsApp para jerarquía visual */
   cursor: pointer;
   transition: var(--transition);
   color: black;
@@ -1018,30 +1018,13 @@ select.nave-input {
 
 /* Ajuste para que en móviles no tapen demasiado */
 @media (max-width: 768px) {
-  .wa-bubble {
-  position: fixed;
-  bottom: 30px; right: 30px;
-  width: 65px; height: 65px;
-  z-index: 999999 !important; /* Nivel Dios */
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.cart-float-bubble {
-  position: fixed;
-  bottom: 105px;
-  right: 30px;
-  width: 65px; height: 65px;
-  background: var(--cian);
-  border-radius: 50%;
-  display: flex; justify-content: center; align-items: center;
-  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
-  z-index: 999998 !important; /* Justo debajo de WA */
-  cursor: pointer;
-  transition: var(--transition);
-  color: black;
-  font-size: 1.6rem;
-}
+  .wa-bubble, .cart-float-bubble {
+    right: 15px;
+    width: 46px; 
+    height: 46px;
+  }
+  .wa-bubble { bottom: 15px; }
+  .cart-float-bubble { bottom: 75px; font-size: 1.1rem; }
   
   /* Ajuste de la alerta roja de cantidad */
   .cart-badge-float { min-width: 18px; height: 18px; font-size: 0.65rem; }

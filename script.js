@@ -1643,7 +1643,7 @@ async function dispararComponenteLegal(accionServidor, e) {
   modal.style.display = 'flex';
   
   try {
-    const res = await ejecutarEnServidor(accionServidor);
+    const res = await ejecutarEnServidor(accionServidor, {});
     if (res.success) {
       contenedor.innerHTML = res.html;
     } else {

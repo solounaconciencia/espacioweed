@@ -726,7 +726,7 @@ function renderizarAtmosfera(tipo, colorBg, colorNeon) {
     </div>
     <p>© 2026 Espacio Weed. Todos los derechos reservados.</p>
     <p class="developer-tag">
-        Desarrollador Digital: <a href="https://coach3dlatam.app/asesoriadigital" target="_blank" rel="noopener noreferrer">COACH 3D LATINOÁMERICA. ÁREA SOLUCIONES TECNOLÓGICAS</a>
+        Desarrollador Digital: <a href="#" onclick="abrirModalAgencia(event)">COACH 3D LATINOÁMERICA. ÁREA SOLUCIONES TECNOLÓGICAS</a>
     </p>
 </footer>
         
@@ -734,10 +734,40 @@ function renderizarAtmosfera(tipo, colorBg, colorNeon) {
 <div id="modal-legal-dinamico" class="modal" style="display:none; z-index: 160000; align-items:center; justify-content:center;">
   <div class="modal-content login-card" style="max-width: 500px; padding: 25px; border-color: var(--cian); box-shadow: 0 0 20px rgba(0,255,255,0.2);">
     <span class="close-modal" onclick="document.getElementById('modal-legal-dinamico').style.display='none'">×</span>
-    <div id="cuerpo-legal-contenido" style="max-height: 60vh; overflow-y: auto; margin-top: 15px; margin-bottom: 20px; padding-right: 5px;">
+    <div id="cuerpo-legal-contenido" style="max-height: 60vh; overflow-y: auto; margin-top: 15px; margin-bottom: 20px; padding: 0 20px;">
       <p style="text-align:center; opacity:0.5; font-size:0.8rem;">Conectando con el satélite legal...</p>
     </div>
     <button class="btn-nave-main" style="background: var(--cian); color: black; margin-top: 0;" onclick="document.getElementById('modal-legal-dinamico').style.display='none'">ENTENDIDO Y ACEPTO</button>
+  </div>
+</div>
+
+<div id="modal-agencia" class="modal" style="display:none; z-index: 160000; align-items:center; justify-content:center;">
+  <div class="modal-content login-card" style="max-width: 450px; padding: 25px; border-color: var(--cian); box-shadow: 0 0 20px rgba(0,255,255,0.2);">
+    <span class="close-modal" onclick="document.getElementById('modal-agencia').style.display='none'">×</span>
+    <h2 class="cian" style="margin-bottom:15px; font-family:var(--font-brand); font-size:1.2rem;"><i class="fas fa-rocket"></i> IMPULSA TU NEGOCIO</h2>
+    <p style="color:#ccc; font-size:0.8rem; margin-bottom:20px;">Habla con los desarrolladores de esta nave (Coach 3D Latam) para crear tu propia tienda o escalar tus ventas.</p>
+    
+    <div id="form-agencia">
+        <input type="text" id="ag-nombre" class="nave-input" placeholder="TU NOMBRE">
+        <input type="email" id="ag-correo" class="nave-input" placeholder="TU CORREO">
+        <input type="tel" id="ag-whatsapp" class="nave-input" placeholder="TU WHATSAPP (Ej: +569...)">
+        
+        <select id="ag-servicio" class="nave-input">
+            <option value="" disabled selected>¿Qué necesitas?</option>
+            <option value="Asesoría Gratuita Método Escala">Asesoría Gratuita Método Escala</option>
+            <option value="Quiero mi propia tienda web">Quiero mi propia tienda web</option>
+            <option value="Otro requerimiento digital">Otro requerimiento digital</option>
+        </select>
+        
+        <button class="btn-nave-main" id="btn-envio-agencia" style="background: var(--cian); color: black; margin-top: 15px;" onclick="enviarLeadAgencia()">SOLICITAR CONTACTO</button>
+    </div>
+
+    <div id="success-agencia" style="display:none; text-align:center;">
+        <p style="color:var(--neon-green); font-weight:bold; margin-bottom:15px;">¡Solicitud enviada a Coach 3D Latam!</p>
+        <a href="#" id="btn-wa-agencia" class="btn-nave-main" style="background: var(--neon-green); color: black; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px;">
+            <i class="fab fa-whatsapp" style="font-size:1.2rem;"></i> ENVIAR WHATSAPP AHORA
+        </a>
+    </div>
   </div>
 </div>
 

@@ -617,16 +617,20 @@ async function procesarCompra() {
 
   try {
     // FOCUS: Si es el código secreto del Admin, enviamos al servidor de Efectivo
-    if(miCuponValidado && miCuponValidado.especial === 'EFECTIVO') {
+    // FOCUS: Si es el código secreto del Admin (ADMINWEED)
+    if(miCuponValidado && (miCuponValidado.codigo === 'ADMINWEED' || miCuponValidado.especial === 'EFECTIVO')) {
         const res = await ejecutarEnServidor("registrarVentaEfectivoDirecta", pedido);
         if(res.success) {
             vaciarCarrito();
-            mostrarToast("VENTA EFECTIVO REGISTRADA");
-            setTimeout(() => { window.location.href = "exito.html?payment_id=EFECTIVO&external_reference=" + res.id; }, 1500);
-        } else { throw new Error(res.msg); }
+            mostrarToast("VENTA EN EFECTIVO REGISTRADA CON ÉXITO");
+            setTimeout(() => { 
+                window.location.href = "exito.html?payment_id=EFECTIVO_PRESENCIAL&external_reference=" + res.id; 
+            }, 1000);
+        } else { 
+            throw new Error(res.msg || "Error al registrar venta en efectivo.");
+        }
         return;
     }
-
     // Ruta Normal: MercadoPago
     const res = await ejecutarEnServidor("pagar", pedido);
     if(res.success) {
@@ -645,10 +649,13 @@ async function procesarCompra() {
 }
 
 function irWhatsApp() {
-  registrarClicRadar('Clic Botón WhatsApp Flotante'); // FOCUS: Registro
-  const num = (configGlobal['WHATSAPP_ADMIN'] || '56984569569').toString().replace(/\D/g, '');
-  const url = 'https://wa.me/' + num + '?text=' + encodeURIComponent('Hola Espacio Weed, necesito información sobre un productos.');
-  window.open(url, '_blank');
+  registrarClicRadar('Clic Botón WhatsApp Flotante');
+  const num = (configGlobal['WHATSAPP_ADMIN'] || configGlobal['WHATSAPP'] || '56984569569').toString().replace(/\D/g, '');
+  const url = 'https://wa.me/' + num + '?text=' + encodeURIComponent('Hola Espacio Weed, necesito información sobre sus productos.');
+  
+  // FOCUS: Abrir en pestaña nueva/App de WhatsApp sin cerrar la tienda
+  const win = window.open(url, '_blank');
+  if (win) win.focus();
 }
 
 // CONTROL DEL SLIDER (Navegación y Automático)

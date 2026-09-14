@@ -1659,6 +1659,15 @@ to { transform: translateX(0); opacity: 1; }
       
       <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">COSTO DE ENVÍO ($)</label>
       <input type="number" id="aj_envio" class="nave-input" placeholder="Ej: 3500">
+      
+      <div style="background: rgba(46, 204, 113, 0.05); border: 1px dashed var(--neon-green); padding: 10px; border-radius: 8px; margin-top: 15px;">
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.7rem; color: white; cursor: pointer; font-weight:bold;">
+          <input type="checkbox" id="aj_envio_gratis_activo" style="accent-color: var(--neon-green); width:16px; height:16px;">
+          ACTIVAR BARRA DE ENVÍO GRATIS (Gamificación)
+        </label>
+        <label style="font-size:0.65rem; color:#888; margin-top:10px; display:block;">MONTO META PARA ENVÍO GRATIS ($)</label>
+        <input type="number" id="aj_envio_meta" class="nave-input" placeholder="Ej: 50000" style="margin-bottom:0;">
+      </div>
 
       <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">TOKEN MERCADO PAGO</label>
       <input type="password" id="aj_mp_token" class="nave-input" placeholder="APP_USR-...">
@@ -2678,6 +2687,8 @@ async function cargarAjustesPanel() {
     document.getElementById('aj_anuncio_texto').value = ajustes['ANUNCIO_TEXTO'] || '';
     document.getElementById('aj_anuncio_imagen').value = ajustes['ANUNCIO_IMAGEN'] || '';
     document.getElementById('aj_envio').value = ajustes['COSTO_ENVIO'] || '';
+    document.getElementById('aj_envio_gratis_activo').checked = ajustes['ENVIO_GRATIS_ACTIVO'] === 'true';
+    document.getElementById('aj_envio_meta').value = ajustes['ENVIO_GRATIS_META'] || '';
     document.getElementById('aj_mp_token').value = ajustes['MP_TOKEN'] || '';
     
     document.getElementById('aj_wa').value = ajustes['WHATSAPP'] || '';
@@ -2704,6 +2715,8 @@ async function guardarAjustesPanel(btn) {
     'ANUNCIO_TEXTO': document.getElementById('aj_anuncio_texto').value,
     'ANUNCIO_IMAGEN': document.getElementById('aj_anuncio_imagen').value,
     'COSTO_ENVIO': document.getElementById('aj_envio').value,
+    'ENVIO_GRATIS_ACTIVO': document.getElementById('aj_envio_gratis_activo').checked,
+    'ENVIO_GRATIS_META': document.getElementById('aj_envio_meta').value,
     'MP_TOKEN': document.getElementById('aj_mp_token').value,
     
     'WHATSAPP': document.getElementById('aj_wa').value,

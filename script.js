@@ -105,10 +105,23 @@ document.addEventListener('DOMContentLoaded', async function() {
 function filtrar() {
   const term = document.getElementById('main-search').value.toLowerCase();
   const slider = document.getElementById('hero-slider');
+  const searchInput = document.getElementById('main-search');
+  
+  if (slider && term.length > 0) slider.style.display = 'none';
 
-  // Si el usuario empieza a buscar, el slider se va
-  if (slider && term.length > 0) {
-    slider.style.display = 'none';
+  // FOCUS: Contenedor de Búsqueda Predictiva Rápida
+  let predictivo = document.getElementById('search-predictive');
+  if(!predictivo) {
+      predictivo = document.createElement('div');
+      predictivo.id = 'search-predictive';
+      predictivo.style.cssText = 'position:absolute; top:100%; left:0; width:100%; background:var(--bg-space); border:1px solid var(--cian); border-radius:15px; margin-top:5px; max-height:350px; overflow-y:auto; z-index:99999; display:none; box-shadow:0 15px 35px rgba(0,0,0,0.8); backdrop-filter:blur(10px);';
+      searchInput.parentNode.appendChild(predictivo);
+  }
+
+  if(term.length < 2) {
+      predictivo.style.display = 'none';
+      renderProductos(productosGlobal); 
+      return;
   }
 
   const filtrados = productosGlobal.filter(function(p) {
@@ -118,8 +131,35 @@ function filtrar() {
       p.CATEGORIA.toString().toLowerCase().includes(term)
     );
   });
+
+  if(filtrados.length > 0) {
+      predictivo.innerHTML = filtrados.slice(0, 5).map(p => {
+        const imgUrl = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : (p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
+        return `
+        <div onclick="abrirDetalle('${p.SKU}'); document.getElementById('search-predictive').style.display='none'; document.getElementById('main-search').value='';" style="display:flex; align-items:center; gap:12px; padding:12px 15px; border-bottom:1px solid rgba(255,255,255,0.05); cursor:pointer; transition:0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <img src="${imgUrl}" style="width:45px; height:45px; object-fit:contain; border-radius:5px; background:rgba(0,0,0,0.5);">
+            <div style="flex:1;">
+                <div style="font-size:0.75rem; color:white; font-weight:bold;">${p.NOMBRE}</div>
+                <div style="font-size:0.6rem; color:var(--amber); font-family:var(--font-brand); letter-spacing:1px;">${p.CATEGORIA}</div>
+            </div>
+            <div style="font-size:0.85rem; color:var(--neon-green); font-weight:bold;">$${Number(p.PRECIO).toLocaleString('es-CL')}</div>
+        </div>
+        `}).join('') + `<div onclick="document.getElementById('search-predictive').style.display='none'" style="text-align:center; padding:12px; font-size:0.7rem; color:var(--cian); font-family:var(--font-brand); cursor:pointer; background:rgba(0,0,0,0.4);">VER RESULTADOS (${filtrados.length}) <i class="fas fa-arrow-down"></i></div>`;
+      predictivo.style.display = 'block';
+  } else {
+      predictivo.innerHTML = '<div style="padding:20px; text-align:center; font-size:0.8rem; color:#888;">El radar no encontró coincidencias.</div>';
+      predictivo.style.display = 'block';
+  }
   renderProductos(filtrados);
 }
+
+// Cierra el buscador predictivo al hacer click fuera
+document.addEventListener('click', (e) => {
+    if(!e.target.closest('.search-container')) {
+        const p = document.getElementById('search-predictive');
+        if(p) p.style.display = 'none';
+    }
+});
 
 
 /**
@@ -424,6 +464,7 @@ function agregarAlCarrito(sku, variantes = "") {
   actualizarUI();
   cerrarModal();
   mostrarToast("+1 " + p.NOMBRE + " en el carro");
+  if (navigator.vibrate) navigator.vibrate(50); // FOCUS: Neuro-estímulo táctil
 }
 
 function actualizarUI() {
@@ -550,10 +591,48 @@ function actualizarTotalCarrito() {
   if(ahorroFinal < 0) ahorroFinal = 0;
 
   const necesitaEnvio = document.getElementById('chk-envio').checked;
-  const costoEnvio = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
+  let costoEnvio = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
   
   const direccionInput = document.getElementById('direccion-envio');
   if(direccionInput) direccionInput.style.display = necesitaEnvio ? 'block' : 'none';
+
+  // FOCUS: Barra de Envío Gratis (Gamificación)
+  const metaEnvio = Number(configGlobal['ENVIO_GRATIS_META'] || 0);
+  const envioGratisActivo = configGlobal['ENVIO_GRATIS_ACTIVO'] === 'true';
+  let msjProgreso = document.getElementById('cart-progress-bar');
+  
+  if(!msjProgreso) {
+      const headerCart = document.querySelector('.cart-header');
+      if(headerCart) {
+          headerCart.insertAdjacentHTML('afterend', `
+            <div id="cart-progress-bar" style="display:none; margin: 15px 0; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 12px; text-align: center; border: 1px solid rgba(0, 255, 255, 0.1);">
+                <div id="progress-text" style="font-size: 0.75rem; color: #ccc; margin-bottom: 8px; font-family: var(--font-brand);"></div>
+                <div style="width: 100%; height: 6px; background: #111; border-radius: 5px; overflow: hidden;">
+                    <div id="progress-fill" style="height: 100%; background: var(--neon-green); width: 0%; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+                </div>
+            </div>`);
+          msjProgreso = document.getElementById('cart-progress-bar');
+      }
+  }
+
+  if (envioGratisActivo && metaEnvio > 0 && subtotal > 0) {
+      msjProgreso.style.display = 'block';
+      let pct = (subtotal / metaEnvio) * 100;
+      if (pct >= 100) {
+          pct = 100;
+          if (necesitaEnvio) costoEnvio = 0; // Se hace 0 automáticamente
+          document.getElementById('progress-text').innerHTML = '¡Felicidades! Desbloqueaste <b style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green);">ENVÍO GRATIS</b> 🚀';
+          document.getElementById('progress-fill').style.background = 'var(--neon-green)';
+          document.getElementById('progress-fill').style.boxShadow = '0 0 10px var(--neon-green)';
+      } else {
+          document.getElementById('progress-text').innerHTML = `Agrega <b style="color:var(--amber);">$${(metaEnvio - subtotal).toLocaleString('es-CL')}</b> más para ENVÍO GRATIS`;
+          document.getElementById('progress-fill').style.background = 'var(--amber)';
+          document.getElementById('progress-fill').style.boxShadow = 'none';
+      }
+      document.getElementById('progress-fill').style.width = pct + '%';
+  } else {
+      if(msjProgreso) msjProgreso.style.display = 'none';
+  }
   
   // FOCUS: Inyección del texto de Ahorro "Efecto Supermercado"
   let msjAhorro = document.getElementById('cart-ahorro-label');
@@ -1766,3 +1845,76 @@ async function enviarLeadAgencia() {
         btn.innerHTML = 'SOLICITAR CONTACTO';
     }
 }
+
+// ==========================================
+// MOTOR FOCUS: EFECTO FOMO (SOCIAL PROOF)
+// ==========================================
+function iniciarFomoToast() {
+    const mensajesFomo = [
+        "Alguien de Santiago acaba de hacer una compra ⚡",
+        "¡Stock bajando! Un usuario se llevó 3 unidades 🔥",
+        "Alguien de Viña del Mar aprovechó una oferta 🚀",
+        "Quedan pocas unidades de los más vendidos 👀",
+        "Un usuario nuevo se acaba de registrar en la plataforma 🛸",
+        "Alguien en Concepción agregó artículos a su carrito 🛒",
+        "¡Una venta acaba de confirmarse con éxito! 💰",
+        "Alguien de Antofagasta está por finalizar su pedido 📦",
+        "Se aplicó un cupón de descuento recientemente 🎟️",
+        "Un pedido acaba de ser despachado a Valparaíso 🚚",
+        "Alguien en Temuco se llevó el último en stock ⏳",
+        "¡Nuevos visitantes están explorando el catálogo! 👽",
+        "Alguien de Iquique completó su expedición con éxito 🌌",
+        "Un usuario frecuente acaba de realizar una nueva compra 🤝",
+        "Alguien en Puerto Montt reservó productos en su carrito 🔒",
+        "¡Boom! Alguien de La Serena encontró un regalo especial 🎁",
+        "La comunidad sigue creciendo, nuevo cliente a bordo 🚀",
+        "Alguien de Talca aprovechó el precio de oportunidad 📈",
+        "Un usuario en Rancagua está coordinando su entrega 📲",
+        "¡Envío gratis desbloqueado por un usuario en Chillán! 🎉",
+        "Alguien de Arica valoró positivamente su experiencia ⭐",
+        "Un producto acaba de volver a estar disponible 🔄",
+        "Alguien en Copiapó hizo una compra express ⚡",
+        "¡Atención! Un producto premium acaba de salir de la bodega 💎",
+        "Alguien de Punta Arenas preparó su viaje a otro mundo 🛸",
+        "Un usuario en Valdivia canjeó una promoción exclusiva 🤫",
+        "Alguien de Osorno está navegando en la zona de ofertas 🎯",
+        "¡Confirmación rápida! Pedido aprobado en Curicó ✅",
+        "Alguien en Los Ángeles completó su registro 📝",
+        "Un carrito abandonado acaba de ser recuperado ♻️"
+    ];
+
+    const fomoContainer = document.createElement('div');
+    fomoContainer.id = 'fomo-toast-bubble';
+    fomoContainer.style.cssText = 'position:fixed; bottom:20px; left:-350px; background:rgba(2,2,4,0.95); border:1px solid var(--cian); padding:10px 15px; border-radius:12px; display:flex; align-items:center; gap:12px; z-index:999997; transition:left 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 8px 25px rgba(0,0,0,0.8); max-width: 280px; pointer-events:none; backdrop-filter:blur(5px);';
+    
+    fomoContainer.innerHTML = `
+        <div style="background:var(--cian); color:black; width:25px; height:25px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 10px var(--cian);">
+            <i class="fas fa-bell" style="font-size:0.7rem;"></i>
+        </div>
+        <div id="fomo-text-content" style="color:#ddd; font-size:0.7rem; font-family:var(--font-main); line-height:1.3; font-weight:600;"></div>
+    `;
+    document.body.appendChild(fomoContainer);
+
+    setInterval(() => {
+        // Silenciador: No mostrar si la persona está mirando un producto en detalle o pagando
+        const modal = document.getElementById('modal-detalle');
+        if(modal && modal.style.display === 'flex') return;
+        
+        const msg = mensajesFomo[Math.floor(Math.random() * mensajesFomo.length)];
+        document.getElementById('fomo-text-content').innerHTML = msg;
+        
+        // Efecto rebote hacia adentro
+        fomoContainer.style.left = '20px';
+        
+        // Se oculta a los 5.5 segundos
+        setTimeout(() => {
+            fomoContainer.style.left = '-350px';
+        }, 5500);
+        
+    }, Math.floor(Math.random() * (45000 - 25000 + 1) + 25000)); // Aparece aleatoriamente entre cada 25s y 45s
+}
+
+// Iniciar Motor FOMO 8 segundos después de que cargue la página
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(iniciarFomoToast, 8000);
+});

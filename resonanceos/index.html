@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resonance OS | Dashboard</title>
+    <!-- Importando las tipografías oficiales -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Iconos básicos -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <style>
+        /* Variables Oficiales de Resonance OS */
+        :root {
+            --bg-dark: #050505;
+            --bg-panel: #121212;
+            --bg-card: #1A1A1A;
+            --primary-green: #00E5AB;
+            --secondary-green: #34D399;
+            --text-main: #FFFFFF;
+            --text-muted: #A0A0A0;
+            --border-color: #2A2A2A;
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Exo 2', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- MENÚ LATERAL (SIDEBAR) --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .brand {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: var(--primary-green);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand i { font-size: 1.5rem; }
+
+        .nav-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            gap: 15px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--primary-green);
+            background-color: rgba(0, 229, 171, 0.05);
+            border-left: 3px solid var(--primary-green);
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* --- BARRA SUPERIOR --- */
+        .topbar {
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            width: 300px;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            outline: none;
+            margin-left: 10px;
+            width: 100%;
+            font-family: var(--font-body);
+        }
+
+        /* --- ÁREA DE DASHBOARD --- */
+        .dashboard-grid {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .welcome-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(145deg, var(--bg-panel) 0%, #0a1f18 100%);
+            border: 1px solid var(--secondary-green);
+        }
+
+        .welcome-text h1 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .mars-avatar-placeholder {
+            width: 120px;
+            height: 120px;
+            background-color: var(--bg-card);
+            border-radius: 50%;
+            border: 2px solid var(--primary-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .access-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-muted);
+        }
+
+        .access-btn:hover {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .access-btn i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                height: 100%;
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .search-bar {
+                display: none; /* Ocultamos buscador en móvil para limpiar interfaz */
+            }
+            .welcome-card {
+                flex-direction: column-reverse;
+                text-align: center;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MENÚ LATERAL -->
+    <nav class="sidebar" id="sidebar">
+        <div class="brand">
+            <i class="ri-mind-map"></i>
+            RESONANCE OS
+        </div>
+        <div class="nav-menu">
+            <a href="#" class="nav-item active"><i class="ri-dashboard-line"></i> Escritorio</a>
+            <a href="#" class="nav-item"><i class="ri-robot-2-line"></i> MARS - Guía</a>
+            <a href="#" class="nav-item"><i class="ri-folder-2-line"></i> Proyectos</a>
+            <a href="#" class="nav-item"><i class="ri-building-line"></i> Oficina Técnica Central</a>
+            <a href="#" class="nav-item"><i class="ri-tools-line"></i> Taller de Producción</a>
+            <a href="#" class="nav-item"><i class="ri-archive-drawer-line"></i> Archivo Central</a>
+            <a href="#" class="nav-item"><i class="ri-image-2-line"></i> Biblioteca de Activos</a>
+            <a href="#" class="nav-item"><i class="ri-planet-line"></i> Universos Narrativos</a>
+            <a href="#" class="nav-item"><i class="ri-shield-check-line"></i> Auditoría</a>
+            <a href="#" class="nav-item"><i class="ri-settings-4-line"></i> Configuración</a>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="ri-menu-line"></i>
+            </button>
+            <div class="search-bar">
+                <i class="ri-search-line" style="color: var(--text-muted)"></i>
+                <input type="text" placeholder="Buscar en Resonance OS...">
+            </div>
+            <div style="display: flex; gap: 15px; color: var(--text-muted);">
+                <i class="ri-notification-3-line"></i>
+                <i class="ri-user-settings-line"></i>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- COLUMNA IZQUIERDA (Principal) -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="card welcome-card">
+                    <div class="welcome-text">
+                        <h1>Bienvenido de vuelta, Sergio</h1>
+                        <p style="color: var(--text-muted);">"La metodología es el puente entre la idea y la creación eterna."</p>
+                    </div>
+                    <!-- Aquí irá tu imagen mars_avatar_normal.png -->
+                    <div class="mars-avatar-placeholder">
+                        Img MARS
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-family: var(--font-heading); margin-bottom: 15px; color: var(--text-muted);">ACCESO RÁPIDO</h3>
+                    <div class="quick-access">
+                        <div class="access-btn">
+                            <i class="ri-add-box-line"></i>
+                            Nuevo Proyecto
+                        </div>
+                        <div class="access-btn">
+                            <i class="ri-file-text-line"></i>
+                            Borradores
+                        </div>
+                        <div class="access-btn">
+                            <i class="ri-checkbox-circle-line"></i>
+                            Por Certificar
+                        </div>
+                        <div class="access-btn">
+                            <i class="ri-lightbulb-flash-line"></i>
+                            Ideas
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA (Panel Mars / Sistema) -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="card" style="border-color: var(--primary-green);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <i class="ri-robot-2-line" style="color: var(--primary-green); font-size: 1.5rem;"></i>
+                        <h3 style="font-family: var(--font-heading);">Hola, soy MARS.</h3>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Estoy aquí para guiarte, ordenar tu flujo de trabajo y asegurar la continuidad de tus proyectos en Resonance OS.</p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button style="background: var(--primary-green); color: black; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer;">Continuar proyecto</button>
+                        <button style="background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); padding: 10px; border-radius: 5px; cursor: pointer;">Nueva creación</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Lógica del menú hamburguesa para versión móvil
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer clic fuera en móvil
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

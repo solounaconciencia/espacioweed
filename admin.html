@@ -2110,6 +2110,15 @@ to { transform: translateX(0); opacity: 1; }
                     <option value="PAUSA">PAUSADO / OCULTO</option>
                     <option value="AFILIADO">AFILIADO (Link Externo)</option>
                 </select>
+                <label style="font-size:0.7rem; color:var(--amber); margin-top:10px; display:block; font-weight:bold;">MODALIDAD LOGÍSTICA:</label>
+                  <select id="np-tipo-logistica" class="nave-input" onchange="document.getElementById('box-np-prov').style.display=(this.value==='DROPSHIPPING')?'block':'none'">
+                      <option value="NORMAL" selected>Stock Propio / Local</option>
+                      <option value="DROPSHIPPING">Dropshipping (Proveedor)</option>
+                  </select>
+                  <div id="box-np-prov" style="display:none; margin-top:5px;">
+                      <label style="font-size:0.65rem; color:#ccc; display:block;">SELECCIONAR PROVEEDOR:</label>
+                      <select id="np-proveedor-id" class="nave-input"></select>
+                  </div>
             </div>
             
             <div>
@@ -2213,6 +2222,15 @@ to { transform: translateX(0); opacity: 1; }
                     <option value="PAUSA">PAUSADO / OCULTO</option>
                     <option value="AFILIADO">AFILIADO (Link Externo)</option>
                 </select>
+                <label style="font-size:0.7rem; color:var(--amber); margin-top:10px; display:block; font-weight:bold;">MODALIDAD LOGÍSTICA:</label>
+              <select id="ed-tipo-logistica" class="nave-input" onchange="document.getElementById('box-ed-prov').style.display=(this.value==='DROPSHIPPING')?'block':'none'">
+                  <option value="NORMAL" selected>Stock Propio / Local</option>
+                  <option value="DROPSHIPPING">Dropshipping (Proveedor)</option>
+              </select>
+              <div id="box-ed-prov" style="display:none; margin-top:5px;">
+                  <label style="font-size:0.65rem; color:#ccc; display:block;">SELECCIONAR PROVEEDOR:</label>
+                  <select id="ed-proveedor-id" class="nave-input"></select>
+              </div>
             </div>
             
             <div>
@@ -2539,6 +2557,7 @@ function showSection(id, btn) {
   if (id === 'buzon') cargarBuzon();
   if (id === 'config') cargarAjustesPanel();
   if (id === 'estilo') cargarEstilosPanel();
+  if (id === 'proveedores_manager') cargarProveedoresAdmin();
 }
 
 function renderizarGrafico(listaData) {
@@ -2727,6 +2746,154 @@ function filtrarBuzon() {
   renderizarListaUsuarios(filtrados);
 }
 
+// ==========================================
+// MOTOR FOCUS: GESTIÓN DE PROVEEDORES
+// ==========================================
+let proveedoresGlobal = [];
+
+async function cargarProveedoresAdmin() {
+    const container = document.getElementById('tabla-proveedores-container');
+    if(container) container.innerHTML = '<p style="text-align:center; color:var(--cian); font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando red de proveedores...</p>';
+    try {
+        const res = await ejecutarEnServidor("obtenerProveedores");
+        if(res.success) {
+            proveedoresGlobal = res.proveedores || [];
+            renderTablaProveedores();
+        } else {
+            if(container) container.innerHTML = '<p style="text-align:center; color:#e74c3c; font-size:0.8rem;">Error al obtener proveedores.</p>';
+        }
+    } catch(e) {
+        console.error("Error al cargar proveedores", e);
+        if(container) container.innerHTML = '<p style="text-align:center; color:#e74c3c; font-size:0.8rem;">Error de conexión con la base de datos.</p>';
+    }
+}
+
+function renderTablaProveedores() {
+    const container = document.getElementById('tabla-proveedores-container');
+    if(!container) return;
+
+    if(proveedoresGlobal.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#888; font-size:0.8rem;">No hay proveedores registrados. Haz clic en <b>+ NUEVO PROVEEDOR</b> para registrar el primero.</p>';
+        return;
+    }
+
+    let html = `
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>EMPRESA / RUT</th>
+          <th>ENCARGADO</th>
+          <th>CONTACTO</th>
+          <th>ORIGEN DESPACHO</th>
+          <th style="text-align:center;">ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    proveedoresGlobal.forEach(p => {
+        html += `
+        <tr>
+          <td><strong class="cian">${p.EMPRESA}</strong><br><small style="color:#888;">${p.RUT}</small></td>
+          <td>${p.ENCARGADO}</td>
+          <td>${p.EMAIL}<br><span style="color:var(--neon-green); font-size:0.75rem;">${p.WHATSAPP}</span></td>
+          <td>${p.COMUNA}, ${p.REGION}</td>
+          <td style="text-align:center;">
+            <button class="tool-btn" style="border-color:var(--amber); color:var(--amber);" onclick="editarProveedor('${p.ID}')"><i class="fas fa-edit"></i></button>
+            <button class="tool-btn" style="border-color:#e74c3c; color:#e74c3c; margin-left:5px;" onclick="eliminarProveedorAction('${p.ID}')"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+
+function abrirModalProveedor() {
+    document.getElementById('prov-id').value = '';
+    document.getElementById('prov-empresa').value = '';
+    document.getElementById('prov-rut').value = '';
+    document.getElementById('prov-encargado').value = '';
+    document.getElementById('prov-email').value = '';
+    document.getElementById('prov-whatsapp').value = '';
+    document.getElementById('prov-web').value = '';
+    document.getElementById('prov-direccion').value = '';
+    document.getElementById('prov-comuna').value = '';
+    document.getElementById('prov-region').value = '';
+    document.getElementById('prov-notas').value = '';
+    document.getElementById('modal-proveedor').style.display = 'flex';
+}
+
+function cerrarModalProveedor() {
+    document.getElementById('modal-proveedor').style.display = 'none';
+}
+
+function editarProveedor(id) {
+    const p = proveedoresGlobal.find(item => item.ID == id);
+    if(!p) return alert("Proveedor no encontrado.");
+
+    document.getElementById('prov-id').value = p.ID || '';
+    document.getElementById('prov-empresa').value = p.EMPRESA || '';
+    document.getElementById('prov-rut').value = p.RUT || '';
+    document.getElementById('prov-encargado').value = p.ENCARGADO || '';
+    document.getElementById('prov-email').value = p.EMAIL || '';
+    document.getElementById('prov-whatsapp').value = p.WHATSAPP || '';
+    document.getElementById('prov-web').value = p.WEB || '';
+    document.getElementById('prov-direccion').value = p.DIRECCION || '';
+    document.getElementById('prov-comuna').value = p.COMUNA || '';
+    document.getElementById('prov-region').value = p.REGION || '';
+    document.getElementById('prov-notas').value = p.NOTAS || '';
+    document.getElementById('modal-proveedor').style.display = 'flex';
+}
+
+async function guardarProveedor() {
+    const data = {
+        id: document.getElementById('prov-id').value || 'PROV-' + Date.now(),
+        empresa: document.getElementById('prov-empresa').value.trim(),
+        rut: document.getElementById('prov-rut').value.trim(),
+        encargado: document.getElementById('prov-encargado').value.trim(),
+        email: document.getElementById('prov-email').value.trim(),
+        whatsapp: document.getElementById('prov-whatsapp').value.trim(),
+        web: document.getElementById('prov-web').value.trim(),
+        direccion: document.getElementById('prov-direccion').value.trim(),
+        comuna: document.getElementById('prov-comuna').value.trim(),
+        region: document.getElementById('prov-region').value.trim(),
+        notas: document.getElementById('prov-notas').value.trim()
+    };
+
+    if(!data.empresa || !data.email || !data.comuna) {
+        return alert("Empresa, Email y Comuna son campos obligatorios.");
+    }
+
+    mostrarNotificacion("Guardando proveedor...");
+    try {
+        const res = await ejecutarEnServidor("guardarProveedorBS", data);
+        if(res.success) {
+            mostrarNotificacion("Proveedor guardado con éxito.");
+            cerrarModalProveedor();
+            cargarProveedoresAdmin();
+        } else {
+            alert("Error al guardar proveedor: " + res.msg);
+        }
+    } catch(e) {
+        alert("Error de conexión al guardar proveedor.");
+    }
+}
+
+async function eliminarProveedorAction(id) {
+    if(!confirm("¿Seguro que deseas eliminar este proveedor de la red?")) return;
+    try {
+        const res = await ejecutarEnServidor("eliminarProveedorBS", { id: id });
+        if(res.success) {
+            mostrarNotificacion("Proveedor eliminado.");
+            cargarProveedoresAdmin();
+        } else {
+            alert("Error al eliminar: " + res.msg);
+        }
+    } catch(e) {
+        alert("Error de red al eliminar proveedor.");
+    }
+}
+
 function mostrarNotificacion(msj) {
   const t = document.createElement('div');
   t.className = 'toast-weed';
@@ -2747,6 +2914,10 @@ async function cargarAjustesPanel() {
     document.getElementById('aj_envio_gratis_activo').checked = ajustes['ENVIO_GRATIS_ACTIVO'] === 'true';
     document.getElementById('aj_envio_meta').value = ajustes['ENVIO_GRATIS_META'] || '';
     document.getElementById('aj_mp_token').value = ajustes['MP_TOKEN'] || '';
+
+    if(document.getElementById('aj_blue_account')) document.getElementById('aj_blue_account').value = ajustes['BLUE_ACCOUNT'] || '';
+    if(document.getElementById('aj_blue_apikey')) document.getElementById('aj_blue_apikey').value = ajustes['BLUE_APIKEY'] || '';
+    if(document.getElementById('aj_sii_apikey')) document.getElementById('aj_sii_apikey').value = ajustes['SII_APIKEY'] || '';
     
     document.getElementById('aj_wa').value = ajustes['WHATSAPP'] || '';
     document.getElementById('aj_wa_admin').value = ajustes['WHATSAPP_ADMIN'] || '';
@@ -2775,6 +2946,10 @@ async function guardarAjustesPanel(btn) {
     'ENVIO_GRATIS_ACTIVO': document.getElementById('aj_envio_gratis_activo').checked,
     'ENVIO_GRATIS_META': document.getElementById('aj_envio_meta').value,
     'MP_TOKEN': document.getElementById('aj_mp_token').value,
+
+    'BLUE_ACCOUNT': document.getElementById('aj_blue_account') ? document.getElementById('aj_blue_account').value : '',
+    'BLUE_APIKEY': document.getElementById('aj_blue_apikey') ? document.getElementById('aj_blue_apikey').value : '',
+    'SII_APIKEY': document.getElementById('aj_sii_apikey') ? document.getElementById('aj_sii_apikey').value : '',
     
     'WHATSAPP': document.getElementById('aj_wa').value,
     'WHATSAPP_ADMIN': document.getElementById('aj_wa_admin').value,
@@ -2809,9 +2984,21 @@ async function guardarAjustesPanel(btn) {
 // ==========================================
 let fotosNuevo = []; // Array táctico para el Nuevo Producto
 
+function poblarSelectProveedores(selectId) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    sel.innerHTML = '<option value="" disabled selected>Selecciona proveedor...</option>';
+    proveedoresGlobal.forEach(p => {
+        sel.innerHTML += `<option value="${p.ID}">${p.EMPRESA} (${p.COMUNA})</option>`;
+    });
+}
+
 function abrirModalProductoNuevo() {
     fotosNuevo = [];
     renderFotosNuevo();
+    poblarSelectProveedores('np-proveedor-id');
+    if(document.getElementById('np-tipo-logistica')) document.getElementById('np-tipo-logistica').value = 'NORMAL';
+    if(document.getElementById('box-np-prov')) document.getElementById('box-np-prov').style.display = 'none';
     document.getElementById('lbl-np-foto').innerHTML = '<i class="fas fa-upload"></i> EXAMINAR ARCHIVOS...';
     document.getElementById('lbl-np-foto').style.borderColor = 'var(--cian)';
     document.getElementById('lbl-np-foto').style.color = 'var(--cian)';
@@ -2896,6 +3083,8 @@ async function procesarNuevoProducto() {
         categoria: document.getElementById('np-categoria').value.trim(),
         marca: document.getElementById('np-marca').value.trim(),
         estado: document.getElementById('np-estado').value,
+        tipo_logistica: document.getElementById('np-tipo-logistica').value,
+        proveedor_id: document.getElementById('np-proveedor-id').value,
         precio: document.getElementById('np-precio').value,
         stock: document.getElementById('np-stock').value,
         tipo_promo: document.getElementById('np-tipo-promo').value,
@@ -3018,6 +3207,11 @@ function abrirModalEdicion(sku) {
     document.getElementById('ed-categoria').value = p.CATEGORIA || '';
     document.getElementById('ed-marca').value = p.MARCA || 'EW';
     document.getElementById('ed-estado').value = p.ESTADO || 'ACTIVO';
+    poblarSelectProveedores('ed-proveedor-id');
+    const tipoLog = p.TIPO_LOGISTICA || 'NORMAL';
+    document.getElementById('ed-tipo-logistica').value = tipoLog;
+    document.getElementById('box-ed-prov').style.display = (tipoLog === 'DROPSHIPPING') ? 'block' : 'none';
+    document.getElementById('ed-proveedor-id').value = p.PROVEEDOR_ID || '';
     document.getElementById('ed-precio').value = p.PRECIO || 0;
     document.getElementById('ed-stock').value = p.STOCK || 0;
     
@@ -3120,6 +3314,8 @@ async function guardarEdicionProducto() {
         categoria: document.getElementById('ed-categoria').value.trim(),
         marca: document.getElementById('ed-marca').value.trim(),
         estado: document.getElementById('ed-estado').value,
+        tipo_logistica: document.getElementById('ed-tipo-logistica').value,
+        proveedor_id: document.getElementById('ed-proveedor-id').value,
         precio: document.getElementById('ed-precio').value,
         stock: document.getElementById('ed-stock').value,
         

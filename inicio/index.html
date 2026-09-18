@@ -132,6 +132,30 @@
     #close-chat { cursor: pointer; color: white; transition: 0.3s; }
     #close-chat:hover { color: #ff4444; transform: scale(1.2); }
 
+    /* MODAL PREVENTA SEMILLAS Y CARRITO */
+    .modal-semillas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(15px); z-index: 10005; display: none; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto;
+    }
+    .semillas-card {
+      background: var(--bg-space); border: 1px solid var(--amber); border-radius: 15px; width: 100%; max-width: 500px; padding: 25px;
+      box-shadow: 0 0 30px rgba(241, 196, 15, 0.15); text-align: left; position: relative; margin-bottom: 20px;
+    }
+    .sem-item {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 10px; padding: 12px;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+    }
+    .sem-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--glass); }
+    .sem-btn-add { background: var(--amber); color: black; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .sem-btn-add:hover { transform: scale(1.1); background: white; }
+    .sem-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; background: rgba(0,0,0,0.5); border: 1px solid var(--cian); color: white; outline: none; font-family: var(--font-main); }
+
+    .cart-float-semillas {
+      position: fixed; bottom: 20px; right: 20px; background: var(--amber); color: black; width: 60px; height: 60px;
+      border-radius: 50%; display: none; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; z-index: 10010; box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+    }
+    .cart-badge-sem { position: absolute; top: 0; right: 0; background: red; color: white; font-size: 0.7rem; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+
     /* MODALES LEGALES BLINDADOS */
     .modal-legal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background: rgba(0, 0, 0, 0.9);
@@ -182,6 +206,57 @@
    </div>
   </div>
 
+  <div class="modal-semillas" id="modalSemillas">
+    <div class="semillas-card">
+      <span class="close-legal-btn" onclick="document.getElementById('modalSemillas').style.display='none'" style="border-color:var(--amber); color:var(--amber);">×</span>
+      <h2 style="color:var(--amber); font-family:var(--font-brand); margin-bottom:5px;"><i class="fas fa-seedling"></i> PREVENTA EXCLUSIVA</h2>
+      <p style="color:white; font-size:0.85rem; line-height:1.5; margin-bottom:15px; background:rgba(241, 196, 15, 0.1); padding:10px; border-radius:8px; border:1px dashed var(--amber);">
+        Haz tu compra de preventa a <b>solo $1.000</b> <span style="text-decoration:line-through; color:#888; font-size:0.7rem;">(Normal $1.500)</span>.<br>
+        <i class="fas fa-calendar-check" style="color:var(--neon-green);"></i> Entregas y despachos programados los días <b>5 y 20 de cada mes</b>. Retira desde 72 horas.
+      </p>
+      <div id="semillas-grid" style="max-height: 50vh; overflow-y: auto; padding-right: 5px;">
+        <p style="text-align:center; color:#888; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Conectando con la bóveda botánica...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-semillas" id="modalCheckoutSemillas" style="z-index: 10008;">
+    <div class="semillas-card" style="border-color:var(--cian);">
+      <span class="close-legal-btn" onclick="document.getElementById('modalCheckoutSemillas').style.display='none'">×</span>
+      <h2 style="color:var(--cian); font-family:var(--font-brand); margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> TU PREVENTA</h2>
+
+      <div id="semillas-cart-items" style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom:10px;"></div>
+
+      <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem; color:var(--amber); margin-bottom:15px;">
+        <span>TOTAL:</span> <span id="semillas-total-txt">$0</span>
+      </div>
+
+      <label style="font-size:0.75rem; color:#ccc; display:block; margin-bottom:5px;">TUS DATOS:</label>
+      <input type="text" id="sem-nombre" class="sem-input" placeholder="Nombre completo">
+      <input type="email" id="sem-email" class="sem-input" placeholder="Correo electrónico">
+
+      <div style="background:rgba(0,255,255,0.05); border:1px solid var(--cian); padding:12px; border-radius:8px; margin-bottom:15px;">
+        <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:0.8rem;">
+          <input type="checkbox" id="sem-chk-envio" style="margin-top:3px; accent-color:var(--cian);" onchange="actualizarTotalSemillas()">
+          <div>
+            <strong style="color:var(--cian);"><i class="fas fa-user-secret"></i> Envío Discreto BlueExpress (+$3.500)</strong>
+            <p style="margin:4px 0 0 0; color:#888; font-size:0.7rem;">Si no marcas esta opción, asumes el Retiro Programado en los días 5 y 20 de cada mes.</p>
+          </div>
+        </label>
+        <input type="text" id="sem-direccion" class="sem-input" placeholder="Ingresa tu dirección completa..." style="display:none; margin-top:10px; border-color:var(--amber);">
+      </div>
+
+      <button id="btn-pagar-semillas" class="btn" style="background:var(--neon-green); color:black; border:none; font-weight:bold; font-family:var(--font-brand);" onclick="procesarPagoSemillas()">
+        IR A PAGAR CON MERCADO PAGO <i class="fas fa-lock"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="btn-carro-semillas" class="cart-float-semillas" onclick="abrirCheckoutSemillas()">
+    <i class="fas fa-shopping-basket"></i>
+    <div id="badge-semillas" class="cart-badge-sem">0</div>
+  </div>
+
   <div class="modal-legal-overlay" id="termsModal">
     <div class="modal-legal-card">
       <button class="close-legal-btn" onclick="closeLegalModal('termsModal')">&times;</button>
@@ -208,6 +283,7 @@
       tiktok: "",
       botones: [
       ["Tienda Oficial", "Entra a nuestra nave principal y compra online", "https://espacioweed.cl/", "#2ecc71", "nave.png"],
+      ["Semillas (Preventa $1.000)", "Retiros programados. Envío discreto.", "SEMILLAS_MODAL", "#9b59b6", "fa-solid fa-seedling"],
       ["Vaporizadores", "Descubre la última tecnología de extracción", "https://espacioweed.cl/?cat=Vaporizadores", "#f1c40f", "vapo.png"],
       ["Ubicación", "Visítanos en nuestra base física", "https://espacioweed.cl/?modal=ubicacion", "#e74c3c", "map.png"],
       ["Habla con Mars", "Conoce la nave y resuelve tus dudas", "CHATBOT", "#00ffff", "marsfavicon.png"]
@@ -243,7 +319,7 @@
         let btn = document.createElement('a');
 
       // FOCUS: Lógica para abrir el chatbot desde el botón
-      if(link === "CHATBOT") {
+     if(link === "CHATBOT") {
           btn.href = "#";
           btn.onclick = function(e) {
               e.preventDefault();
@@ -251,10 +327,15 @@
               win.style.display = 'flex';
               if(document.getElementById('chat-messages').innerHTML === '') renderChatNode('inicio');
           };
+      } else if (link === "SEMILLAS_MODAL") {
+          btn.href = "#";
+          btn.onclick = function(e) {
+              e.preventDefault();
+              abrirCatalogoSemillas();
+          };
       } else {
           btn.href = link;
       }
-
       btn.className = 'btn';
       btn.style.borderLeft = `4px solid ${color}`; // Acento lateral estético
         
@@ -393,6 +474,185 @@
     function openLegalModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
     function closeLegalModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
     window.addEventListener('click', (e) => { if (e.target.classList.contains('modal-legal-overlay')) e.target.style.display = 'none'; });
+
+    // ==========================================
+    // MOTOR FOCUS: MINI-ECOMMERCE SEMILLAS
+    // ==========================================
+    const API_URL_MAIN = "https://script.google.com/macros/s/AKfycbz4tyWIFGtnbdhoyBQg5ngicVxHrF88rUdNCaoG0o85G5Uf00WpiAC38OrTH3__RWa2LQ/exec";
+    let semillasData = [];
+    let carritoSemillas = [];
+
+    async function abrirCatalogoSemillas() {
+        document.getElementById('modalSemillas').style.display = 'flex';
+
+        // Si ya cargaron, no volvemos a llamar al servidor
+        if (semillasData.length > 0) return;
+
+        try {
+            const res = await fetch(API_URL_MAIN + "?action=getInitialData");
+            const data = await res.json();
+
+            // Filtramos estrictamente la categoría "Semillas"
+            semillasData = data.productos.filter(p => p.CATEGORIA && p.CATEGORIA.toUpperCase().includes('SEMILLA'));
+
+            let html = '';
+            if (semillasData.length === 0) {
+                html = '<p style="text-align:center; color:#888;">No hay semillas disponibles para preventa en este momento.</p>';
+            } else {
+                semillasData.forEach(p => {
+                    const img = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : (p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
+                    html += `
+                    <div class="sem-item">
+                        <img src="${img}">
+                        <div style="flex:1;">
+                            <h4 style="color:white; margin:0; font-size:0.85rem; line-height:1.2;">${p.NOMBRE}</h4>
+                            <p style="color:var(--amber); font-weight:bold; margin:4px 0 0 0; font-size:0.9rem;">$1.000 <span style="text-decoration:line-through; color:#666; font-size:0.65rem; margin-left:5px;">$${Number(p.PRECIO).toLocaleString('es-CL')}</span></p>
+                        </div>
+                        <button class="sem-btn-add" onclick="agregarSemilla('${p.SKU}')"><i class="fas fa-plus"></i></button>
+                    </div>`;
+                });
+            }
+            document.getElementById('semillas-grid').innerHTML = html;
+        } catch (e) {
+            document.getElementById('semillas-grid').innerHTML = '<p style="color:#e74c3c; text-align:center;">Error de conexión con la base central.</p>';
+        }
+    }
+
+    function agregarSemilla(sku) {
+        const prod = semillasData.find(p => p.SKU === sku);
+        if(!prod) return;
+
+        const existente = carritoSemillas.find(i => i.sku === sku);
+        if (existente) {
+            existente.cantidad++;
+        } else {
+            carritoSemillas.push({
+                sku: prod.SKU,
+                nombre: "PREVENTA: " + prod.NOMBRE,
+                precio: 1000, // PRECIO FORZADO SEGÚN REGLA DE NEGOCIO
+                cantidad: 1,
+                variantes: ""
+            });
+        }
+        actualizarBurbujaSemillas();
+
+        // Cerrar catálogo y abrir checkout directo para agilizar compra
+        document.getElementById('modalSemillas').style.display = 'none';
+        abrirCheckoutSemillas();
+    }
+
+    function actualizarBurbujaSemillas() {
+        const total = carritoSemillas.reduce((acc, item) => acc + item.cantidad, 0);
+        const burbuja = document.getElementById('btn-carro-semillas');
+        document.getElementById('badge-semillas').innerText = total;
+        burbuja.style.display = total > 0 ? 'flex' : 'none';
+    }
+
+    function abrirCheckoutSemillas() {
+        document.getElementById('modalSemillas').style.display = 'none'; // Cierra el catálogo si estaba abierto
+        document.getElementById('modalCheckoutSemillas').style.display = 'flex';
+        renderCarritoSemillas();
+    }
+
+    function renderCarritoSemillas() {
+        const container = document.getElementById('semillas-cart-items');
+        if (carritoSemillas.length === 0) {
+            container.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Tu carro está vacío.</p>';
+            actualizarTotalSemillas();
+            return;
+        }
+
+        container.innerHTML = carritoSemillas.map((item, index) => `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:0.8rem;">
+                <div style="flex:1; color:white;"><b>${item.cantidad}x</b> ${item.nombre}</div>
+                <div style="color:var(--cian); font-weight:bold; margin-right:10px;">$${(item.precio * item.cantidad).toLocaleString('es-CL')}</div>
+                <button onclick="eliminarSemilla(${index})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></button>
+            </div>
+        `).join('');
+
+        actualizarTotalSemillas();
+    }
+
+    function eliminarSemilla(index) {
+        carritoSemillas.splice(index, 1);
+        renderCarritoSemillas();
+        actualizarBurbujaSemillas();
+        if (carritoSemillas.length === 0) document.getElementById('modalCheckoutSemillas').style.display = 'none';
+    }
+
+    // Lógica de visualización del campo dirección
+    document.getElementById('sem-chk-envio').addEventListener('change', function() {
+        document.getElementById('sem-direccion').style.display = this.checked ? 'block' : 'none';
+    });
+
+    function actualizarTotalSemillas() {
+        const subtotal = carritoSemillas.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+        const necesitaEnvio = document.getElementById('sem-chk-envio').checked;
+        const envio = necesitaEnvio ? 3500 : 0;
+        const total = subtotal + envio;
+        document.getElementById('semillas-total-txt').innerText = '$' + total.toLocaleString('es-CL');
+        return { subtotal, envio, total };
+    }
+
+    async function procesarPagoSemillas() {
+        if (carritoSemillas.length === 0) return;
+
+        const nombre = document.getElementById('sem-nombre').value.trim();
+        const email = document.getElementById('sem-email').value.trim();
+        const necesitaEnvio = document.getElementById('sem-chk-envio').checked;
+        const direccion = document.getElementById('sem-direccion').value.trim();
+
+        if (!nombre || !email) {
+            alert("Por favor ingresa tu Nombre y Correo para asegurar tu preventa.");
+            return;
+        }
+        if (necesitaEnvio && !direccion) {
+            alert("Por favor ingresa tu dirección para el envío discreto.");
+            return;
+        }
+
+        const { subtotal, envio, total } = actualizarTotalSemillas();
+        const btn = document.getElementById('btn-pagar-semillas');
+        const txtOriginal = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CONECTANDO CON MERCADO PAGO...';
+        btn.disabled = true;
+
+        const pedido = {
+            nombreCliente: nombre,
+            email: email,
+            resumenProductos: carritoSemillas.map(i => i.nombre + " (x" + i.cantidad + ")").join(', '),
+            items: carritoSemillas,
+            subtotal: subtotal,
+            necesitaEnvio: necesitaEnvio,
+            totalFinal: total,
+            direccion: necesitaEnvio ? (direccion + " (ENVÍO DISCRETO BLUEEXPRESS)") : "RETIRO PROGRAMADO (Días 5 y 20)",
+            metodoPago: "mercadopago",
+            cuponActivo: null
+        };
+
+        try {
+            // Enviar la orden al servidor central de Espacio Weed
+            const res = await fetch(API_URL_MAIN + "?action=pagar", {
+                method: "POST",
+                mode: "cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(pedido)
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                window.location.href = data.init_point; // Redirección a MercadoPago
+            } else {
+                alert("Error en la pasarela de pago: " + data.msg);
+                btn.innerHTML = txtOriginal;
+                btn.disabled = false;
+            }
+        } catch (err) {
+            alert("Error de conexión al servidor central.");
+            btn.innerHTML = txtOriginal;
+            btn.disabled = false;
+        }
+    }
   </script>
 </body>
 </html>

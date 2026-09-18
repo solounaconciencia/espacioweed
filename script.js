@@ -703,9 +703,26 @@ async function procesarCompra() {
   const subtotal = calcularSubtotal(); 
   const envioVal = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
   const direccion = document.getElementById('direccion-envio') ? document.getElementById('direccion-envio').value : "";
-  
+
+  // FOCUS: Escáner de Logística Dropshipping en el Carrito
+  let tieneDropshipping = false;
+  for (let item of carrito) {
+      const pData = productosGlobal.find(p => p.SKU === item.sku.replace("-REGALO", ""));
+      if (pData && pData.TIPO_LOGISTICA === 'DROPSHIPPING') {
+          tieneDropshipping = true;
+          break;
+      }
+  }
+
+  if (tieneDropshipping && !necesitaEnvio) {
+      mostrarToast("⚠️ Tu carrito incluye artículos de despacho directo. Activa el envío a domicilio e ingresa tu dirección.");
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      return;
+  }
+
   if (necesitaEnvio && !direccion) {
-    alert("Por favor, ingresa tu dirección para el envío.");
+    alert("Por favor, ingresa tu dirección para el envío exacto.");
     btn.innerHTML = originalText;
     btn.disabled = false;
     return;

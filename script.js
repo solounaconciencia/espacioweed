@@ -332,20 +332,14 @@ ${p.TIPO_PROMO === 'Volumen' && p.DETALLE_PROMO ?
     </div>` : ''}
 
         <div class="variantes-container" style="margin-bottom:20px;">
-          ${crearSelectorVariante('SABOR', p.SABOR)}
-          ${crearSelectorVariante('COLOR', p.COLOR)}${crearSelectorVariante('TAMAÑO', p.TAMANO)}
-      </div>
+            ${crearSelectorVariante('SABOR', p.SABOR)}
+            ${crearSelectorVariante('COLOR', p.COLOR)}${crearSelectorVariante('TAMAÑO', p.TAMANO)}
+        </div>
 
-      ${p.TIPO_LOGISTICA === 'DROPSHIPPING' ? `
-      <div style="background:rgba(241, 196, 15, 0.05); border:1px dashed var(--amber); padding:12px; border-radius:8px; margin-bottom:20px;">
-          <p style="color:var(--amber); font-size:0.75rem; margin:0; font-weight:bold;"><i class="fas fa-truck-fast"></i> DESPACHO EXCLUSIVO A DOMICILIO</p>
-          <p style="color:#ccc; font-size:0.7rem; margin:5px 0 0 0; line-height:1.4;">Este es un artículo especial. Se enviará de forma segura a tu puerta vía <b>BlueExpress</b>. Tiempo estimado de vuelo: <b>48 a 72 horas hábiles</b>.</p>
-      </div>
-      ` : ''}
-
-      <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border-left: 3px solid var(--cian); margin-top: 15px; margin-bottom: 20px;">
-            <p style="color:var(--cian); font-size:0.75rem; margin:0; font-weight:bold;"><i class="fas fa-box-open"></i> DESPACHO DIRECTO DE BODEGA</p>
-            <p style="color:#ccc; font-size:0.7rem; margin:5px 0 0 0; line-height:1.4;">Este producto se enviará a tu domicilio vía <b>BlueExpress</b> en un plazo estimado de 48 a 72 horas hábiles tras la compra.</p>
+        ${p.TIPO_LOGISTICA === 'DROPSHIPPING' ? `
+        <div style="background:rgba(241, 196, 15, 0.05); border:1px dashed var(--amber); padding:12px; border-radius:8px; margin-bottom:20px;">
+            <p style="color:var(--amber); font-size:0.75rem; margin:0; font-weight:bold;"><i class="fas fa-truck-fast"></i> DESPACHO EXCLUSIVO A DOMICILIO</p>
+            <p style="color:#ccc; font-size:0.7rem; margin:5px 0 0 0; line-height:1.4;">Este es un artículo especial. Se enviará de forma segura a tu puerta vía <b>BlueExpress</b>. Tiempo estimado de vuelo: <b>48 a 72 horas hábiles</b>.</p>
         </div>
         ` : ''}
 

@@ -244,8 +244,16 @@ function renderProductos(lista) {
 
   grid.innerHTML = lista.map(function(p) {
     const stockBajo = (Number(p.STOCK) < 5);
-    const imgUrl = p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png';
-    // FOCUS: Lógica de etiquetas de promoción
+  // Extraer correctamente la imagen si es un array o string simple
+  const imgUrl = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : (p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
+
+  // FOCUS: Etiqueta Dropshipping (48-72 Hrs)
+  let badgeDropshipping = '';
+  if (p.TIPO_LOGISTICA === 'DROPSHIPPING') {
+      badgeDropshipping = `<div class="scarcity-label" style="background:var(--amber); color:black; top:15px; right:15px; left:auto;"><i class="fas fa-truck-fast"></i> 48-72 Hrs</div>`;
+  }
+
+  // FOCUS: Lógica de etiquetas de promoción
     let promoLabel = '';
     if (p.TIPO_PROMO === 'Descuento') {
         promoLabel = `<div class="scarcity-label" style="background:var(--amber); color:black; top:45px;">OFERTA</div>`;
@@ -259,6 +267,7 @@ function renderProductos(lista) {
       <div class="product-card" onclick="abrirDetalle('${p.SKU}')">
         ${stockBajo ? '<div class="scarcity-label">STOCK CRÍTICO</div>' : ''}
         ${promoLabel}
+        ${badgeDropshipping}
         <div style="position: relative;">
           <img src="${imgUrl}" loading="lazy" alt="${p.NOMBRE}" onerror="this.src='https://i.postimg.cc/hj6mws46/Logoew.png'">
           <button class="btn-quick-add" onclick="event.stopPropagation(); agregarAlCarrito('${p.SKU}')" title="Añadir rápido">
@@ -323,10 +332,22 @@ ${p.TIPO_PROMO === 'Volumen' && p.DETALLE_PROMO ?
     </div>` : ''}
 
         <div class="variantes-container" style="margin-bottom:20px;">
-            ${crearSelectorVariante('SABOR', p.SABOR)}
-            ${crearSelectorVariante('COLOR', p.COLOR)}
-            ${crearSelectorVariante('TAMAÑO', p.TAMANO)}
+          ${crearSelectorVariante('SABOR', p.SABOR)}
+          ${crearSelectorVariante('COLOR', p.COLOR)}${crearSelectorVariante('TAMAÑO', p.TAMANO)}
+      </div>
+
+      ${p.TIPO_LOGISTICA === 'DROPSHIPPING' ? `
+      <div style="background:rgba(241, 196, 15, 0.05); border:1px dashed var(--amber); padding:12px; border-radius:8px; margin-bottom:20px;">
+          <p style="color:var(--amber); font-size:0.75rem; margin:0; font-weight:bold;"><i class="fas fa-truck-fast"></i> DESPACHO EXCLUSIVO A DOMICILIO</p>
+          <p style="color:#ccc; font-size:0.7rem; margin:5px 0 0 0; line-height:1.4;">Este es un artículo especial. Se enviará de forma segura a tu puerta vía <b>BlueExpress</b>. Tiempo estimado de vuelo: <b>48 a 72 horas hábiles</b>.</p>
+      </div>
+      ` : ''}
+
+      <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border-left: 3px solid var(--cian); margin-top: 15px; margin-bottom: 20px;">
+            <p style="color:var(--cian); font-size:0.75rem; margin:0; font-weight:bold;"><i class="fas fa-box-open"></i> DESPACHO DIRECTO DE BODEGA</p>
+            <p style="color:#ccc; font-size:0.7rem; margin:5px 0 0 0; line-height:1.4;">Este producto se enviará a tu domicilio vía <b>BlueExpress</b> en un plazo estimado de 48 a 72 horas hábiles tras la compra.</p>
         </div>
+        ` : ''}
 
         <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border-left: 3px solid var(--cian); margin-top: 15px; margin-bottom: 20px;">
             <p class="nave-text" style="text-align:left; line-height:1.6; font-size:0.85rem; white-space: pre-line; margin: 0; color: #ddd;">

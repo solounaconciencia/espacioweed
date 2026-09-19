@@ -3766,9 +3766,9 @@ function actualizarMapaPreview() {
     const direccion = document.getElementById('est-direccion-txt').value.trim();
     const iframe = document.getElementById('mapa-preview');
     if (direccion !== "") {
-        // Convierte el texto en coordenadas de Google Maps
         const direccionCodificada = encodeURIComponent(direccion);
-        iframeMapa.src = "https://maps.google.com/maps?q=" + direccionCodificada + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
+        // FOCUS: Ruta Oficial de Google Maps para incrustar Iframe
+        iframe.src = "https://maps.google.com/maps?q=" + direccionCodificada + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
     } else {
         iframe.src = "";
     }

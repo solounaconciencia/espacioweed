@@ -259,7 +259,7 @@
                 <iframe src="https://www.youtube.com/embed/HkXA_nkBC6A?autoplay=1&mute=1" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 8px;"></iframe>
             </div>
 
-            <a id="btn-abrir-maps" href="#" target="_blank" class="btn-nave-main" style="display: none; text-align: center; text-decoration: none; background: var(--cian); color: black; margin: 0; padding: 15px; font-size: 1rem;">
+            <a id="btn-abrir-maps" href="https://www.google.com/maps/search/?api=1&query=Espacio+Weed" target="_blank" class="btn-nave-main" style="display: block; text-align: center; text-decoration: none; background: var(--cian); color: black; margin: 0; padding: 15px; font-size: 1rem; border-radius: 8px; font-weight: bold; font-family: var(--font-brand);">
                 <i class="fas fa-map-marked-alt"></i> ABRIR DIRECCIÓN EN MAPS
             </a>
 
@@ -399,9 +399,8 @@ function aplicarEstilosDinamicos(config) {
         const btnMaps = document.getElementById('btn-abrir-maps');
         if (btnMaps) {
             const direccionCodificada = encodeURIComponent(config['DIRECCION_TEXTO'].trim());
-            // FOCUS: URL Universal de Búsqueda de Google Maps (Abre la App en el celular)
+            // FOCUS: URL Oficial Verificada que abre la App Móvil de Google Maps o la Web
             btnMaps.href = "https://www.google.com/maps/search/?api=1&query=" + direccionCodificada;
-            btnMaps.style.display = "block";
         }
     }
 

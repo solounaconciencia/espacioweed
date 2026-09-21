@@ -246,11 +246,16 @@
         <input type="text" id="sem-direccion" class="sem-input" placeholder="Ingresa tu dirección completa..." style="display:none; margin-top:10px; border-color:var(--amber);">
       </div>
 
-      <button id="btn-pagar-semillas" class="btn" style="background:var(--neon-green); color:black; border:none; font-weight:bold; font-family:var(--font-brand);" onclick="procesarPagoSemillas()">
-        IR A PAGAR CON MERCADO PAGO <i class="fas fa-lock"></i>
-      </button>
+      <div style="display:flex; gap:10px; margin-top:15px;">
+            <button class="btn" style="flex:1; background:transparent; border:1px solid var(--amber); color:var(--amber); font-weight:bold; padding:12px;" onclick="abrirCatalogoSemillas()">
+              + AGREGAR MÁS
+            </button>
+            <button id="btn-pagar-semillas" class="btn" style="flex:2; background:var(--neon-green); color:black; border:none; font-weight:bold; font-family:var(--font-brand); padding:12px;" onclick="procesarPagoSemillas()">
+              IR A PAGAR <i class="fas fa-lock"></i>
+            </button>
+        </div>
+      </div>
     </div>
-  </div>
 
   <div id="btn-carro-semillas" class="cart-float-semillas" onclick="abrirCheckoutSemillas()">
     <i class="fas fa-shopping-basket"></i>
@@ -483,108 +488,130 @@
     let carritoSemillas = [];
 
     async function abrirCatalogoSemillas() {
-        document.getElementById('modalSemillas').style.display = 'flex';
+          document.getElementById('modalCheckoutSemillas').style.display = 'none'; // Cierra la caja si venimos del botón "Agregar más"
+          document.getElementById('modalSemillas').style.display = 'flex';
 
-        // Si ya cargaron, no volvemos a llamar al servidor
-        if (semillasData.length > 0) return;
+          // Si ya cargaron los productos, no saturamos el servidor
+          if (semillasData.length > 0) return;
 
-        try {
-            const res = await fetch(API_URL_MAIN + "?action=getInitialData");
-            const data = await res.json();
+          try {
+              const res = await fetch(API_URL_MAIN + "?action=getInitialData");
+              const data = await res.json();
 
-            // Filtramos estrictamente la categoría "Semillas"
-            semillasData = data.productos.filter(p => p.CATEGORIA && p.CATEGORIA.toUpperCase().includes('SEMILLA'));
+              semillasData = data.productos.filter(p => p.CATEGORIA && p.CATEGORIA.toUpperCase().includes('SEMILLA'));
 
-            let html = '';
-            if (semillasData.length === 0) {
-                html = '<p style="text-align:center; color:#888;">No hay semillas disponibles para preventa en este momento.</p>';
-            } else {
-                semillasData.forEach(p => {
-                    const img = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : (p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
-                    html += `
-                    <div class="sem-item">
-                        <img src="${img}">
-                        <div style="flex:1;">
-                            <h4 style="color:white; margin:0; font-size:0.85rem; line-height:1.2;">${p.NOMBRE}</h4>
-                            <p style="color:var(--amber); font-weight:bold; margin:4px 0 0 0; font-size:0.9rem;">$1.000 <span style="text-decoration:line-through; color:#666; font-size:0.65rem; margin-left:5px;">$${Number(p.PRECIO).toLocaleString('es-CL')}</span></p>
-                        </div>
-                        <button class="sem-btn-add" onclick="agregarSemilla('${p.SKU}')"><i class="fas fa-plus"></i></button>
-                    </div>`;
-                });
-            }
-            document.getElementById('semillas-grid').innerHTML = html;
-        } catch (e) {
-            document.getElementById('semillas-grid').innerHTML = '<p style="color:#e74c3c; text-align:center;">Error de conexión con la base central.</p>';
-        }
-    }
+              let html = '';
+              if (semillasData.length === 0) {
+                  html = '<p style="text-align:center; color:#888;">No hay semillas disponibles para preventa en este momento.</p>';
+              } else {
+                  semillasData.forEach(p => {
+                      const img = Array.isArray(p.IMAGEN_URL) ? p.IMAGEN_URL[0] : (p.IMAGEN_URL || 'https://i.postimg.cc/hj6mws46/Logoew.png');
+                      html += `
+                      <div class="sem-item">
+                          <img src="${img}">
+                          <div style="flex:1;">
+                              <h4 style="color:white; margin:0; font-size:0.85rem; line-height:1.2;">${p.NOMBRE}</h4>
+                              <p style="color:var(--amber); font-weight:bold; margin:4px 0 0 0; font-size:0.9rem;">$1.000 <span style="text-decoration:line-through; color:#666; font-size:0.65rem; margin-left:5px;">$${Number(p.PRECIO).toLocaleString('es-CL')}</span></p>
+                          </div>
+                          <button class="sem-btn-add" onclick="agregarSemilla('${p.SKU}', event)"><i class="fas fa-plus"></i></button>
+                      </div>`;
+                  });
+              }
+              document.getElementById('semillas-grid').innerHTML = html;
+          } catch (e) {
+              document.getElementById('semillas-grid').innerHTML = '<p style="color:#e74c3c; text-align:center;">Error de conexión con la base central.</p>';
+          }
+      }
 
-    function agregarSemilla(sku) {
-        const prod = semillasData.find(p => p.SKU === sku);
-        if(!prod) return;
+      function agregarSemilla(sku, evt) {
+          const prod = semillasData.find(p => p.SKU === sku);
+          if(!prod) return;
 
-        const existente = carritoSemillas.find(i => i.sku === sku);
-        if (existente) {
-            existente.cantidad++;
-        } else {
-            carritoSemillas.push({
-                sku: prod.SKU,
-                nombre: "PREVENTA: " + prod.NOMBRE,
-                precio: 1000, // PRECIO FORZADO SEGÚN REGLA DE NEGOCIO
-                cantidad: 1,
-                variantes: ""
-            });
-        }
-        actualizarBurbujaSemillas();
+          const existente = carritoSemillas.find(i => i.sku === sku);
+          if (existente) {
+              existente.cantidad++;
+          } else {
+              carritoSemillas.push({
+                  sku: prod.SKU,
+                  nombre: "PREVENTA: " + prod.NOMBRE,
+                  precio: 1000,
+                  cantidad: 1,
+                  variantes: ""
+              });
+          }
+          actualizarBurbujaSemillas();
 
-        // Cerrar catálogo y abrir checkout directo para agilizar compra
-        document.getElementById('modalSemillas').style.display = 'none';
-        abrirCheckoutSemillas();
-    }
+          // FOCUS: Feedback visual táctil (El botón se pone blanco y muestra un check)
+          if(evt && evt.target) {
+              const btn = evt.target.closest('button');
+              if(btn) {
+                  const originalHTML = btn.innerHTML;
+                  btn.innerHTML = '<i class="fas fa-check"></i>';
+                  btn.style.background = 'white';
+                  setTimeout(() => {
+                      btn.innerHTML = originalHTML;
+                      btn.style.background = 'var(--amber)';
+                  }, 800);
+              }
+          }
+      }
 
-    function actualizarBurbujaSemillas() {
-        const total = carritoSemillas.reduce((acc, item) => acc + item.cantidad, 0);
-        const burbuja = document.getElementById('btn-carro-semillas');
-        document.getElementById('badge-semillas').innerText = total;
-        burbuja.style.display = total > 0 ? 'flex' : 'none';
-    }
+      function actualizarBurbujaSemillas() {
+          const total = carritoSemillas.reduce((acc, item) => acc + item.cantidad, 0);
+          const burbuja = document.getElementById('btn-carro-semillas');
+          document.getElementById('badge-semillas').innerText = total;
+          burbuja.style.display = total > 0 ? 'flex' : 'none';
+      }
 
-    function abrirCheckoutSemillas() {
-        document.getElementById('modalSemillas').style.display = 'none'; // Cierra el catálogo si estaba abierto
-        document.getElementById('modalCheckoutSemillas').style.display = 'flex';
-        renderCarritoSemillas();
-    }
+      function abrirCheckoutSemillas() {
+          document.getElementById('modalSemillas').style.display = 'none';
+          document.getElementById('modalCheckoutSemillas').style.display = 'flex';
+          renderCarritoSemillas();
+      }
 
-    function renderCarritoSemillas() {
-        const container = document.getElementById('semillas-cart-items');
-        if (carritoSemillas.length === 0) {
-            container.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Tu carro está vacío.</p>';
-            actualizarTotalSemillas();
-            return;
-        }
+      function renderCarritoSemillas() {
+          const container = document.getElementById('semillas-cart-items');
+          if (carritoSemillas.length === 0) {
+              container.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Tu carro está vacío.</p>';
+              actualizarTotalSemillas();
+              return;
+          }
 
-        container.innerHTML = carritoSemillas.map((item, index) => `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:0.8rem;">
-                <div style="flex:1; color:white;"><b>${item.cantidad}x</b> ${item.nombre}</div>
-                <div style="color:var(--cian); font-weight:bold; margin-right:10px;">$${(item.precio * item.cantidad).toLocaleString('es-CL')}</div>
-                <button onclick="eliminarSemilla(${index})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></button>
-            </div>
-        `).join('');
+          container.innerHTML = carritoSemillas.map((item, index) => `
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:0.8rem; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">
+                  <div style="flex:1; color:white;">
+                      <div style="margin-bottom:5px; font-weight:600;">${item.nombre}</div>
+                      <div style="color:var(--cian); font-weight:bold;">$${(item.precio * item.cantidad).toLocaleString('es-CL')}</div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                      <button onclick="cambiarCantidadSemilla(${index}, -1)" style="background:#222; border:1px solid #444; color:white; width:25px; height:25px; border-radius:4px; cursor:pointer; font-weight:bold;">-</button>
+                      <span style="color:white; font-weight:bold; min-width:15px; text-align:center;">${item.cantidad}</span>
+                      <button onclick="cambiarCantidadSemilla(${index}, 1)" style="background:#222; border:1px solid #444; color:white; width:25px; height:25px; border-radius:4px; cursor:pointer; font-weight:bold;">+</button>
+                      <button onclick="eliminarSemilla(${index})" style="background:none; border:none; color:#e74c3c; cursor:pointer; margin-left:5px;"><i class="fas fa-trash"></i></button>
+                  </div>
+              </div>
+          `).join('');
 
-        actualizarTotalSemillas();
-    }
+          actualizarTotalSemillas();
+      }
 
-    function eliminarSemilla(index) {
-        carritoSemillas.splice(index, 1);
-        renderCarritoSemillas();
-        actualizarBurbujaSemillas();
-        if (carritoSemillas.length === 0) document.getElementById('modalCheckoutSemillas').style.display = 'none';
-    }
+      function cambiarCantidadSemilla(index, delta) {
+          carritoSemillas[index].cantidad += delta;
+          if (carritoSemillas[index].cantidad <= 0) {
+              eliminarSemilla(index);
+          } else {
+              renderCarritoSemillas();
+              actualizarBurbujaSemillas();
+          }
+      }
 
-    // Lógica de visualización del campo dirección
-    document.getElementById('sem-chk-envio').addEventListener('change', function() {
-        document.getElementById('sem-direccion').style.display = this.checked ? 'block' : 'none';
-    });
-
+      function eliminarSemilla(index) {
+          carritoSemillas.splice(index, 1);
+          renderCarritoSemillas();
+          actualizarBurbujaSemillas();
+          if (carritoSemillas.length === 0) document.getElementById('modalCheckoutSemillas').style.display = 'none';
+      }
+    
     function actualizarTotalSemillas() {
         const subtotal = carritoSemillas.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
         const necesitaEnvio = document.getElementById('sem-chk-envio').checked;

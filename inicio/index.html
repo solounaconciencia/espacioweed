@@ -169,6 +169,24 @@
     .modal-legal-card h3 { color: var(--amber); font-family: var(--font-brand); margin-bottom: 15px; font-size: 1.2rem; }
     .close-legal-btn { position: absolute; top: 15px; right: 15px; background: rgba(0,255,255,0.1); border: 1px solid var(--cian); color: var(--cian); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s; }
     .close-legal-btn:hover { background: var(--cian); color: #000; }
+
+    /* OPTIMIZACIÓN UX MÓVIL: ENCAJE 100% EN PANTALLA SIN SCROLL */
+    @media (max-height: 750px) {
+      #app-container { padding: 15px 15px 5px; }
+      #encabezado img { max-width: 120px; margin-bottom: 5px; }
+      #encabezado h1 { font-size: 1.2em; margin-top: 0; }
+      #encabezado p { font-size: 0.75em; margin-top: 4px; padding: 0 5px; line-height: 1.2; }
+      #redes-sociales { margin-top: 8px; gap: 15px; }
+      .btn-red { font-size: 1.3em; }
+      #contenedorBotones { gap: 10px; margin: 15px 0; }
+      .btn { padding: 12px 15px; border-radius: 12px; }
+      .btn h3 { font-size: 0.9em; gap: 8px; }
+      .btn span { font-size: 0.7em; margin-top: 3px; }
+      #footer { padding: 10px; font-size: 0.65em; }
+    }
+
+    /* Ajuste fino para la tarjeta del catálogo */
+    .semillas-card { padding: 20px; }
   </style>
  <script src="mars.js"></script>
 </head>
@@ -209,12 +227,14 @@
   <div class="modal-semillas" id="modalSemillas">
     <div class="semillas-card">
       <span class="close-legal-btn" onclick="document.getElementById('modalSemillas').style.display='none'" style="border-color:var(--amber); color:var(--amber);">×</span>
-      <h2 style="color:var(--amber); font-family:var(--font-brand); margin-bottom:5px;"><i class="fas fa-seedling"></i> PREVENTA EXCLUSIVA</h2>
-      <p style="color:white; font-size:0.85rem; line-height:1.5; margin-bottom:15px; background:rgba(241, 196, 15, 0.1); padding:10px; border-radius:8px; border:1px dashed var(--amber);">
-        Haz tu compra de preventa a <b>solo $1.000</b> <span style="text-decoration:line-through; color:#888; font-size:0.7rem;">(Normal $1.500)</span>.<br>
-        <i class="fas fa-calendar-check" style="color:var(--neon-green);"></i> Entregas y despachos programados los días <b>5 y 20 de cada mes</b>. Retira desde 72 horas.
-      </p>
-      <div id="semillas-grid" style="max-height: 50vh; overflow-y: auto; padding-right: 5px;">
+      <h2 style="color:var(--amber); font-family:var(--font-brand); margin-bottom:10px; font-size: 1.3rem;"><i class="fas fa-seedling"></i> PREVENTA EXCLUSIVA</h2>
+
+      <div style="background: rgba(241, 196, 15, 0.05); border: 1px dashed rgba(241, 196, 15, 0.5); border-radius: 8px; padding: 10px; margin-bottom: 15px; text-align: center;">
+        <p style="color:white; font-size:0.8rem; margin:0 0 4px 0;">Reserva ahora a <b>solo $1.000</b> <span style="text-decoration:line-through; color:#888; font-size:0.7rem;">($1.500)</span></p>
+        <p style="color:var(--neon-green); font-size:0.75rem; margin:0; font-weight:bold;"><i class="fas fa-calendar-check"></i> Entregas exclusivas los días 5 y 20.</p>
+      </div>
+
+      <div id="semillas-grid" style="max-height: 55vh; overflow-y: auto; padding-right: 5px;">
         <p style="text-align:center; color:#888; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Conectando con la bóveda botánica...</p>
       </div>
     </div>

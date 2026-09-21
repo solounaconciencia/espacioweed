@@ -1711,10 +1711,22 @@ to { transform: translateX(0); opacity: 1; }
     <div class="metric-card" style="margin-bottom:0; border-color: #f1c40f; grid-column: span 3;">
       <h3 style="color: #f1c40f; margin-bottom: 15px;"><i class="fas fa-boxes-packing"></i> LOGÍSTICA DROPSHIPPING Y SII</h3>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <div>
-            <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-truck-fast cian"></i> BLUEEXPRESS Pyme API</label>
-            <input type="text" id="aj_blue_account" class="nave-input" placeholder="Número de Cuenta BlueExpress">
-            <input type="password" id="aj_blue_apikey" class="nave-input" placeholder="API Key BlueExpress">
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px solid #333;">
+
+            <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-bolt" style="color:var(--neon-green);"></i> <a href="https://envia.com/es-CL/" target="_blank" style="color:var(--neon-green); text-decoration:none; font-weight:bold;">ENVIA.COM (Agregador Multi-Courier)</a></label>
+            <div style="position:relative; margin-bottom: 15px;">
+                <input type="password" id="aj_envia_apikey" class="nave-input" style="margin-bottom:0; padding-right:35px; border-color:var(--neon-green);" placeholder="API Key Envia.com">
+                <i class="fas fa-eye" style="position:absolute; right:12px; top:14px; color:#888; cursor:pointer;" onclick="const inp=document.getElementById('aj_envia_apikey'); inp.type=(inp.type==='password')?'text':'password'; this.style.color=(inp.type==='text')?'var(--neon-green)':'#888';"></i>
+            </div>
+
+            <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-truck-fast cian"></i> <a href="https://www.blue.cl/" target="_blank" style="color:var(--cian); text-decoration:none;">BLUEEXPRESS (Directo)</a></label>
+            <input type="text" id="aj_blue_account" class="nave-input" placeholder="N° Cuenta BlueExpress">
+            <div style="position:relative; margin-bottom: 15px;">
+                <input type="password" id="aj_blue_apikey" class="nave-input" style="margin-bottom:0; padding-right:35px;" placeholder="API Key BlueExpress">
+                <i class="fas fa-eye" style="position:absolute; right:12px; top:14px; color:#888; cursor:pointer;" onclick="const inp=document.getElementById('aj_blue_apikey'); inp.type=(inp.type==='password')?'text':'password'; this.style.color=(inp.type==='text')?'var(--cian)':'#888';"></i>
+            </div>
+
+            <p style="font-size:0.65rem; color:#555; margin:0; text-align:center;">* Slots para Chilexpress, Starken y MercadoEnvíos inactivos. Esperando actualización del motor central.</p>
         </div>
         <div>
             <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-file-invoice-dollar amber"></i> FACTURADOR SII (API)</label>
@@ -2915,6 +2927,7 @@ async function cargarAjustesPanel() {
     document.getElementById('aj_envio_meta').value = ajustes['ENVIO_GRATIS_META'] || '';
     document.getElementById('aj_mp_token').value = ajustes['MP_TOKEN'] || '';
 
+    if(document.getElementById('aj_envia_apikey')) document.getElementById('aj_envia_apikey').value = ajustes['ENVIA_APIKEY'] || '';
     if(document.getElementById('aj_blue_account')) document.getElementById('aj_blue_account').value = ajustes['BLUE_ACCOUNT'] || '';
     if(document.getElementById('aj_blue_apikey')) document.getElementById('aj_blue_apikey').value = ajustes['BLUE_APIKEY'] || '';
     if(document.getElementById('aj_sii_apikey')) document.getElementById('aj_sii_apikey').value = ajustes['SII_APIKEY'] || '';
@@ -2947,6 +2960,7 @@ async function guardarAjustesPanel(btn) {
     'ENVIO_GRATIS_META': document.getElementById('aj_envio_meta').value,
     'MP_TOKEN': document.getElementById('aj_mp_token').value,
 
+    'ENVIA_APIKEY': document.getElementById('aj_envia_apikey') ? document.getElementById('aj_envia_apikey').value : '',
     'BLUE_ACCOUNT': document.getElementById('aj_blue_account') ? document.getElementById('aj_blue_account').value : '',
     'BLUE_APIKEY': document.getElementById('aj_blue_apikey') ? document.getElementById('aj_blue_apikey').value : '',
     'SII_APIKEY': document.getElementById('aj_sii_apikey') ? document.getElementById('aj_sii_apikey').value : '',

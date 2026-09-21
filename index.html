@@ -247,25 +247,22 @@
 </div>
     
 <div id="modal-ubicacion" class="modal-overlay-ubic">
-    <div class="modal-box-ubic">
-        <span class="close-nave" id="close-ubicacion" style="position: absolute; top: 15px; right: 15px;">&times;</span>
-        <div class="modal-header-ubic">
+    <div class="modal-box-ubic" style="max-width: 450px;">
+        <span class="close-nave" id="close-ubicacion" style="position: absolute; top: 15px; right: 15px; z-index: 10;">×</span>
+        <div class="modal-header-ubic" style="margin-bottom: 15px;">
             <h2><i class="fas fa-map-marker-alt"></i> NUESTRA UBICACIÓN</h2>
         </div>
-        <div class="modal-body-ubic">
-            <div class="media-container-ubic caja-mapa">
-             <iframe src="" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        <div class="modal-body-ubic" style="display: flex; flex-direction: column; gap: 15px;">
+
+            <div class="media-container-ubic caja-video" style="position: relative; width: 100%; padding-top: 56.25%;">
+                <div class="parche-drive"></div>
+                <iframe src="https://www.youtube.com/embed/HkXA_nkBC6A?autoplay=1&mute=1" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 8px;"></iframe>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
-                <div class="media-container-ubic caja-video" style="position: relative;">
-                    <div class="parche-drive"></div>
-                    <iframe src="https://www.youtube.com/embed/HkXA_nkBC6A?autoplay=1&mute=1"></iframe>
-                </div>
-                <a id="btn-abrir-maps" href="#" target="_blank" class="btn-nave-main" style="text-align:center; text-decoration:none; background:var(--cian); color:black; margin:0; padding:12px; display:none;">
-                    <i class="fas fa-map-marked-alt"></i> ABRIR EN MAPS
-                </a>
-            </div>
+            <a id="btn-abrir-maps" href="#" target="_blank" class="btn-nave-main" style="display: none; text-align: center; text-decoration: none; background: var(--cian); color: black; margin: 0; padding: 15px; font-size: 1rem;">
+                <i class="fas fa-map-marked-alt"></i> ABRIR DIRECCIÓN EN MAPS
+            </a>
+
         </div>
     </div>
 </div>
@@ -397,22 +394,14 @@ function aplicarEstilosDinamicos(config) {
     if (typeof encenderAtmosfera === "function") {
         encenderAtmosfera(config['ATMOSFERA'] || 'espacial');
     }
-    // 7. Inyectar Mapa Dinámico Automatizado (Google Maps)
+    // 7. Configurar Botón de Dirección Dinámico (Google Maps)
     if (config['DIRECCION_TEXTO'] && config['DIRECCION_TEXTO'].trim() !== "") {
-        const iframeMapa = document.querySelector('.caja-mapa iframe');
         const btnMaps = document.getElementById('btn-abrir-maps');
-
-        if (iframeMapa) {
+        if (btnMaps) {
             const direccionCodificada = encodeURIComponent(config['DIRECCION_TEXTO'].trim());
-
-            // FOCUS: Ruta Oficial de Google Maps para incrustar Iframe
-            iframeMapa.src = "https://maps.google.com/maps?q=" + direccionCodificada + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
-
-            // FOCUS: Ruta Oficial para abrir en la App o Navegador
-            if(btnMaps) {
-                btnMaps.href = "https://www.google.com/maps/search/?api=1&query=" + direccionCodificada;
-                btnMaps.style.display = "block";
-            }
+            // FOCUS: URL Universal de Búsqueda de Google Maps (Abre la App en el celular)
+            btnMaps.href = "https://www.google.com/maps/search/?api=1&query=" + direccionCodificada;
+            btnMaps.style.display = "block";
         }
     }
 

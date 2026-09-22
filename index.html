@@ -150,13 +150,38 @@
 
         <div class="cart-footer">
             <div class="shipping-option">
-                <label class="custom-checkbox">
-                    <input type="checkbox" id="chk-envio" onchange="actualizarTotalCarrito()"> 
-                    <span class="checkmark"></span>
-                    ¿Deseas envío a domicilio? (+$3.500)
-                </label>
-                <input type="text" id="direccion-envio" placeholder="Calle, Número, Ciudad..." style="display:none;">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="chk-envio" onchange="actualizarTotalCarrito()"> 
+                <span class="checkmark"></span>
+                ¿Deseas envío a domicilio? (+$3.500)
+            </label>
+
+            <div id="box-direccion" style="display:none; margin-top: 10px; padding: 10px; background: rgba(0,255,255,0.05); border-radius: 8px; border: 1px dashed var(--cian);">
+                <select id="region-envio" class="nave-input" style="margin-bottom: 8px;" onchange="cargarComunasFocus()">
+                    <option value="" disabled selected>Selecciona tu Región...</option>
+                    <option value="Arica y Parinacota">Arica y Parinacota</option>
+                    <option value="Tarapacá">Tarapacá</option>
+                    <option value="Antofagasta">Antofagasta</option>
+                    <option value="Atacama">Atacama</option>
+                    <option value="Coquimbo">Coquimbo</option>
+                    <option value="Valparaíso">Valparaíso</option>
+                    <option value="Región Metropolitana">Región Metropolitana</option>
+                    <option value="O'Higgins">O'Higgins</option>
+                    <option value="Maule">Maule</option>
+                    <option value="Ñuble">Ñuble</option>
+                    <option value="Biobío">Biobío</option>
+                    <option value="Araucanía">Araucanía</option>
+                    <option value="Los Ríos">Los Ríos</option>
+                    <option value="Los Lagos">Los Lagos</option>
+                    <option value="Aysén">Aysén</option>
+                    <option value="Magallanes">Magallanes</option>
+                </select>
+                <select id="comuna-envio" class="nave-input" style="margin-bottom: 8px;">
+                    <option value="" disabled selected>Primero selecciona tu Región...</option>
+                </select>
+                <input type="text" id="direccion-envio" class="nave-input" style="margin-bottom: 0;" placeholder="Calle, Número, Depto...">
             </div>
+        </div>
 
         <div style="display:flex; gap:10px; margin-bottom:10px;">
             <input type="text" id="input-cupon" class="nave-input" placeholder="¿Tienes un código?" style="margin:0; padding:8px; font-size:0.8rem; text-transform:uppercase;">

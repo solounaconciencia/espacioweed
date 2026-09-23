@@ -427,8 +427,9 @@ body {
 
 .product-card img {
   width: 100%;
-  aspect-ratio: 1/1;
-  object-fit: cover;
+  height: 200px;
+  object-fit: contain;
+  background: transparent;
   transition: transform 0.8s ease;
 }
 

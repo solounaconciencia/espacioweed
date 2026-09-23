@@ -1782,11 +1782,11 @@ function encenderAtmosfera(tipo) {
     // Si el usuario subió una imagen fija de fondo, no la pisamos con animaciones
     if (configGlobal['BG_IMG'] && configGlobal['BG_IMG'].trim() !== "") return;
 
-    if (tipo === 'espacial') {
+        if (tipo === 'espacial') {
         // Tu hermoso fondo actual de estrellas aceleradas por tarjeta gráfica
         canvas.style.background = 'radial-gradient(circle at center, #1B2735 0%, #020204 100%)';
-        canvas.classList.add('scrolling'); // Usa tu regla CSS existente para mover las estrellas
-    } 
+        // FOCUS CORRECCIÓN: Eliminamos la clase scrolling que movía el fondo y causaba la franja negra
+    }
     else if (tipo === 'matrix') {
         // Atmósfera Cyberpunk / Verde hacker
         canvas.style.background = '#000';

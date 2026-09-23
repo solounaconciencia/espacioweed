@@ -2019,3 +2019,137 @@ function iniciarFomoToast() {
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(iniciarFomoToast, 8000);
 });
+
+
+// ==========================================
+// MOTOR FOCUS: APLICADOR DE ESTILOS DINÁMICOS Y UBICACIÓN
+// ==========================================
+function aplicarEstilosDinamicos(config) {
+    if (!config) return;
+
+    // 1. Fuentes
+    const fontTitulos = config['FONT_TITULOS'] || "'Orbitron', sans-serif";
+    const fontMenu = config['FONT_MENU'] || "'Montserrat', sans-serif";
+    const fontCuerpo = config['FONT_CUERPO'] || "'Montserrat', sans-serif";
+
+    const fontClean = (f) => f.split(',')[0].replace(/'/g, '').replace(/ /g, '+');
+    const linkFonts = document.createElement('link');
+    linkFonts.rel = 'stylesheet';
+    linkFonts.href = `https://fonts.googleapis.com/css2?family=${fontClean(fontTitulos)}&family=${fontClean(fontMenu)}&family=${fontClean(fontCuerpo)}&display=swap`;
+    document.head.appendChild(linkFonts);
+
+    // 2. Colores Variables CSS
+    const root = document.documentElement;
+    if (config['COLOR_NEON']) root.style.setProperty('--neon-green', config['COLOR_NEON']);
+    if (config['COLOR_AMBER']) root.style.setProperty('--amber', config['COLOR_AMBER']);
+    if (config['COLOR_CIAN']) root.style.setProperty('--cian', config['COLOR_CIAN']);
+    if (config['COLOR_BG']) root.style.setProperty('--bg-space', config['COLOR_BG']);
+    
+    if (config['COLOR_GLASS']) {
+        const hex = config['COLOR_GLASS'];
+        const opacidad = Number(config['OPACIDAD_GLASS'] || 5) / 100;
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        root.style.setProperty('--glass', `rgba(${r}, ${g}, ${b}, ${opacidad})`);
+    }
+
+    root.style.setProperty('--font-brand', fontTitulos);
+    root.style.setProperty('--font-main', fontCuerpo);
+
+    // 3. Favicon y Logo
+    if (config['LOGO_PRINCIPAL'] && config['LOGO_PRINCIPAL'].trim() !== "") {
+        const logoImg = document.querySelector('.main-logo');
+        if (logoImg) logoImg.src = config['LOGO_PRINCIPAL'].trim();
+    }
+    
+    if (config['FAVICON'] && config['FAVICON'].trim() !== "") {
+        let fav = document.querySelector("link[rel*='icon']");
+        if (!fav) {
+            fav = document.createElement('link');
+            fav.rel = 'shortcut icon';
+            document.head.appendChild(fav);
+        }
+        fav.href = config['FAVICON'].trim();
+    }
+
+    // 4. Parche Banner
+    if (config['BANNER_BG'] && config['BANNER_BG'].trim() !== "") {
+        const header = document.querySelector('.header-wrap');
+        const topBar = document.querySelector('.top-bar');
+        if (header) {
+            if (config['BANNER_BG'].startsWith('#')) {
+                header.style.background = config['BANNER_BG'];
+                if (topBar) topBar.style.background = config['BANNER_BG'];
+            } else {
+                header.style.backgroundImage = `url('${config['BANNER_BG']}')`;
+                header.style.backgroundSize = 'cover';
+                header.style.backgroundPosition = 'center';
+            }
+        }
+    }
+
+    if (config['BG_IMG'] && config['BG_IMG'].trim() !== "") {
+        const canvas = document.getElementById('star-canvas');
+        if (canvas) {
+            canvas.style.backgroundImage = `url('${config['BG_IMG']}')`;
+            canvas.style.backgroundSize = config['BG_MODO'] === 'cover' ? 'cover' : 'auto';
+            canvas.style.backgroundRepeat = config['BG_MODO'] === 'cover' ? 'no-repeat' : 'repeat';
+            canvas.style.animation = 'none';
+        }
+    }
+
+    if (typeof encenderAtmosfera === "function") encenderAtmosfera(config['ATMOSFERA'] || 'espacial');
+
+    // 5. UBICACIÓN Y VIDEO (La reparación clave)
+    const btnMaps = document.getElementById('btn-abrir-maps');
+    const txtDireccion = document.getElementById('texto-direccion-fisica');
+    
+    if (config['DIRECCION_TEXTO'] && config['DIRECCION_TEXTO'].trim() !== "") {
+        if (btnMaps) {
+            btnMaps.style.display = 'block';
+            btnMaps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(config['DIRECCION_TEXTO'].trim());
+        }
+        if (txtDireccion) {
+            txtDireccion.style.display = 'block';
+            txtDireccion.innerHTML = `<i class="fas fa-building" style="color:var(--cian); margin-right:5px;"></i> ${config['DIRECCION_TEXTO'].trim()}`;
+        }
+    } else {
+        if (btnMaps) btnMaps.style.display = 'none';
+        if (txtDireccion) txtDireccion.style.display = 'none';
+    }
+
+    const contenedorVideo = document.getElementById('contenedor-video-ubicacion');
+    if (config['VIDEO_DRIVE_ID'] && config['VIDEO_DRIVE_ID'].trim() !== "") {
+        if (contenedorVideo) contenedorVideo.style.display = 'block';
+        const iframeVideo = document.querySelector('.caja-video iframe');
+        if (iframeVideo) iframeVideo.src = `https://drive.google.com/file/d/${config['VIDEO_DRIVE_ID'].trim()}/preview`;
+    } else {
+        if (contenedorVideo) contenedorVideo.style.display = 'none';
+    }
+
+    // 6. INYECCIÓN PRO ESTILOS
+    let styleTag = document.getElementById('focus-pro-styles');
+    if (!styleTag) {
+        styleTag = document.createElement('style');
+        styleTag.id = 'focus-pro-styles';
+        document.head.appendChild(styleTag);
+    }
+    
+    const borde = config['borde'] || '15px';
+    const alineacion = config['alineacion'] || 'center';
+    const sombra = config['sombra'] || '0 15px 35px rgba(0,0,0,0.5)';
+    const size = config['fontSize'] || '100';
+    const weight = config['fontBold'] || 'normal';
+    const italic = config['fontItalic'] || 'normal';
+    const decor = config['fontUnderline'] || 'none';
+
+    styleTag.innerHTML = `
+        body { font-size: ${size}%; font-weight: ${weight}; font-style: ${italic}; }
+        a, h1, h2, h3, p { text-decoration: ${decor} !important; }
+        .product-card, .btn-nave-main, .btn-checkout, .login-card, .modal-content { border-radius: ${borde} !important; }
+        .product-card:hover { box-shadow: ${sombra} !important; }
+        .product-card > div { text-align: ${alineacion} !important; }
+        .more-info-btn { border-radius: ${borde} !important; }
+    `;
+}

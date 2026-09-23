@@ -2685,24 +2685,22 @@ let currentChatEmail = "";
 let dataBuzonGlobal = [];
 
 // CARGA INICIAL Y REFRESCO CADA 60 SEG
-// CARGA INICIAL Y REFRESCO CADA 60 SEG
 setInterval(async () => {
   if (document.getElementById('buzon').classList.contains('active')) {
     try {
-      const usuarios = await ejecutarEnServidor("obtenerResumenBuzon");
-      renderizarListaUsuarios(usuarios);
+      const res = await ejecutarEnServidor("obtenerResumenBuzon");
+      if (res.success) renderizarListaUsuarios(res.datos);
     } catch(e) { console.error("Error al auto-refrescar buzón", e); }
   }
 }, 60000);
 
-// Esta función debe llamarse al hacer clic en la pestaña BUZON
 async function cargarBuzon() {
   try {
-    const usuarios = await ejecutarEnServidor("obtenerResumenBuzon");
-    renderizarListaUsuarios(usuarios);
+    const res = await ejecutarEnServidor("obtenerResumenBuzon");
+    if (res.success) renderizarListaUsuarios(res.datos);
   } catch(e) { console.error("Error al cargar buzón", e); }
 }
-
+    
 function renderizarListaUsuarios(usuarios) {
   dataBuzonGlobal = usuarios || [];
   const lista = document.getElementById('lista-usuarios-buzon');
@@ -2730,8 +2728,8 @@ async function abrirChat(email) {
   renderizarListaUsuarios(dataBuzonGlobal);
   
   try {
-    const mensajes = await ejecutarEnServidor("obtenerChatUsuario", {email: email});
-    renderizarChat(mensajes);
+    const res = await ejecutarEnServidor("obtenerChatUsuario", {email: email});
+    if (res.success) renderizarChat(res.datos);
   } catch(e) { 
     document.getElementById('chat-mensajes').innerHTML = '<p style="color:var(--amber); text-align:center;">Error de conexión con el buzón.</p>';
   }
@@ -2768,9 +2766,9 @@ async function enviarMensajeBuzon() {
   input.value = "Enviando...";
   try {
     await ejecutarEnServidor("enviarRespuestaAdmin", {email: currentChatEmail, msj: msj});
-    input.value = "";
-    const mensajes = await ejecutarEnServidor("obtenerChatUsuario", {email: currentChatEmail});
-    renderizarChat(mensajes);
+      input.value = "";
+      const res = await ejecutarEnServidor("obtenerChatUsuario", {email: currentChatEmail});
+      if (res.success) renderizarChat(res.datos);
   } catch(e) { 
     alert("Error al enviar mensaje"); 
     input.value = msj; 

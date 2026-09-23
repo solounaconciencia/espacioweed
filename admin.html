@@ -4192,12 +4192,46 @@ async function cargarMetricasClics() {
 
 // FOCUS: Extractor Inteligente para Editar Productos desde el Clic
 function editarDesdeMetrica(nombre) {
-    // Si la cadena contiene un SKU (que empiece con EW-), lo extrae y abre el modal
-    const match = nombre.match(/EW-[A-Z0-9\-]+/);
-    if (match) {
-        abrirModalEdicion(match[0]);
+    // 1. EXTRACTOR FOCUS: Limpiamos la frase para aislar el SKU o Nombre
+    let skuPuro = String(elemento).trim();
+
+    if (skuPuro.includes("Ver Producto:")) {
+        // Ejemplo: "Ver Producto: SEM-006" -> "SEM-006"
+        skuPuro = skuPuro.split("Ver Producto:")[1].trim();
+    } else if (skuPuro.includes("Añadir Carro:")) {
+        // Ejemplo: "Añadir Carro: SEM-006 - Nombre" -> "SEM-006"
+        skuPuro = skuPuro.split("Añadir Carro:")[1].split("-")[0].trim();
+    }
+
+    // 2. Búsqueda exacta en el inventario del Admin (A prueba de fallos)
+    let catalogo = typeof prodsGlobal !== 'undefined' ? prodsGlobal : (typeof productosGlobal !== 'undefined' ? productosGlobal : []);
+    const p = catalogo.find(x => 
+        String(x.SKU).trim() === skuPuro || 
+        String(x.NOMBRE).trim() === skuPuro
+    );
+
+    // 3. Acción Quirúrgica
+    if (p) {
+        // Cerramos el modal de métricas para despejar la vista
+        const modalMetricas = document.getElementById('modal-metricas');
+        if (modalMetricas) modalMetricas.style.display = 'none';
+        
+        // Escribimos el SKU en el buscador del inventario y filtramos
+        const buscador = document.getElementById('search-catalogo');
+        if (buscador) {
+            buscador.value = p.SKU;
+            if (typeof filtrarCatalogo === "function") filtrarCatalogo();
+        }
+        
+        // Disparamos la edición (Prueba los 3 nombres más comunes de tu sistema)
+        if (typeof editarProducto === "function") {
+            editarProducto(p.SKU);
+        } else if (typeof editarProductoMasivo === "function") {
+            editarProductoMasivo(p.SKU);
+        }
     } else {
-        alert("El elemento [" + nombre + "] no es un producto o no se puede editar directamente.");
+        // Si sigue sin encontrarlo, es porque fue un clic en Categoría o Búsqueda general
+        alert("El registro [" + elemento + "] no corresponde a un producto físico (Ej: Clic en Categoría).");
     }
 }
     </script>

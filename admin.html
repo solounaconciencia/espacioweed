@@ -1454,6 +1454,19 @@ input[type="file"].hidden-file { display: none; }
 from { transform: translateX(100%); opacity: 0; }
 to { transform: translateX(0); opacity: 1; }
 }
+
+
+/* FOCUS: REPARACIÓN UX MÓVIL (MODALES Y BOTONES) */
+.grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.botones-scroll { display: flex; gap: 10px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5px; scrollbar-width: none; }
+.botones-scroll::-webkit-scrollbar { display: none; }
+.botones-scroll button { flex-shrink: 0; }
+
+@media (max-width: 600px) {
+    .grid-responsive { grid-template-columns: 1fr !important; }
+    .modal-content { width: 95% !important; padding: 15px !important; }
+    .home-cards-grid { grid-template-columns: 1fr 1fr !important; }
+}
 </style>
 </head>
 <body>
@@ -1486,16 +1499,22 @@ to { transform: translateX(0); opacity: 1; }
               <p style="font-size: 0.8rem; color: #888;">Gestión de stock y destacados.</p>
           </div>
 
-          <div class="home-card-item" style="border-bottom-color: var(--cian);" onclick="showSection('buzon', document.getElementById('btn-tab-buzon'))">
-              <i class="fas fa-envelope" style="color: var(--cian); font-size: 3rem; margin-bottom: 15px; display: block;"></i>
-              <h3 style="color: white;">BUZÓN</h3>
-              <p style="font-size: 0.8rem; color: #888;">Soporte técnico y mensajes.</p>
+          <div class="home-card-item" style="border-bottom-color: var(--cian);" onclick="showSection('proveedores_manager', document.getElementById('btn-tab-prov'))">
+              <i class="fas fa-truck-ramp-box" style="color: var(--cian); font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">PROVEEDORES</h3>
+              <p style="font-size: 0.8rem; color: #888;">Red de Dropshipping.</p>
+          </div>
+
+          <div class="home-card-item" style="border-bottom-color: #f39c12;" onclick="showSection('logistica_manager', document.getElementById('btn-tab-log'))">
+              <i class="fas fa-shipping-fast" style="color: #f39c12; font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+              <h3 style="color: white;">LOGÍSTICA</h3>
+              <p style="font-size: 0.8rem; color: #888;">Envíos, metas y APIs.</p>
           </div>
 
           <div class="home-card-item" style="border-bottom-color: #e1306c;" onclick="showSection('config', document.getElementById('btn-tab-config'))">
               <i class="fas fa-cogs" style="color: #e1306c; font-size: 3rem; margin-bottom: 15px; display: block;"></i>
               <h3 style="color: white;">AJUSTES</h3>
-              <p style="font-size: 0.8rem; color: #888;">Tienda, envíos y datos bancarios.</p>
+              <p style="font-size: 0.8rem; color: #888;">Tienda y datos bancarios.</p>
           </div>
 
           <div class="home-card-item" style="border-bottom-color: #9b59b6;" onclick="showSection('estilo', document.getElementById('btn-tab-estilo'))">
@@ -1604,20 +1623,23 @@ to { transform: translateX(0); opacity: 1; }
 <div id="productos_manager" class="section">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
         <h2 class="cian"><i class="fas fa-box-open"></i> GESTIÓN DE CATÁLOGO</h2>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalDestacados()">
-                <i class="fas fa-star"></i> DESTACADOS
-            </button>
-            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalPatrocinadores()">
-                <i class="fas fa-handshake"></i> PATROCINADORES
-            </button>
-            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: var(--amber); color: black;" onclick="abrirModalCupones()">
-                <i class="fas fa-ticket-alt"></i> CREAR DESCUENTO
-            </button>
-            <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0;" onclick="abrirModalProductoNuevo()">
-                <i class="fas fa-plus"></i> NUEVO PRODUCTO
-            </button>
-        </div>
+        <div class="botones-scroll">
+        <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0;" onclick="abrirModalProductoNuevo()">
+            <i class="fas fa-plus"></i> NUEVO PRODUCTO
+        </button>
+        <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: var(--amber); color: black;" onclick="abrirModalCupones()">
+            <i class="fas fa-ticket-alt"></i> CREAR DESCUENTO
+        </button>
+        <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalDestacados()">
+            <i class="fas fa-star"></i> DESTACADOS
+        </button>
+        <button class="btn-nave-main" style="width: auto; padding: 10px 20px; margin: 0; background: transparent; border: 1px solid var(--cian); color: var(--cian);" onclick="abrirModalPatrocinadores()">
+            <i class="fas fa-handshake"></i> PATROCINADORES
+        </button>
+        <button class="btn-nave-main" id="btn-guardar-todo" style="width: auto; padding: 10px 20px; margin: 0; background: var(--neon-green); color: black;" onclick="guardarCambiosMasivosTabla()">
+            <i class="fas fa-save"></i> GUARDAR TODO
+        </button>
+    </div>
     </div>
     
     <div style="margin-top: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
@@ -1650,114 +1672,113 @@ to { transform: translateX(0); opacity: 1; }
       
       
 
+<!-- ========================================== -->
+<!-- MÓDULO 1: AJUSTES DE TIENDA Y COMUNICACIÓN -->
+<!-- ========================================== -->
 <div id="config" class="section">
   <h2 class="cian"><i class="fas fa-cogs"></i> CONFIGURACIÓN MAESTRA</h2>
-  
-  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
-    
+
+  <div class="grid-responsive" style="margin-top: 20px;">
     <div class="metric-card" style="margin-bottom:0;">
-      <h3 style="color: var(--amber); margin-bottom: 15px;"><i class="fas fa-store"></i> TIENDA Y SISTEMA</h3>
-      
-      <label style="font-size:0.7rem; color:#888;">ESTADO DE LA TIENDA (Pausa/Vacaciones)</label>
+      <h3 style="color: var(--amber); margin-bottom: 15px;"><i class="fas fa-store"></i> TIENDA Y ESTADO</h3>
+      <label style="font-size:0.7rem; color:#888;">ESTADO DE LA TIENDA</label>
       <select id="aj_estado" class="nave-input">
         <option value="ABIERTO">ABIERTO (Recibiendo pedidos)</option>
         <option value="CERRADO">CERRADO (Modo Pausa)</option>
       </select>
-      
       <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">ANUNCIO EMERGENTE (Texto)</label>
       <input type="text" id="aj_anuncio_texto" class="nave-input" placeholder="Ej: ¡Envíos gratis este finde!">
-      
       <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">ANUNCIO EMERGENTE (URL Imagen opcional)</label>
       <input type="text" id="aj_anuncio_imagen" class="nave-input" placeholder="URL de la imagen (Drive, Imgur...)">
-      
-      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">COSTO DE ENVÍO ($)</label>
-      <input type="number" id="aj_envio" class="nave-input" placeholder="Ej: 3500">
-      
-      <div style="background: rgba(46, 204, 113, 0.05); border: 1px dashed var(--neon-green); padding: 10px; border-radius: 8px; margin-top: 15px;">
-        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.7rem; color: white; cursor: pointer; font-weight:bold;">
-          <input type="checkbox" id="aj_envio_gratis_activo" style="accent-color: var(--neon-green); width:16px; height:16px;">
-          ACTIVAR BARRA DE ENVÍO GRATIS (Gamificación)
-        </label>
-        <label style="font-size:0.65rem; color:#888; margin-top:10px; display:block;">MONTO META PARA ENVÍO GRATIS ($)</label>
-        <input type="number" id="aj_envio_meta" class="nave-input" placeholder="Ej: 50000" style="margin-bottom:0;">
-      </div>
-
       <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">TOKEN MERCADO PAGO</label>
       <input type="password" id="aj_mp_token" class="nave-input" placeholder="APP_USR-...">
     </div>
 
     <div class="metric-card" style="margin-bottom:0; border-color: #e1306c;">
-      <h3 style="color: #e1306c; margin-bottom: 15px;"><i class="fas fa-hashtag"></i> COMUNICACIÓN</h3>
-      
+      <h3 style="color: #e1306c; margin-bottom: 15px;"><i class="fas fa-hashtag"></i> COMUNICACIÓN Y REDES</h3>
       <label style="font-size:0.7rem; color:#888;">WHATSAPP (Contacto Clientes)</label>
       <input type="text" id="aj_wa" class="nave-input" placeholder="569...">
-      
       <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">WHATSAPP (Alertas Admin)</label>
       <input type="text" id="aj_wa_admin" class="nave-input" placeholder="569...">
-      
       <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">LINK INSTAGRAM</label>
       <input type="text" id="aj_ig" class="nave-input" placeholder="https://instagram.com/...">
-      
       <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">LINK FACEBOOK</label>
       <input type="text" id="aj_fb" class="nave-input" placeholder="https://facebook.com/...">
-      
-      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">LINK YOUTUBE</label>
-      <input type="text" id="aj_yt" class="nave-input" placeholder="https://youtube.com/...">
-      
-      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">LINK TIKTOK</label>
-      <input type="text" id="aj_tk" class="nave-input" placeholder="https://tiktok.com/...">
     </div>
 
-    <div class="metric-card" style="margin-bottom:0; border-color: #f1c40f; grid-column: span 3;">
-      <h3 style="color: #f1c40f; margin-bottom: 15px;"><i class="fas fa-boxes-packing"></i> LOGÍSTICA DROPSHIPPING Y SII</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px solid #333;">
-
-            <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-bolt" style="color:var(--neon-green);"></i> <a href="https://envia.com/es-CL/" target="_blank" style="color:var(--neon-green); text-decoration:none; font-weight:bold;">ENVIA.COM (Agregador Multi-Courier)</a></label>
-            <div style="position:relative; margin-bottom: 15px;">
-                <input type="password" id="aj_envia_apikey" class="nave-input" style="margin-bottom:0; padding-right:35px; border-color:var(--neon-green);" placeholder="API Key Envia.com">
-                <i class="fas fa-eye" style="position:absolute; right:12px; top:14px; color:#888; cursor:pointer;" onclick="const inp=document.getElementById('aj_envia_apikey'); inp.type=(inp.type==='password')?'text':'password'; this.style.color=(inp.type==='text')?'var(--neon-green)':'#888';"></i>
-            </div>
-
-            <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-truck-fast cian"></i> <a href="https://www.blue.cl/" target="_blank" style="color:var(--cian); text-decoration:none;">BLUEEXPRESS (Directo)</a></label>
-            <input type="text" id="aj_blue_account" class="nave-input" placeholder="N° Cuenta BlueExpress">
-            <div style="position:relative; margin-bottom: 15px;">
-                <input type="password" id="aj_blue_apikey" class="nave-input" style="margin-bottom:0; padding-right:35px;" placeholder="API Key BlueExpress">
-                <i class="fas fa-eye" style="position:absolute; right:12px; top:14px; color:#888; cursor:pointer;" onclick="const inp=document.getElementById('aj_blue_apikey'); inp.type=(inp.type==='password')?'text':'password'; this.style.color=(inp.type==='text')?'var(--cian)':'#888';"></i>
-            </div>
-
-            <p style="font-size:0.65rem; color:#555; margin:0; text-align:center;">* Slots para Chilexpress, Starken y MercadoEnvíos inactivos. Esperando actualización del motor central.</p>
+    <div class="metric-card" style="margin-bottom:0; border-color: #00ff88; grid-column: 1 / -1;">
+      <h3 style="color: #00ff88; margin-bottom: 15px;"><i class="fas fa-university"></i> DATOS BANCARIOS (TRANSFERENCIAS)</h3>
+      <div class="grid-responsive">
+        <div>
+          <label style="font-size:0.7rem; color:#888;">NOMBRE DEL BANCO</label>
+          <input type="text" id="aj_banco_nombre" class="nave-input" placeholder="Ej: Banco Estado">
+          <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">TIPO DE CUENTA</label>
+          <input type="text" id="aj_banco_tipo" class="nave-input" placeholder="Ej: Cuenta RUT">
         </div>
         <div>
-            <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-file-invoice-dollar amber"></i> FACTURADOR SII (API)</label>
-            <p style="font-size:0.6rem; color:#666; margin:0 0 10px 0;">Contrata un API <a href="https://openfactura.cl/" target="_blank" style="color:var(--cian);">OpenFactura (Haulmer)</a> para emisión automática.</p>
-            <input type="password" id="aj_sii_apikey" class="nave-input" placeholder="Token API Facturador">
+          <label style="font-size:0.7rem; color:#888;">RUT</label>
+          <input type="text" id="aj_banco_rut" class="nave-input" placeholder="Ej: 11.111.111-1">
+          <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">NÚMERO DE CUENTA</label>
+          <input type="text" id="aj_banco_numero" class="nave-input" placeholder="Ej: 11111111">
+          <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">CORREO ELECTRÓNICO</label>
+          <input type="text" id="aj_banco_correo" class="nave-input" placeholder="transferencias@espacioweed.cl">
         </div>
       </div>
     </div>
-
-    <div class="metric-card" style="margin-bottom:0; border-color: #00ff88;">
-      <h3 style="color: #00ff88; margin-bottom: 15px;"><i class="fas fa-university"></i> DATOS BANCARIOS</h3>
-      
-      <label style="font-size:0.7rem; color:#888;">NOMBRE DEL BANCO</label>
-      <input type="text" id="aj_banco_nombre" class="nave-input" placeholder="Ej: Banco Estado">
-      
-      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">TIPO DE CUENTA</label>
-      <input type="text" id="aj_banco_tipo" class="nave-input" placeholder="Ej: Cuenta RUT">
-      
-      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">RUT</label>
-      <input type="text" id="aj_banco_rut" class="nave-input" placeholder="Ej: 11.111.111-1">
-      
-      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">NÚMERO DE CUENTA</label>
-      <input type="text" id="aj_banco_numero" class="nave-input" placeholder="Ej: 11111111">
-      
-      <label style="font-size:0.7rem; color:#888; margin-top:10px; display:block;">CORREO ELECTRÓNICO</label>
-      <input type="text" id="aj_banco_correo" class="nave-input" placeholder="transferencias@espacioweed.cl">
-    </div>
   </div>
-
   <button class="btn-nave-main" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1rem;" onclick="guardarAjustesPanel(this)">
     <i class="fas fa-save"></i> GUARDAR CONFIGURACIÓN MAESTRA
+  </button>
+</div>
+
+<!-- ========================================== -->
+<!-- MÓDULO 2: LOGÍSTICA EXCLUSIVA (DROPSHIPPING Y NORMAL) -->
+<!-- ========================================== -->
+<div id="logistica_manager" class="section">
+  <h2 style="color: #f39c12;"><i class="fas fa-shipping-fast"></i> LOGÍSTICA Y DESPACHOS</h2>
+
+  <div class="grid-responsive" style="margin-top: 20px;">
+    <div class="metric-card" style="margin-bottom:0; border-color: var(--neon-green);">
+      <h3 style="color: var(--neon-green); margin-bottom: 15px;"><i class="fas fa-box"></i> REGLAS DE ENVÍO</h3>
+      <label style="font-size:0.7rem; color:#888; display:block;">COSTO BASE DE ENVÍO (Local/Bodega) $</label>
+      <input type="number" id="aj_envio" class="nave-input" placeholder="Ej: 3500">
+
+      <div style="background: rgba(46, 204, 113, 0.05); border: 1px dashed var(--neon-green); padding: 15px; border-radius: 8px; margin-top: 15px;">
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: white; cursor: pointer; font-weight:bold; margin-bottom:15px;">
+          <input type="checkbox" id="aj_envio_gratis_activo" style="accent-color: var(--neon-green); width:18px; height:18px;">
+          ACTIVAR METAS DE ENVÍO GRATIS (Gamificación Dual)
+        </label>
+        <label style="font-size:0.7rem; color:var(--amber); display:block;">META ENVÍO GRATIS: BODEGA NORMAL ($)</label>
+        <input type="number" id="aj_envio_meta_normal" class="nave-input" placeholder="Ej: 50000">
+
+        <label style="font-size:0.7rem; color:var(--cian); margin-top:10px; display:block;">META ENVÍO GRATIS: DROPSHIPPING ($)</label>
+        <input type="number" id="aj_envio_meta_drop" class="nave-input" placeholder="Ej: 70000" style="margin-bottom:0;">
+      </div>
+    </div>
+
+    <div class="metric-card" style="margin-bottom:0; border-color: #f1c40f;">
+      <h3 style="color: #f1c40f; margin-bottom: 15px;"><i class="fas fa-plug"></i> CONEXIONES API COURIER</h3>
+
+      <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-bolt" style="color:var(--neon-green);"></i> <a href="https://envia.com/es-CL/" target="_blank" style="color:var(--neon-green); text-decoration:none; font-weight:bold;">ENVIA.COM (Agregador)</a></label>
+      <div style="position:relative; margin-bottom: 15px;">
+          <input type="password" id="aj_envia_apikey" class="nave-input" style="margin-bottom:0; padding-right:35px; border-color:var(--neon-green);" placeholder="API Key Envia.com">
+          <i class="fas fa-eye" style="position:absolute; right:12px; top:14px; color:#888; cursor:pointer;" onclick="const inp=document.getElementById('aj_envia_apikey'); inp.type=(inp.type==='password')?'text':'password'; this.style.color=(inp.type==='text')?'var(--neon-green)':'#888';"></i>
+      </div>
+
+      <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-truck-fast cian"></i> <a href="https://www.blue.cl/" target="_blank" style="color:var(--cian); text-decoration:none;">BLUEEXPRESS (Directo)</a></label>
+      <input type="text" id="aj_blue_account" class="nave-input" placeholder="N° Cuenta BlueExpress">
+      <div style="position:relative; margin-bottom: 15px;">
+          <input type="password" id="aj_blue_apikey" class="nave-input" style="margin-bottom:0; padding-right:35px;" placeholder="API Key BlueExpress">
+          <i class="fas fa-eye" style="position:absolute; right:12px; top:14px; color:#888; cursor:pointer;" onclick="const inp=document.getElementById('aj_blue_apikey'); inp.type=(inp.type==='password')?'text':'password'; this.style.color=(inp.type==='text')?'var(--cian)':'#888';"></i>
+      </div>
+
+      <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 15px 0;">
+      <label style="font-size:0.75rem; color:#888; margin-bottom:5px; display:block;"><i class="fas fa-file-invoice-dollar amber"></i> FACTURADOR SII (API)</label>
+      <input type="password" id="aj_sii_apikey" class="nave-input" placeholder="Token API Facturador (OpenFactura)" style="margin-bottom:0;">
+    </div>
+  </div>
+  <button class="btn-nave-main" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1rem; background: #f39c12;" onclick="guardarLogisticaPanel(this)">
+    <i class="fas fa-save"></i> GUARDAR REGLAS LOGÍSTICAS
   </button>
 </div>
 
@@ -2105,7 +2126,7 @@ to { transform: translateX(0); opacity: 1; }
     <div class="modal-content" style="max-width:650px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
         <h2 class="neon-green"><i class="fas fa-rocket"></i> ALTA DE PRODUCTO</h2>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="grid-responsive">
             <div>
                 <label style="font-size:0.7rem; color:var(--cian);">NOMBRE:</label>
                 <input type="text" id="np-nombre" class="nave-input">
@@ -2217,7 +2238,9 @@ to { transform: translateX(0); opacity: 1; }
     <div class="modal-content" style="max-width:650px; padding:20px !important; max-height: 90vh; overflow-y: auto;">
         <h2 class="amber"><i class="fas fa-edit"></i> EDICIÓN MAESTRA</h2>
         
-        <input type="hidden" id="ed-sku"> <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <label style="font-size:0.7rem; color:var(--amber);">SKU (Modificable bajo tu responsabilidad):</label>
+        <input type="text" id="ed-sku" class="nave-input" style="border-color: var(--amber);">
+        <div class="grid-responsive">
             <div>
                 <label style="font-size:0.7rem; color:var(--cian);">NOMBRE:</label>
                 <input type="text" id="ed-nombre" class="nave-input">
@@ -2568,6 +2591,7 @@ function showSection(id, btn) {
 
   if (id === 'buzon') cargarBuzon();
   if (id === 'config') cargarAjustesPanel();
+  if (id === 'logistica_manager') cargarLogisticaPanel();
   if (id === 'estilo') cargarEstilosPanel();
   if (id === 'proveedores_manager') cargarProveedoresAdmin();
 }
@@ -2917,33 +2941,22 @@ function mostrarNotificacion(msj) {
 // --- FUNCIONES DEL PANEL DE AJUSTES ---
 async function cargarAjustesPanel() {
   try {
-    // FOCUS: Motor API
     const ajustes = await ejecutarEnServidor("getConfig");
-    document.getElementById('aj_estado').value = ajustes['ESTADO_TIENDA'] || 'ABIERTO';
-    document.getElementById('aj_anuncio_texto').value = ajustes['ANUNCIO_TEXTO'] || '';
-    document.getElementById('aj_anuncio_imagen').value = ajustes['ANUNCIO_IMAGEN'] || '';
-    document.getElementById('aj_envio').value = ajustes['COSTO_ENVIO'] || '';
-    document.getElementById('aj_envio_gratis_activo').checked = ajustes['ENVIO_GRATIS_ACTIVO'] === 'true';
-    document.getElementById('aj_envio_meta').value = ajustes['ENVIO_GRATIS_META'] || '';
-    document.getElementById('aj_mp_token').value = ajustes['MP_TOKEN'] || '';
+    if(document.getElementById('aj_estado')) document.getElementById('aj_estado').value = ajustes['ESTADO_TIENDA'] || 'ABIERTO';
+    if(document.getElementById('aj_anuncio_texto')) document.getElementById('aj_anuncio_texto').value = ajustes['ANUNCIO_TEXTO'] || '';
+    if(document.getElementById('aj_anuncio_imagen')) document.getElementById('aj_anuncio_imagen').value = ajustes['ANUNCIO_IMAGEN'] || '';
+    if(document.getElementById('aj_mp_token')) document.getElementById('aj_mp_token').value = ajustes['MP_TOKEN'] || '';
 
-    if(document.getElementById('aj_envia_apikey')) document.getElementById('aj_envia_apikey').value = ajustes['ENVIA_APIKEY'] || '';
-    if(document.getElementById('aj_blue_account')) document.getElementById('aj_blue_account').value = ajustes['BLUE_ACCOUNT'] || '';
-    if(document.getElementById('aj_blue_apikey')) document.getElementById('aj_blue_apikey').value = ajustes['BLUE_APIKEY'] || '';
-    if(document.getElementById('aj_sii_apikey')) document.getElementById('aj_sii_apikey').value = ajustes['SII_APIKEY'] || '';
-    
-    document.getElementById('aj_wa').value = ajustes['WHATSAPP'] || '';
-    document.getElementById('aj_wa_admin').value = ajustes['WHATSAPP_ADMIN'] || '';
-    document.getElementById('aj_ig').value = ajustes['LINK_INSTAGRAM'] || '';
-    document.getElementById('aj_fb').value = ajustes['LINK_FACEBOOK'] || '';
-    document.getElementById('aj_yt').value = ajustes['LINK_YOUTUBE'] || '';
-    document.getElementById('aj_tk').value = ajustes['LINK_TIKTOK'] || '';
-    
-    document.getElementById('aj_banco_nombre').value = ajustes['BANCO_NOMBRE'] || '';
-    document.getElementById('aj_banco_tipo').value = ajustes['BANCO_TIPO'] || '';
-    document.getElementById('aj_banco_rut').value = ajustes['BANCO_RUT'] || '';
-    document.getElementById('aj_banco_numero').value = ajustes['BANCO_NUMERO'] || '';
-    document.getElementById('aj_banco_correo').value = ajustes['BANCO_CORREO'] || '';
+    if(document.getElementById('aj_wa')) document.getElementById('aj_wa').value = ajustes['WHATSAPP'] || '';
+    if(document.getElementById('aj_wa_admin')) document.getElementById('aj_wa_admin').value = ajustes['WHATSAPP_ADMIN'] || '';
+    if(document.getElementById('aj_ig')) document.getElementById('aj_ig').value = ajustes['LINK_INSTAGRAM'] || '';
+    if(document.getElementById('aj_fb')) document.getElementById('aj_fb').value = ajustes['LINK_FACEBOOK'] || '';
+
+    if(document.getElementById('aj_banco_nombre')) document.getElementById('aj_banco_nombre').value = ajustes['BANCO_NOMBRE'] || '';
+    if(document.getElementById('aj_banco_tipo')) document.getElementById('aj_banco_tipo').value = ajustes['BANCO_TIPO'] || '';
+    if(document.getElementById('aj_banco_rut')) document.getElementById('aj_banco_rut').value = ajustes['BANCO_RUT'] || '';
+    if(document.getElementById('aj_banco_numero')) document.getElementById('aj_banco_numero').value = ajustes['BANCO_NUMERO'] || '';
+    if(document.getElementById('aj_banco_correo')) document.getElementById('aj_banco_correo').value = ajustes['BANCO_CORREO'] || '';
   } catch(e) { console.error("Error al cargar ajustes", e); }
 }
 
@@ -2955,23 +2968,11 @@ async function guardarAjustesPanel(btn) {
     'ESTADO_TIENDA': document.getElementById('aj_estado').value,
     'ANUNCIO_TEXTO': document.getElementById('aj_anuncio_texto').value,
     'ANUNCIO_IMAGEN': document.getElementById('aj_anuncio_imagen').value,
-    'COSTO_ENVIO': document.getElementById('aj_envio').value,
-    'ENVIO_GRATIS_ACTIVO': document.getElementById('aj_envio_gratis_activo').checked,
-    'ENVIO_GRATIS_META': document.getElementById('aj_envio_meta').value,
     'MP_TOKEN': document.getElementById('aj_mp_token').value,
-
-    'ENVIA_APIKEY': document.getElementById('aj_envia_apikey') ? document.getElementById('aj_envia_apikey').value : '',
-    'BLUE_ACCOUNT': document.getElementById('aj_blue_account') ? document.getElementById('aj_blue_account').value : '',
-    'BLUE_APIKEY': document.getElementById('aj_blue_apikey') ? document.getElementById('aj_blue_apikey').value : '',
-    'SII_APIKEY': document.getElementById('aj_sii_apikey') ? document.getElementById('aj_sii_apikey').value : '',
-    
     'WHATSAPP': document.getElementById('aj_wa').value,
     'WHATSAPP_ADMIN': document.getElementById('aj_wa_admin').value,
     'LINK_INSTAGRAM': document.getElementById('aj_ig').value,
     'LINK_FACEBOOK': document.getElementById('aj_fb').value,
-    'LINK_YOUTUBE': document.getElementById('aj_yt').value,
-    'LINK_TIKTOK': document.getElementById('aj_tk').value,
-    
     'BANCO_NOMBRE': document.getElementById('aj_banco_nombre').value,
     'BANCO_TIPO': document.getElementById('aj_banco_tipo').value,
     'BANCO_RUT': document.getElementById('aj_banco_rut').value,
@@ -2988,6 +2989,54 @@ async function guardarAjustesPanel(btn) {
     }, 2000);
   } catch(e) {
     alert("Error de red al guardar ajustes.");
+    btn.innerHTML = '<i class="fas fa-save"></i> REINTENTAR';
+    btn.disabled = false;
+  }
+}
+
+// --- FUNCIONES EXCLUSIVAS DE LOGÍSTICA ---
+async function cargarLogisticaPanel() {
+  try {
+    const logist = await ejecutarEnServidor("getConfig");
+    if(document.getElementById('aj_envio')) document.getElementById('aj_envio').value = logist['COSTO_ENVIO'] || '';
+    if(document.getElementById('aj_envio_gratis_activo')) document.getElementById('aj_envio_gratis_activo').checked = logist['ENVIO_GRATIS_ACTIVO'] === 'true';
+
+    // FOCUS: Metas separadas
+    if(document.getElementById('aj_envio_meta_normal')) document.getElementById('aj_envio_meta_normal').value = logist['ENVIO_GRATIS_META_NORMAL'] || '';
+    if(document.getElementById('aj_envio_meta_drop')) document.getElementById('aj_envio_meta_drop').value = logist['ENVIO_GRATIS_META_DROP'] || '';
+
+    // APIs Logísticas
+    if(document.getElementById('aj_envia_apikey')) document.getElementById('aj_envia_apikey').value = logist['ENVIA_APIKEY'] || '';
+    if(document.getElementById('aj_blue_account')) document.getElementById('aj_blue_account').value = logist['BLUE_ACCOUNT'] || '';
+    if(document.getElementById('aj_blue_apikey')) document.getElementById('aj_blue_apikey').value = logist['BLUE_APIKEY'] || '';
+    if(document.getElementById('aj_sii_apikey')) document.getElementById('aj_sii_apikey').value = logist['SII_APIKEY'] || '';
+  } catch(e) { console.error("Error al cargar logística", e); }
+}
+
+async function guardarLogisticaPanel(btn) {
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO REGLAS...';
+  btn.disabled = true;
+
+  const nuevasReglas = {
+    'COSTO_ENVIO': document.getElementById('aj_envio').value,
+    'ENVIO_GRATIS_ACTIVO': document.getElementById('aj_envio_gratis_activo').checked,
+    'ENVIO_GRATIS_META_NORMAL': document.getElementById('aj_envio_meta_normal').value,
+    'ENVIO_GRATIS_META_DROP': document.getElementById('aj_envio_meta_drop').value,
+    'ENVIA_APIKEY': document.getElementById('aj_envia_apikey').value,
+    'BLUE_ACCOUNT': document.getElementById('aj_blue_account').value,
+    'BLUE_APIKEY': document.getElementById('aj_blue_apikey').value,
+    'SII_APIKEY': document.getElementById('aj_sii_apikey').value
+  };
+
+  try {
+    await ejecutarEnServidor("guardarAjustes", nuevasReglas);
+    btn.innerHTML = '<i class="fas fa-check"></i> REGLAS ACTIVADAS';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR REGLAS LOGÍSTICAS';
+      btn.disabled = false;
+    }, 2000);
+  } catch(e) {
+    alert("Error de red al guardar logística.");
     btn.innerHTML = '<i class="fas fa-save"></i> REINTENTAR';
     btn.disabled = false;
   }
@@ -3204,6 +3253,65 @@ function filtrarCatalogo() {
     (p.SKU && p.SKU.toLowerCase().includes(texto))
   );
   renderCatalogo(filtrados);
+}
+
+// ==========================================
+// MOTOR FOCUS: GUARDADO MASIVO (INVENTARIO)
+// ==========================================
+async function guardarCambiosMasivosTabla() {
+    const btn = document.getElementById('btn-guardar-todo');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO EN LOTE...';
+    btn.disabled = true;
+
+    let cambiosDectectados = [];
+
+    // Escáner de mutaciones: Compara los inputs de la pantalla con la memoria global
+    globalStock.forEach(p => {
+        const inputPrecio = document.getElementById('q-pr-' + p.SKU);
+        const inputStock = document.getElementById('q-st-' + p.SKU);
+
+        if(inputPrecio && inputStock) {
+            if(inputPrecio.value != p.PRECIO || inputStock.value != p.STOCK) {
+                cambiosDectectados.push({
+                    sku: p.SKU,
+                    precio: inputPrecio.value,
+                    stock: inputStock.value
+                });
+            }
+        }
+    });
+
+    if(cambiosDectectados.length === 0) {
+        mostrarNotificacion("SISTEMA: No hay cambios pendientes.");
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR TODO';
+        btn.disabled = false;
+        return;
+    }
+
+    try {
+        // Disparo táctico consecutivo (No satura el servidor de Google)
+        for (let c of cambiosDectectados) {
+            await ejecutarEnServidor("actualizarProductoAdmin", {sku: c.sku, precio: c.precio, stock: c.stock});
+
+            // Actualizar memoria RAM
+            const idx = globalStock.findIndex(it => it.SKU === c.sku);
+            if(idx !== -1) { 
+                globalStock[idx].PRECIO = c.precio; 
+                globalStock[idx].STOCK = c.stock; 
+            }
+
+            // Feedback visual de éxito por fila
+            document.getElementById('q-pr-' + c.sku).style.backgroundColor = "rgba(46, 204, 113, 0.2)";
+            document.getElementById('q-st-' + c.sku).style.backgroundColor = "rgba(46, 204, 113, 0.2)";
+        }
+
+        mostrarNotificacion(`¡Éxito! ${cambiosDectectados.length} productos actualizados.`);
+    } catch(e) {
+        alert("Error de conexión durante el guardado por lotes.");
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR TODO';
+        btn.disabled = false;
+    }
 }
 
 // ==========================================

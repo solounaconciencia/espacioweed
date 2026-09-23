@@ -114,7 +114,8 @@ function filtrar() {
   if(!predictivo) {
       predictivo = document.createElement('div');
       predictivo.id = 'search-predictive';
-      predictivo.style.cssText = 'position:absolute; top:100%; left:0; width:100%; background:var(--bg-space); border:1px solid var(--cian); border-radius:15px; margin-top:5px; max-height:350px; overflow-y:auto; z-index:99999; display:none; box-shadow:0 15px 35px rgba(0,0,0,0.8); backdrop-filter:blur(10px);';
+      // FOCUS: Añadimos padding-bottom para el teclado y scroll táctil nativo
+      predictivo.style.cssText = 'position:absolute; top:100%; left:0; width:100%; background:var(--bg-space); border:1px solid var(--cian); border-radius:15px; margin-top:5px; max-height:350px; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-bottom:60px; z-index:99999; display:none; box-shadow:0 15px 35px rgba(0,0,0,0.8); backdrop-filter:blur(10px);';
       searchInput.parentNode.appendChild(predictivo);
   }
 
@@ -282,7 +283,7 @@ function renderProductos(lista) {
               `<span style="font-size: 0.85rem; color: var(--amber); cursor: pointer;"><i class="fas fa-external-link-alt"></i> Consulta el valor Aquí</span>` : 
               '$' + precioMostrar.toLocaleString('es-CL')}
           </div>
-          <div style="font-size:0.85rem; font-weight:600; color:white; line-height: 1.3;">${p.NOMBRE}</div>
+          <div style="font-size:0.85rem; font-weight:600; color:white; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 38px;">${p.NOMBRE}</div>
         </div>
       </div>
     `;

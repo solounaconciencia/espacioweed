@@ -504,13 +504,42 @@ function renderCarrito() {
     return;
   }
 
-  container.innerHTML = carrito.map(function(item, index) {
-    // FOCUS: Tacha el precio si hay una rebaja
+  // FOCUS: Split Cart Logic (Separador Visual)
+  const itemsNormal = [];
+  const itemsDrop = [];
+
+  carrito.forEach((item, index) => {
+     const pData = productosGlobal.find(p => p.SKU === item.sku.replace("-REGALO", ""));
+     const esDrop = pData && pData.TIPO_LOGISTICA === 'DROPSHIPPING';
+
+     item.originalIndex = index; // Mantenemos el ID original para borrar/sumar
+
+     if (esDrop) itemsDrop.push(item);
+     else itemsNormal.push(item);
+  });
+
+  let htmlFinal = "";
+
+  if (itemsNormal.length > 0) {
+     htmlFinal += `<div style="background: rgba(46, 204, 113, 0.05); border-left: 3px solid var(--neon-green); padding: 5px 10px; margin-bottom: 10px; font-family: var(--font-brand); font-size: 0.75rem; color: var(--neon-green);">🛍️ DESPACHO TIENDA LOCAL</div>`;
+     htmlFinal += generarHtmlItemsCarrito(itemsNormal);
+  }
+
+  if (itemsDrop.length > 0) {
+     htmlFinal += `<div style="background: rgba(241, 196, 15, 0.05); border-left: 3px solid var(--amber); padding: 5px 10px; margin: 15px 0 10px 0; font-family: var(--font-brand); font-size: 0.75rem; color: var(--amber);">📦 DESPACHO BODEGA CENTRAL (Directo)</div>`;
+     htmlFinal += generarHtmlItemsCarrito(itemsDrop);
+  }
+
+  container.innerHTML = htmlFinal;
+}
+
+function generarHtmlItemsCarrito(items) {
+   return items.map(function(item) {
     let tachado = "";
     if (item.precioOriginal && item.precioOriginal > item.precio && !item.sku.includes("-REGALO")) {
         tachado = `<span style="text-decoration: line-through; color: #888; font-size: 0.7rem; margin-right: 5px;">$${item.precioOriginal.toLocaleString('es-CL')}</span>`;
     }
-    
+
     let subInfo = `<small style="color:var(--cian);">${tachado}$${item.precio.toLocaleString('es-CL')}</small>`;
     if(item.sku.includes("-REGALO")) subInfo = `<small style="color:var(--neon-green);"><i class="fas fa-gift"></i> GRATIS</small>`;
 
@@ -521,10 +550,10 @@ function renderCarrito() {
           ${subInfo}
         </div>
         <div class="cart-item-actions" style="display:flex; align-items:center; gap:8px;">
-          <button class="btn-qty" onclick="cambiarCantidad(${index}, -1)">-</button>
+          <button class="btn-qty" onclick="cambiarCantidad(${item.originalIndex}, -1)">-</button>
           <span style="font-size:0.8rem; font-weight:bold; min-width:15px; text-align:center; color:white;">${item.cantidad}</span>
-          <button class="btn-qty" onclick="cambiarCantidad(${index}, 1)">+</button>
-          <button class="btn-del" onclick="eliminarDelCarrito(${index})"><i class="fas fa-trash-alt"></i></button>
+          <button class="btn-qty" onclick="cambiarCantidad(${item.originalIndex}, 1)">+</button>
+          <button class="btn-del" onclick="eliminarDelCarrito(${item.originalIndex})"><i class="fas fa-trash-alt"></i></button>
         </div>
       </div>
     `;
@@ -546,110 +575,123 @@ function eliminarDelCarrito(index) {
 }
 
 function actualizarTotalCarrito() {
-  let subtotal = 0;
-  let totalOriginal = 0; // Para medir cuánto costaría sin descuentos
+  let subtotalGlobal = 0;
+  let subtotalNormal = 0;
+  let subtotalDrop = 0;
+  let totalOriginal = 0;
 
-  // FOCUS: Recálculo Dinámico por Volumen y Ahorro
+  // 1. Recálculo separando por logística
   carrito.forEach(item => {
       const pData = productosGlobal.find(p => p.SKU === item.sku.replace("-REGALO", ""));
-      
-      let precioBase = 0;
-      if (pData) {
-          precioBase = Number(pData.PRECIO);
-          item.precioOriginal = precioBase; // Guardamos el original para el HTML
-      }
+      const esDrop = pData && pData.TIPO_LOGISTICA === 'DROPSHIPPING';
 
+      let precioBase = pData ? Number(pData.PRECIO) : 0;
+      item.precioOriginal = precioBase; 
       let precioCalculado = precioBase;
-      const promoType = pData ? String(pData.TIPO_PROMO || '').trim().toUpperCase() : '';
 
+      const promoType = pData ? String(pData.TIPO_PROMO || '').trim().toUpperCase() : '';
       if (promoType === 'DESCUENTO' && pData.DETALLE_PROMO) {
           precioCalculado = precioBase - Number(pData.DETALLE_PROMO);
       } else if (promoType === 'VOLUMEN' && pData.DETALLE_PROMO) {
-          // Calculamos si aplica volumen (Ej: 10:10000,5:6500)
           const umbrales = String(pData.DETALLE_PROMO).split(',').map(u => {
               const partes = u.split(':');
               return { cant: parseInt(partes[0]), precioTotal: parseInt(partes[1]) };
           }).sort((a,b) => b.cant - a.cant); 
-          
           for(let u of umbrales) {
-              if(item.cantidad >= u.cant) {
-                  precioCalculado = u.precioTotal / u.cant; // Genera el nuevo precio unitario
-                  break;
-              }
+              if(item.cantidad >= u.cant) { precioCalculado = u.precioTotal / u.cant; break; }
           }
       }
-      
-      if(item.sku.includes("-REGALO")) precioCalculado = 0;
 
-      item.precio = precioCalculado; // Fijamos el precio final de la unidad
-      subtotal += (item.precio * item.cantidad);
+      if(item.sku.includes("-REGALO")) precioCalculado = 0;
+      item.precio = precioCalculado; 
+      const subItems = (item.precio * item.cantidad);
+
+      subtotalGlobal += subItems;
       totalOriginal += (precioBase * item.cantidad);
+
+      if (esDrop) subtotalDrop += subItems;
+      else subtotalNormal += subItems;
   });
 
-  // FOCUS: MOTOR DE DESCUENTO (CUPÓN)
+  // 2. Motor de Descuento (Cupón proporcionado)
   let descuentoCupon = 0;
   if (miCuponValidado && miCuponValidado.pct > 0) {
       if (miCuponValidado.sku === "TODOS" || !miCuponValidado.sku) {
-          descuentoCupon = subtotal * (miCuponValidado.pct / 100);
+          descuentoCupon = subtotalGlobal * (miCuponValidado.pct / 100);
+          subtotalNormal -= (subtotalNormal * (miCuponValidado.pct / 100));
+          subtotalDrop -= (subtotalDrop * (miCuponValidado.pct / 100));
       } else {
           carrito.forEach(item => {
               if (item.sku.startsWith(miCuponValidado.sku)) {
-                  descuentoCupon += (item.precio * item.cantidad) * (miCuponValidado.pct / 100);
+                  const descItem = (item.precio * item.cantidad) * (miCuponValidado.pct / 100);
+                  descuentoCupon += descItem;
+                  const pData = productosGlobal.find(p => p.SKU === item.sku.replace("-REGALO", ""));
+                  if (pData && pData.TIPO_LOGISTICA === 'DROPSHIPPING') subtotalDrop -= descItem;
+                  else subtotalNormal -= descItem;
               }
           });
       }
-      subtotal = subtotal - Math.round(descuentoCupon);
+      subtotalGlobal -= Math.round(descuentoCupon);
   }
 
-  // Cálculo del ahorro global
-  let ahorroFinal = (totalOriginal - subtotal);
-  if(ahorroFinal < 0) ahorroFinal = 0;
+  let ahorroFinal = Math.max(0, totalOriginal - subtotalGlobal);
 
-  const necesitaEnvio = document.getElementById('chk-envio').checked;
+  const necesitaEnvio = document.getElementById('chk-envio') ? document.getElementById('chk-envio').checked : false;
   let costoEnvio = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
-  
-  const direccionInput = document.getElementById('direccion-envio');
-  if(direccionInput) direccionInput.style.display = necesitaEnvio ? 'block' : 'none';
 
-  // FOCUS: Barra de Envío Gratis (Gamificación)
-  const metaEnvio = Number(configGlobal['ENVIO_GRATIS_META'] || 0);
+  const boxDireccion = document.getElementById('box-direccion');
+  if(boxDireccion) boxDireccion.style.display = necesitaEnvio ? 'block' : 'none';
+
+  // 3. GAMIFICACIÓN DUAL DE ENVÍO GRATIS
   const envioGratisActivo = configGlobal['ENVIO_GRATIS_ACTIVO'] === 'true';
-  let msjProgreso = document.getElementById('cart-progress-bar');
-  
+  const metaNormal = Number(configGlobal['ENVIO_GRATIS_META_NORMAL'] || 0);
+  const metaDrop = Number(configGlobal['ENVIO_GRATIS_META_DROP'] || 0);
+
+  let msjProgreso = document.getElementById('cart-progress-bar-dual');
   if(!msjProgreso) {
       const headerCart = document.querySelector('.cart-header');
       if(headerCart) {
-          headerCart.insertAdjacentHTML('afterend', `
-            <div id="cart-progress-bar" style="display:none; margin: 15px 0; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 12px; text-align: center; border: 1px solid rgba(0, 255, 255, 0.1);">
-                <div id="progress-text" style="font-size: 0.75rem; color: #ccc; margin-bottom: 8px; font-family: var(--font-brand);"></div>
-                <div style="width: 100%; height: 6px; background: #111; border-radius: 5px; overflow: hidden;">
-                    <div id="progress-fill" style="height: 100%; background: var(--neon-green); width: 0%; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
-                </div>
-            </div>`);
-          msjProgreso = document.getElementById('cart-progress-bar');
+          headerCart.insertAdjacentHTML('afterend', `<div id="cart-progress-bar-dual" style="margin-bottom: 15px;"></div>`);
+          msjProgreso = document.getElementById('cart-progress-bar-dual');
       }
   }
 
-  if (envioGratisActivo && metaEnvio > 0 && subtotal > 0) {
-      msjProgreso.style.display = 'block';
-      let pct = (subtotal / metaEnvio) * 100;
-      if (pct >= 100) {
-          pct = 100;
-          if (necesitaEnvio) costoEnvio = 0; // Se hace 0 automáticamente
-          document.getElementById('progress-text').innerHTML = '¡Felicidades! Desbloqueaste <b style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green);">ENVÍO GRATIS</b> 🚀';
-          document.getElementById('progress-fill').style.background = 'var(--neon-green)';
-          document.getElementById('progress-fill').style.boxShadow = '0 0 10px var(--neon-green)';
-      } else {
-          document.getElementById('progress-text').innerHTML = `Agrega <b style="color:var(--amber);">$${(metaEnvio - subtotal).toLocaleString('es-CL')}</b> más para ENVÍO GRATIS`;
-          document.getElementById('progress-fill').style.background = 'var(--amber)';
-          document.getElementById('progress-fill').style.boxShadow = 'none';
-      }
-      document.getElementById('progress-fill').style.width = pct + '%';
+  if (envioGratisActivo && msjProgreso) {
+      let htmlBarras = '';
+      let cobraEnvio = false;
+
+      // Barra 1: NORMAL
+      if (subtotalNormal > 0 && metaNormal > 0) {
+          let pctNormal = (subtotalNormal / metaNormal) * 100;
+          if (pctNormal >= 100) {
+              htmlBarras += crearHtmlBarra("Tienda Local", "¡ENVÍO GRATIS! 🚀", 100, "var(--neon-green)");
+          } else {
+              cobraEnvio = true;
+              htmlBarras += crearHtmlBarra("Tienda Local", `Faltan $${Math.round(metaNormal - subtotalNormal).toLocaleString('es-CL')}`, pctNormal, "var(--cian)");
+          }
+      } else if (subtotalNormal > 0) cobraEnvio = true;
+
+      // Barra 2: DROPSHIPPING
+      if (subtotalDrop > 0 && metaDrop > 0) {
+          let pctDrop = (subtotalDrop / metaDrop) * 100;
+          if (pctDrop >= 100) {
+              htmlBarras += crearHtmlBarra("Bodega Central", "¡ENVÍO GRATIS! 🚀", 100, "var(--neon-green)");
+          } else {
+              cobraEnvio = true;
+              htmlBarras += crearHtmlBarra("Bodega Central", `Faltan $${Math.round(metaDrop - subtotalDrop).toLocaleString('es-CL')}`, pctDrop, "var(--amber)");
+          }
+      } else if (subtotalDrop > 0) cobraEnvio = true;
+
+      msjProgreso.innerHTML = htmlBarras;
+      msjProgreso.style.display = htmlBarras ? 'block' : 'none';
+
+      // Si hay barras, y NINGUNA sección activa se quedó corta de meta, envío es $0
+      if (necesitaEnvio && !cobraEnvio && htmlBarras !== '') costoEnvio = 0;
   } else {
       if(msjProgreso) msjProgreso.style.display = 'none';
   }
-  
-  // FOCUS: Inyección del texto de Ahorro "Efecto Supermercado"
+
+  // 4. Etiqueta de Ahorro
   let msjAhorro = document.getElementById('cart-ahorro-label');
   if(!msjAhorro) {
       const totalBox = document.querySelector('.cart-total-box');
@@ -658,17 +700,23 @@ function actualizarTotalCarrito() {
           msjAhorro = document.getElementById('cart-ahorro-label');
       }
   }
+  if(msjAhorro) msjAhorro.style.display = (ahorroFinal > 0) ? 'block' : 'none';
+  if(msjAhorro && ahorroFinal > 0) msjAhorro.innerHTML = `<i class="fas fa-tags"></i> HAS AHORRADO: $${ahorroFinal.toLocaleString('es-CL')}`;
 
-  if(msjAhorro) {
-      if(ahorroFinal > 0) {
-          msjAhorro.innerHTML = `<i class="fas fa-tags"></i> HAS AHORRADO: $${ahorroFinal.toLocaleString('es-CL')}`;
-          msjAhorro.style.display = 'block';
-      } else {
-          msjAhorro.style.display = 'none';
-      }
-  }
-  
-  document.getElementById('cart-total-value').innerText = '$' + (subtotal + costoEnvio).toLocaleString('es-CL');
+  document.getElementById('cart-total-value').innerText = '$' + (subtotalGlobal + costoEnvio).toLocaleString('es-CL');
+}
+
+function crearHtmlBarra(titulo, texto, pct, color) {
+    return `
+    <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 10px; margin-top: 10px; border: 1px solid rgba(255,255,255,0.05);">
+        <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: #ccc; margin-bottom: 5px; font-family: var(--font-brand);">
+            <span>${titulo}</span>
+            <strong style="color:${color};">${texto}</strong>
+        </div>
+        <div style="width: 100%; height: 6px; background: #111; border-radius: 5px; overflow: hidden;">
+            <div style="height: 100%; background: ${color}; width: ${pct}%; transition: width 0.6s ease; box-shadow: ${pct >= 100 ? '0 0 10px '+color : 'none'};"></div>
+        </div>
+    </div>`;
 }
 
 function vaciarCarrito() {
@@ -681,7 +729,6 @@ async function procesarCompra() {
   if (carrito.length === 0) return;
   localStorage.setItem('weed_last_cart', JSON.stringify(carrito));
 
-  // FOCUS: Barrera +18
   const chkEdad = document.getElementById('chk-mayor-edad');
   if(chkEdad && !chkEdad.checked) {
       mostrarToast("Debes confirmar que eres mayor de 18 años.");
@@ -695,10 +742,37 @@ async function procesarCompra() {
 
   const necesitaEnvio = document.getElementById('chk-envio').checked;
   const subtotal = calcularSubtotal(); 
-  const envioVal = necesitaEnvio ? Number(configGlobal['COSTO_ENVIO'] || 3500) : 0;
-  const direccion = document.getElementById('direccion-envio') ? document.getElementById('direccion-envio').value : "";
+  let costoEnvioFinal = 0; 
 
-  // FOCUS: Escáner de Logística Dropshipping en el Carrito
+  // Leer el costo exacto final cobrado en pantalla
+  const valorTotalDOM = document.getElementById('cart-total-value').innerText.replace('$', '').replace(/\./g, '');
+  const totalPantalla = parseInt(valorTotalDOM);
+  if(!isNaN(totalPantalla)) {
+      costoEnvioFinal = totalPantalla - subtotal;
+      if(costoEnvioFinal < 0) costoEnvioFinal = 0;
+  }
+
+  let direccionFinal = "Retiro en Local";
+  let comunaFinal = "";
+  let telefonoFinal = "";
+
+  if (necesitaEnvio) {
+      const region = document.getElementById('region-envio') ? document.getElementById('region-envio').value : "";
+      const comuna = document.getElementById('comuna-envio') ? document.getElementById('comuna-envio').value : "";
+      const calle = document.getElementById('direccion-envio') ? document.getElementById('direccion-envio').value.trim() : "";
+      const tel = document.getElementById('telefono-envio') ? document.getElementById('telefono-envio').value.trim() : "";
+
+      if (!region || !comuna || !calle || !tel) {
+          mostrarToast("Faltan datos logísticos (Región, Comuna, Calle o Teléfono).");
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          return;
+      }
+      direccionFinal = `${calle}, ${comuna}, ${region}`;
+      comunaFinal = comuna;
+      telefonoFinal = tel;
+  }
+
   let tieneDropshipping = false;
   for (let item of carrito) {
       const pData = productosGlobal.find(p => p.SKU === item.sku.replace("-REGALO", ""));
@@ -709,28 +783,23 @@ async function procesarCompra() {
   }
 
   if (tieneDropshipping && !necesitaEnvio) {
-      mostrarToast("⚠️ Tu carrito incluye artículos de despacho directo. Activa el envío a domicilio e ingresa tu dirección.");
+      mostrarToast("⚠️ Tu carrito incluye artículos de despacho directo. Activa el envío a domicilio e ingresa tus datos completos.");
       btn.innerHTML = originalText;
       btn.disabled = false;
       return;
   }
 
-  if (necesitaEnvio && !direccion) {
-    alert("Por favor, ingresa tu dirección para el envío exacto.");
-    btn.innerHTML = originalText;
-    btn.disabled = false;
-    return;
-  }
-
   const pedido = {
     nombreCliente: sessionUser ? sessionUser.nombre : "Cliente Web",
     email: sessionUser ? sessionUser.email : "N/A",
+    telefono: telefonoFinal, // <--- INYECTADO PARA ENVIA Y BLUE
     resumenProductos: carrito.map(i => i.nombre + " (x" + i.cantidad + ")").join(', '),
     items: carrito,
     subtotal: subtotal,
     necesitaEnvio: necesitaEnvio,
-    totalFinal: subtotal + envioVal,
-    direccion: necesitaEnvio ? direccion : "Retiro en Local",
+    totalFinal: subtotal + costoEnvioFinal,
+    direccion: direccionFinal,
+    comuna: comunaFinal,
     metodoPago: "mercadopago",
     cuponActivo: miCuponValidado ? miCuponValidado.codigo : null
   };

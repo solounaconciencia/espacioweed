@@ -853,8 +853,18 @@ body {
 .avatar-opt:hover { border-color: var(--amber); }
 
 .btn-logout { background: none; border: none; color: #ff4444; font-size: 0.7rem; cursor: pointer; }
+
+    
 /* AJUSTES ESPECÍFICOS PARA MÓVILES (Pantallas menores a 600px) */
 @media (max-width: 600px) {
+    .buzon-layout { flex-direction: column; height: 82vh; }
+    .buzon-sidebar { width: 100%; min-width: 100%; height: 35%; border-right: none; border-bottom: 1px solid var(--cian); }
+    .buzon-chat-window { height: 65%; }
+    .user-card { padding: 10px; }
+    .grid-responsive { grid-template-columns: 1fr !important; }
+    .modal-content { width: 95% !important; padding: 15px !important; }
+    .home-cards-grid { grid-template-columns: 1fr 1fr !important; }
+    }
     /* Ajustes de tarjetas y comunidad (Tu código original) */
     .login-card {
         padding: 20px 15px; /* Menos espacio interno para ganar pantalla */
@@ -1463,10 +1473,7 @@ to { transform: translateX(0); opacity: 1; }
 .botones-scroll button { flex-shrink: 0; }
 
 @media (max-width: 600px) {
-    .grid-responsive { grid-template-columns: 1fr !important; }
-    .modal-content { width: 95% !important; padding: 15px !important; }
-    .home-cards-grid { grid-template-columns: 1fr 1fr !important; }
-}
+   
 </style>
 </head>
 <body>

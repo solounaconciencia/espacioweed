@@ -1630,35 +1630,34 @@ to { transform: translateX(0); opacity: 1; }
 <div id="productos_manager" class="section">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
         <h2 class="cian"><i class="fas fa-box-open"></i> GESTIÓN DE CATÁLOGO</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;">
-        <button class="home-card-item" style="border-bottom-color: var(--neon-green); padding: 15px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;" onclick="abrirModalProductoNuevo()">
-            <i class="fas fa-plus" style="font-size: 1.5rem; color: var(--neon-green);"></i>
-            <span style="font-size: 0.7rem; font-weight: bold; color:white;">NUEVO PRODUCTO</span>
-        </button>
+    </div>
 
-        <button class="home-card-item" style="border-bottom-color: var(--amber); padding: 15px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;" onclick="abrirModalCupones()">
-            <i class="fas fa-ticket-alt" style="font-size: 1.5rem; color: var(--amber);"></i>
-            <span style="font-size: 0.7rem; font-weight: bold; color:white;">DESCUENTOS</span>
+    <!-- FOCUS: Botones 3x3 perfectos -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; margin-bottom: 15px;">
+        <button class="home-card-item" style="border-bottom-color: var(--neon-green); padding: 10px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;" onclick="abrirModalProductoNuevo()">
+            <i class="fas fa-plus" style="font-size: 1.2rem; color: var(--neon-green);"></i>
+            <span style="font-size: 0.65rem; font-weight: bold; color:white;">NUEVO</span>
         </button>
-
-        <button class="home-card-item" style="border-bottom-color: var(--cian); padding: 15px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;" onclick="abrirModalDestacados()">
-            <i class="fas fa-star" style="font-size: 1.5rem; color: var(--cian);"></i>
-            <span style="font-size: 0.7rem; font-weight: bold; color:white;">DESTACADOS</span>
+        <button class="home-card-item" style="border-bottom-color: var(--amber); padding: 10px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;" onclick="abrirModalCupones()">
+            <i class="fas fa-ticket-alt" style="font-size: 1.2rem; color: var(--amber);"></i>
+            <span style="font-size: 0.65rem; font-weight: bold; color:white;">CUPONES</span>
         </button>
-
-        <button class="home-card-item" style="border-bottom-color: #f39c12; padding: 15px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;" onclick="abrirModalPatrocinadores()">
-            <i class="fas fa-handshake" style="font-size: 1.5rem; color: #f39c12;"></i>
-            <span style="font-size: 0.7rem; font-weight: bold; color:white;">MARCAS</span>
+        <button class="home-card-item" style="border-bottom-color: var(--cian); padding: 10px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;" onclick="abrirModalDestacados()">
+            <i class="fas fa-star" style="font-size: 1.2rem; color: var(--cian);"></i>
+            <span style="font-size: 0.65rem; font-weight: bold; color:white;">DESTACADOS</span>
         </button>
-
-        <button class="home-card-item" id="btn-guardar-todo" style="background: rgba(46, 204, 113, 0.1); border-bottom-color: var(--neon-green); padding: 15px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;" onclick="guardarCambiosMasivosTabla()">
-            <i class="fas fa-save" style="font-size: 1.5rem; color: var(--neon-green);"></i>
-            <span style="font-size: 0.7rem; font-weight: bold; color:var(--neon-green);">GUARDAR CAMBIOS</span>
+        <button class="home-card-item" style="border-bottom-color: #f39c12; padding: 10px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;" onclick="abrirModalPatrocinadores()">
+            <i class="fas fa-handshake" style="font-size: 1.2rem; color: #f39c12;"></i>
+            <span style="font-size: 0.65rem; font-weight: bold; color:white;">MARCAS</span>
+        </button>
+        <!-- El botón guardar abarca 2 espacios para equilibrar la cuadrícula -->
+        <button class="home-card-item" id="btn-guardar-todo" style="background: rgba(46, 204, 113, 0.1); border-bottom-color: var(--neon-green); padding: 10px 5px; margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; grid-column: span 2;" onclick="guardarCambiosMasivosTabla()">
+            <i class="fas fa-save" style="font-size: 1.2rem; color: var(--neon-green);"></i>
+            <span style="font-size: 0.65rem; font-weight: bold; color:var(--neon-green);">GUARDAR TODOS</span>
         </button>
     </div>
-    </div>
-    
-    <div style="margin-top: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+
+    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
         <input type="text" id="search-catalogo" class="nave-input" placeholder="Buscar por Nombre o SKU..." onkeyup="filtrarCatalogo()" style="width: 100%; max-width: 400px; margin-bottom: 0;">
         <button id="btn-eliminar-masa" class="btn-save" style="background: #e74c3c; color: white; display: none; padding: 12px 20px;" onclick="confirmarEliminacionMasa()">
             <i class="fas fa-trash-alt"></i> Eliminar (0)
@@ -1667,7 +1666,7 @@ to { transform: translateX(0); opacity: 1; }
             Cancelar
         </button>
     </div>
-    
+
     <div style="overflow-x: auto; margin-top: 15px;">
         <table class="admin-table">
             <thead>
@@ -1681,10 +1680,10 @@ to { transform: translateX(0); opacity: 1; }
                 </tr>
             </thead>
             <tbody id="tbody-catalogo">
-                </tbody>
+            </tbody>
         </table>
     </div>
-</div>      
+</div>
       
       
 

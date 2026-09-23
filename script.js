@@ -1435,21 +1435,21 @@ function mostrarBuzon() {
 
 async function cargarChat() {
   if (!sessionUser) return;
-  const container = document.getElementById('chat-messages');
+  const container = document.getElementById('chat-box'); // <-- CORRECCIÓN VITAL DEL ID
   if (!container) return;
 
   try {
-    // FOCUS: Petición al servidor mediante el nuevo motor fetch
     const res = await ejecutarEnServidor("obtenerMensajes", { email: sessionUser.email });
-    
-    if (res && res.length > 0) {
-      container.innerHTML = res.map(m => `
-        <div class="message ${m.EMISOR === 'ADMIN' ? 'admin' : 'user'}">
-          <div class="msg-bubble">${m.MENSAJE}</div>
-          <div class="msg-time">${m.FECHA}</div>
+
+    if (res && res.success && res.datos.length > 0) {
+      container.innerHTML = res.datos.map(m => `
+        <div style="display:flex; flex-direction:column; align-items: ${m.emisor === 'admin' ? 'flex-start' : 'flex-end'}; margin-bottom:10px;">
+            <div style="background: ${m.emisor === 'admin' ? 'rgba(0,255,255,0.1)' : 'rgba(255,255,255,0.05)'}; padding: 10px 15px; border-radius: 12px; border-bottom-${m.emisor === 'admin' ? 'left' : 'right'}-radius: 2px; border: 1px solid ${m.emisor === 'admin' ? 'var(--cian)' : '#333'}; max-width: 85%;">
+              <div style="font-size:0.85rem; color:white; line-height: 1.4;">${m.mensaje}</div>
+              <div style="font-size:0.6rem; color:#888; text-align:right; margin-top:5px;">${m.fecha}</div>
+            </div>
         </div>
       `).join('');
-      // FOCUS: Micro-pausa para asegurar que el HTML se dibujó antes de bajar
       setTimeout(() => { container.scrollTop = container.scrollHeight; }, 100);
     } else {
       container.innerHTML = '<p style="text-align:center; color:#666; font-size:0.8rem; margin-top:20px;">No hay transmisiones aún. ¡Inicia el contacto!</p>';

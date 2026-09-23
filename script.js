@@ -1381,12 +1381,14 @@ async function mostrarHistorial() {
             <span class="h-date" style="color:#888; font-size: 0.7rem;">${v.fecha}</span>
           </div>
           <div class="h-details" style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="h-total" style="font-family:var(--font-brand); font-size: 1.1rem; color:var(--amber);">$${Number(v.total).toLocaleString('es-CL')}</div>
-            <div class="h-status" style="font-size: 0.75rem; font-weight: bold; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px;">${v.estado}</div>
-          </div>
+        <div class="h-total" style="font-family:var(--font-brand); font-size: 1.1rem; color:var(--amber);">$${Number(v.total).toLocaleString('es-CL')}</div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div class="h-status" style="font-size: 0.75rem; font-weight: bold; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px;">${v.estado}</div>
+          <button onclick='recomprarDesdeSKUMaestro(${v.receta})' style="background:var(--cian); color:black; border:none; padding:5px 10px; border-radius:4px; font-family:var(--font-brand); font-size:0.65rem; font-weight:bold; cursor:pointer;"><i class="fas fa-redo-alt"></i> REPETIR</button>
         </div>
-      `).join('');
-    } else {
+      </div>
+    </div>
+  `).join('');    } else {
       container.innerHTML = `
         <div style="text-align:center; padding:30px; color:#555;">
           <i class="fas fa-box-open" style="font-size:2rem; margin-bottom:10px; opacity:0.3;"></i>
@@ -1926,7 +1928,7 @@ async function enviarLeadAgencia() {
             const nombreTienda = configGlobal['NOMBRE_TIENDA'] || "una tienda asociada";
             
             // ---> COLOCA EL NÚMERO DE WHATSAPP DE COACH 3D AQUÍ <---
-            const numDestino = "56900000000"; 
+            const numDestino = "56976003402"; 
             
             const msgWa = `¡Hola Coach 3D Latam!%0A%0AVengo referido desde la tienda *${nombreTienda}*.%0A%0A*Mi Nombre:* ${nombre}%0A*Mi Solicitud:* ${servicio}%0A%0AMe gustaría coordinar para avanzar.`;
             
